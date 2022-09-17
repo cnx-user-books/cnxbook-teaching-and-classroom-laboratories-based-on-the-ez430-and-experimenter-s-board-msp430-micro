@@ -1,0 +1,177 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Communications: Lab3 - Echo test using I2C</title>
+  <metadata>
+  <md:content-id>m23569</md:content-id><md:title>Laboratory Communications: Lab3 - Echo test using I2C</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool establish a connection between two MSP430's via the I2C bus. The master receives one byte from the slave. This is the master code. It receives a single byte as soon as a button connected on P1.0 was pressed.</md:abstract>
+  <md:uuid>3f73cc0b-ba0b-476b-8ab4-04b2685bf9d5</md:uuid>
+</metadata>
+
+<content>
+    <section id="id18583969">
+      <title>Laboratory Communications: Lab3 - Echo test using I2C</title>
+      <section id="id21402029">
+        <title>Introduction</title>
+        <para id="id21239631">The MSP430 contains built-in features for both parallel and serial data communication. This chapter describes the operation of these peripherals, and discusses the protocols, data formats and specific techniques for each type of data communication.</para>
+        <para id="id18484125">The communication modules available for the MSP430 family of microcontrollers are USART (Universal Synchronous/Asynchronous Receiver/Transmitter), USCI (Universal Serial Communication Interface) and USI (Universal Serial Interface). These provide asynchronous data transmission between the MSP430 and other peripheral devices when configured in UART mode. They also support data transmission synchronized to a clock signal through a serial I/O port in Serial Peripheral Interface (SPI) and Inter Integrated Circuit (I2C) modes.</para>
+      </section>
+      <section id="id22912046">
+        <title>Overview</title>
+        <para id="id20520110">This laboratory explores the USCI and USI communication interfaces in I<sup>2</sup>C mode. It uses the two MSP430 devices included on the Experimenter’s board: MSP430FG4618 as the master and the MSP430F2013 as the slave. The master receives a single byte from the slave as soon as a button connected to P1.0 is pressed.</para>
+      </section>
+      <section id="id21158779">
+        <title>Resources</title>
+        <para id="id22912910">This laboratory uses the USCI module of the MSP430FG4618 device and the USI module included in the MSP430F2013. Both units operate in I2C mode.</para>
+        <para id="id22114982">The interrupts on the slave unit are generated exclusively by the USI module. They are:</para>
+        <para id="id15193164">- START condition in the I2C bus;</para>
+        <para id="id15983265">- Data reception and transmission.</para>
+        <para id="id15983269">The interrupts on the master unit are provided by the USCI module. They are:</para>
+        <para id="id22923335">- Data reception;</para>
+        <para id="id22923338">- Interrupt on Port1.</para>
+        <para id="id11236020">The resources used are:</para>
+        <para id="id14441651">- USCI module;</para>
+        <para id="id22913901">- USI module;</para>
+        <para id="id22896523">- Interrupts;</para>
+        <para id="id22896526">- I/O ports.</para>
+      </section>
+      <section id="id22908679">
+        <title>Software application organization</title>
+        <para id="id22271408">The software architecture for this laboratory is shown in Figure 1.</para>
+        <para id="id22271411">The master task is composed of two interrupt service routines (<link url="http://cnx.org/GroupWorkspaces/wg1386/module.2009-04-01.2361860801/Lab3_Comm_1.c/view" window="new"> Lab3_Comm_1.c</link>):</para>
+        <para id="id22906482">- S1 switch service routine used to receive a new frame from the slave;</para>
+        <para id="id20592611">- USCI module interrupt service routine that reads the data sent by the slave.</para>
+        <para id="id11647085">Software architecture</para>
+        <figure id="id11832522">
+          <media id="id11832522_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics1-d809.png" id="id11832522__onlineimage" height="263" width="560"/>
+          </media>
+        </figure>
+        <para id="id22912127">For the operational capability of the slave unit based on the USI module, it is necessary to implement a state machine as shown in Figure 2. It is important to note that the states “RX Address” and “RX (N)ACK" are transient states that ensure the USI module is prepared for the next activity.</para>
+        <para id="id18058266"/>
+        <para id="id11436926">Slave state machine.</para>
+        <figure id="id21402367">
+          <media id="id21402367_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics2-c788.png" id="id21402367__onlineimage" height="482" width="265"/>
+          </media>
+        </figure>
+      </section>
+      <section id="id15309253">
+        <title>System configuration</title>
+        <section id="id3722018">
+          <title>USCI_B (master) control registers configuration</title>
+          <para id="id20589584">The connection via I<sup>2</sup>C bus will operate in the following mode:</para>
+          <para id="id20621136">- Address slave with 7-bit address;</para>
+          <para id="id21467290">- Master mode;</para>
+          <para id="id20569312">- Single master;</para>
+          <para id="id20990897">- USCI clock source is SMCLK;</para>
+          <para id="id20990901">The following control registers are configured based on these characteristics:</para>
+          <code id="id22102579" display="block">UCB0CTL0 = 0x0F;
+    //UCB0CTL0 = UCA10 | UCSLA10 | UCMM | Unused | UCMST | UCMODEx | UCSYNC
+    //UCA10 (Own address) = 0b -&gt; Own address (7-bit)
+    //UCSLA10 (Slave address) = 0b -&gt; 7-bit slave address
+    //UCMM (Multi-master) = 0b -&gt; Single master
+    //Unused 
+    //UCMST (Master mode) = 1b -&gt; Master mode
+    //UCMODEx (USCI mode) = 11b -&gt; I2C Mode
+    //UCSYNC (Synchronous mode enable) = 1b -&gt; Synchronous
+    
+    
+UCB0CTL1 = 0x81;
+    
+    //UCB0CTL1 = UCSSELx | Unused | UCTR | UCTXNACK | UCTXSTP | UCTXSTT | UCSWRST
+    //UCSSELx (USCI clock source select) = 10b -&gt; SMCLK
+    //Unused 
+    //UCTR (Transmitter/Receiver) = 0b -&gt; Receiver
+    //UCTXNACK (Transmit a NACK) = 0b -&gt; ACK normally
+    //UCTXSTP (Transmit STOP condition) = 0b -&gt; No STOP
+    //UCTXSTT (Transmit START condition) = 0b -&gt; No START
+    //UCSWRST (Software reset) = 1b -&gt; Enabled
+    </code>
+        </section>
+        <section id="id3181887">
+          <title>Data rate USCI_B (master)</title>
+          <para id="id22904809">The system clock is configured to operate with a frequency of ~ 1048 kHz from the DCO. This frequency will be the working base frequency of the USCI module. The connection operates at a clock frequency of ~ 95.3 kHz:</para>
+          <code id="id21266053" display="block">// DATA RATE 
+// data rate -&gt; fSCL = SMCLK/11 = 95.3kHz
+    UCB0BR0 = 0x0B; // fSCL = SMCLK/11 = 95.3kHz 
+    UCB0BR1 = 0x00;
+    </code>
+        </section>
+        <section id="id23350887">
+          <title>Port configuration USCI_B (master)</title>
+          <para id="id22918267">In order to set the external interfaces at the USCI module, it is necessary to configure the I/O ports. Select the USCI peripheral in I<sup>2</sup>C mode matching the connections provided at the Experimenter’s board:</para>
+          <para id="id22883280">
+            <code display="inline">P3SEL |=0x06; // Assign I2C pins to USCI_B0</code>
+          </para>
+        </section>
+        <section id="id22923206">
+          <title>USI (slave) control registers configuration</title>
+          <para id="id23226917">The connection via I<sup>2</sup>C bus will operate in the following mode:</para>
+          <para id="id22886751">- Slave mode;</para>
+          <para id="id22256402">- USI counter interrupt enable (RX and TX);</para>
+          <para id="id3571299">- START condition interrupt-enable;</para>
+          <para id="id3571302">- USIIFG is not cleared automatically.</para>
+          <para id="id22647267">The following control registers are configured based on these characteristics:</para>
+          <code id="id18500146" display="block">USICTL0 = 0XC1;
+    
+    //USICTL0 = USIPE7 | USIPE6 | USIPE5 | USILSB | USIMST | USIGE | USIOE | USISWRST
+    //USIPE7 (USI SDI/SDA port enable) = 1b -&gt; USI enabled
+    //USIPE6 (USI SDO/SCL port enable) = 1b -&gt; USI enabled
+    //USIPE5 (USI SCLK port enable) = 0b -&gt; SCLK disable
+    //USILSB (LSB first) = 0b -&gt; MSB first
+    //USIMST (Master) = 0b -&gt; Slave mode
+    //USIGE (Output latch control) = 0b -&gt; Output latch
+    // enable depends on shift clock
+    //USIOE (Serial data output enable) = 0b -&gt; Output enable
+    //USISWRST (USI software reset) = 1b -&gt; Software reset
+    
+USICTL1 = 0x70;
+    
+    //USICTL1 = USICKPH | USII2C | USISTTIE | USIIE | USIAL | USISTP | USISTTIFG | USIIFG
+    //USICKPH (Clock phase select) = 0b -&gt; Data is changed
+    // on the first SCLK edge and captured on the following edge.
+    //USII2C (I2C mode enable) = 1b -&gt; I2C mode enabled
+    //USISTTIE = 1b -&gt; Interrupt on START condition enabled
+    //USIIE = 1b -&gt; USI counter interrupt enable
+    //USIAL (Arbitration lost) = 0b -&gt; Not used
+    //USISTP (STOP condition received) = 0b -&gt; Not used
+    //USISTTIFG (START condition int. flag) = 0b -&gt; Not used
+    //USIIFG (USI counter int. flag) = 0b -&gt; No int. pending
+    </code>
+          <para id="id22164161">The slave unit interrupt service routine is not complete. The portion related to the “I2C_TX” state needs to be completed:</para>
+          <para id="id14441645">- Configure the USI module as output;</para>
+          <para id="id22823673">- Insert the information to transmit using the transmission register;</para>
+          <para id="id22921105">- Configure the bit counter.</para>
+          <code id="id22921109" display="block">// USI Bit Counter Register
+USICNT |= 0x20;
+    
+    //USICNT = USISCLREL | USI16B | USIIFGCC | USICNTx
+    //USISCLREL (SCL release) = 0b -&gt; SCL line is held low
+    // if USIIFG is set
+    //USI16B (16-bit shift register enable) = 0b -&gt; 8-bit
+    // shift register mode
+    //USIIFGCC (USI int. flag clear control) = 1b -&gt; USIIFG
+    // is not cleared automatically
+    //USICNTx (USI bit count) = 00000b -&gt; (not relevant)
+    
+// I2C state machine:
+USICTL0 |= USIOE;   // SDA = output
+USISRL = SlaveData; // Send data byte
+USICNT |= 0x08;     // Bit counter = 8, TX data
+    </code>
+        </section>
+      </section>
+      <section id="id22893511">
+        <title>Analysis of operation</title>
+        <para id="id22926047">Once the USCI module is configured in accordance with the previous steps, initiate the experiment with the files (<link url="http://cnx.org/content/m23569/latest/Lab3_Comm_1.c" window="new"> Lab3_Comm_1.c</link>) (master – MSP430FG4618) and (<link url="http://cnx.org/content/m23569/latest/Lab3_Comm_2.c" window="new"> Lab3_Comm_2.c</link>) (slave – MSP430F2013), compiling them and running them on the Experimenter’s board.</para>
+        <para id="id22959777">For this laboratory, the following jumper settings are required:</para>
+        <para id="id22959781">- PWR1/2, BATT, LCL1/2, JP2;</para>
+        <para id="id22288263">- SPI: H1- 1&amp;2, 3&amp;4.</para>
+        <para id="id5393660">The slave data is sent and increments from 0x00 with each transmitted byte, which is verified by the Master. The LED is off for address or data Acknowledge and the LED turns on for address or data Not Acknowledge. LED3 blinks at each data request. It is turned on with a START condition and it is turned off by the data transmit acknowledge by the slave (Note: the I<sup>2</sup>C bus is not released by the master since the successive START conditions are interpreted as “repeated START”).</para>
+        <para id="id22287794">Verify the value received setting a breakpoint in the line of code “<code display="inline">RxBuffer = UCB0RXBUF;</code>” of the USCI interrupt.</para>
+        <para id="id23277438"/>
+        <para id="id22130255">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id22913318">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

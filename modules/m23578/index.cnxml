@@ -1,0 +1,113 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Flash memory: Lab2 - Flash memory programming with the CPU executing the code in RAM</title>
+  <metadata>
+  <md:content-id>m23578</md:content-id><md:title>Laboratory Flash memory: Lab2 - Flash memory programming with the CPU executing the code in RAM</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool implement a flash memory programming with the CPU executing the code in RAM.</md:abstract>
+  <md:uuid>a967ae95-1367-41ed-820f-ed709e5cf9fb</md:uuid>
+</metadata>
+
+<content>
+    <section id="id3918808">
+      <title>Laboratory Flash memory: Lab2 - Flash memory programming with the CPU executing the code in RAM</title>
+      <section id="id11968262">
+        <title>Introduction</title>
+        <para id="id10767482">The TI MSP430 has an internal flash memory that can be used for data storage. Two different methods of writing to the flash memory are studied in this laboratory. The first method requires the CPU execution of the code resident in flash memory. The consequences of this procedure are discussed. In the second part of the laboratory, the flash write and erase operations are conducted with the CPU executing the code resident in RAM. The important details are highlighted.</para>
+      </section>
+      <section id="id12015582">
+        <title>Overview</title>
+        <para id="id10978804">This laboratory programs the internal flash memory with the CPU executing the code in RAM. It requires to configure: - Several flash storage management routines; - Check the state of the flag Wait; an the - Flash write routine. This procedure requires special attention during the project construction. The application begins copying the routines from flash to RAM. Directive MEMORY: Device's memory configuration. Identifies the memory ranges that are physically present on the device Directive SECTIONS: controls how the sections are built and reserved.</para>
+        <para id="id11180529">The execution time of the different operations can be obtained with an oscilloscope connected on pin 2 of the Header 4 or analyzing the state of the LED (digital output P2.1).</para>
+      </section>
+      <section id="id4778250">
+        <title>Resources</title>
+        <para id="id12012943">The tasks developed in the <emphasis effect="italics">Lab1: Flash memory programming with the CPU executing the code from flash memory</emphasis> are executed again during this laboratory. The difference this time is that the software runs from RAM.</para>
+        <para id="id11214502">This process requires special procedures. The routines to run from RAM must be identified. The application must begin by copying the routines from flash to RAM.</para>
+        <para id="id11061856">The directive MEMORY determines the device's memory configuration. The memory can be organized in accordance with the system needs. This directive identifies the memory ranges that are physically present on the device. Each of these ranges has a set of features, such as:</para>
+        <para id="id3908686">- Name;</para>
+        <para id="id11061858">- Initial address;</para>
+        <para id="id12012627">- Length;</para>
+        <para id="id12012631">- Optional attributes set;</para>
+        <para id="id11234974">- Optional filling specifications.</para>
+        <para id="id11234977">The directive <emphasis>Memory</emphasis> is organized as described below.</para>
+        <code id="id11968334" display="block">MEMORY
+    {
+    name 1 [(attr)] : origin = constant, length = constant [, fill = constant]
+    
+    name n [(attr)] : origin = constant, length = constant [, fill = constant]
+    }
+    </code>
+        <para id="id11332246">The directive <emphasis>SECTIONS</emphasis> controls how the sections are built and reserved. The directive performs the following:</para>
+        <para id="id10812143">- Describes how the input sections are related to the output sections;</para>
+        <para id="id12030802">- Defines the output sections in the executable program;</para>
+        <para id="id8617683">- Defines where the output sections are placed in memory;</para>
+        <para id="id8617687">- Allows changing the name of the output sections;</para>
+        <para id="id11178870">The directive <emphasis>SECTIONS</emphasis> is organized as described below.</para>
+        <code id="id10745825" display="block">SECTIONS
+    {
+    name : [property [, property] [, property] . . . ]
+    name : [property [, property] [, property] . . . ]
+    name : [property [, property] [, property] . . . ]
+    }
+    
+    The following directives are possible:
+    // Reserve memory space to load the section:
+    Syntax: load = allocation or
+    Allocation or
+    &gt; allocation
+    
+    // Define the memory space where the code belonging to the section will run:
+    Syntax: run = allocation or
+    run &gt; allocation
+    </code>
+        <para id="id8749612">In this project, we intend to write the code to the flash memory, but we want it to be executed from RAM. The Linker offers a very simple way to accomplish this task. A memory space where the code is stored is associated with another memory space where it will run. The application transfers the code to the memory space, where it will be executed.</para>
+        <para id="id12005358">The memory spaces needed to store the routines are defined in the lnk_msp430fg4618_RAM.cmd file.</para>
+        <code id="id12020728" display="block">RAM_MEM : origin = 0x1100, length = 0x0200
+FLASH_MEM : origin = 0x3100, length = 0x0200
+    </code>
+        <para id="id3815678">The following sections are also defined:</para>
+        <code id="id3815682" display="block">.FLASHCODE : load = FLASH_MEM, run = RAM_MEM
+.RAMCODE : load = FLASH_MEM
+    </code>
+      </section>
+      <section id="id12022134">
+        <title>Software application organization</title>
+        <para id="id10756842">The software for this laboratory has the same structure as the <emphasis effect="italics">Lab1: Flash memory programming with the CPU executing the code from flash memory</emphasis>.</para>
+        <para id="id5094330">The directive <code display="inline">#pragma CODE_SECTION (symbol, "section name")</code> reserves space for the "<code display="inline">symbol</code>" in a section called "<code display="inline">section name</code>". Thus, the routines are stored in the section "<code display="inline">.FLASHCODE</code>".</para>
+        <para id="id12061503">The routine <code display="inline">copy_flash_to_RAM</code> runs from the beginning of the program. It is responsible for transferring the flash contents to RAM.</para>
+        <para id="id12006793">The files (<link url="http://cnx.org/content/m23578/latest/Lab2_Flash.c" window="new"> Lab2_Flash.c</link>) and lnk_msp430fg4618_RAM.cmd must be included during the compilation.</para>
+        <para id="id8630129">Now, the code is executed from RAM. Check, whenever appropriate, the <emphasis>Wait</emphasis> bit state of the register FCTL3.</para>
+      </section>
+      <section id="id11967016">
+        <title>System configuration</title>
+        <section id="id11967022">
+          <title>Flash storage management routines</title>
+          <para id="id4087274">To store the flash management routines in the section ".FLASHCODE" complete the empty spaces:</para>
+          <code id="id4087280" display="block">#pragma CODE_SECTION(erase_segment,".FLASHCODE")
+void erase_segment(int address)
+    
+#pragma CODE_SECTION(write_char_flash,".FLASHCODE")
+void write_char_flash(int address, char value)
+    
+#pragma CODE_SECTION(write_int_flash,".FLASHCODE")
+void write_int_flash(int address, int value)
+    
+#pragma CODE_SECTION(copy_seg_flash,".FLASHCODE")
+void copy_seg_flash(int address_source, int address_destination)
+    </code>
+        </section>
+        <section id="id12019318">
+          <title>Check the flag wait</title>
+          <para id="id11158184">At software key points, and whenever writing or erasing the flash memory, perform a delay before proceeding with the data writes. Complete the following line of code in order to suspend the program flow while the busy flag is not active.</para>
+          <code id="id11158191" display="block">while(FCTL3&amp;BUSY); // Check BUSY flag
+    </code>
+        </section>
+      </section>
+      <section id="id11999508">
+        <title>Analysis of operation</title>
+        <para id="id11999514">Analyse the differences between the different versions of the routines. Note that successive delays are placed in the versions to be executed from RAM.</para>
+        <para id="id3814479">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id3814484">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

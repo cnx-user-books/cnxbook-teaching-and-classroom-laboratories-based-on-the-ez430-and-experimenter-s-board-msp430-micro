@@ -1,0 +1,256 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Timers: Lab4 - Buzzer tone generator</title>
+  <metadata>
+  <md:content-id>m23529</md:content-id><md:title>Laboratory Timers: Lab4 - Buzzer tone generator</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool and the MSP430FG4618 device implement a Buzzer tone generator.</md:abstract>
+  <md:uuid>95c39e7a-e2cf-4b92-891d-8a561962680f</md:uuid>
+</metadata>
+
+<content>
+    <section id="id7323946">
+      <title>Laboratory Timers: Lab4 - Buzzer tone generator</title>
+      <section id="id7326362">
+        <title>Introduction</title>
+        <para id="id5794905">Correct system timing is a fundamental requirement for the proper operation of a real-time application. The timing definition can dictate how the data information processed during the execution of the application program. The clock implementations vary between devices in the MSP430 family. Each device provides different clock sources, controls and uses. This chapter discusses the clock controls included in the platforms used.</para>
+        <para id="id7327385">The MSP430 4xx family has two general-purpose 16-bit or 8-bit counters and event timers, named Timer_A, Timer_B, and a Basic Timer. The Basic Timer module is only implemented in ‘4xx devices. The 2xx device family also has Timer_A and Timer_B, but the clock signals are provided by the basic clock module+.</para>
+        <para id="id7327389">The timers may receive an internal or external clock. Timer_A and Timer_B also include multiple independent capture and compare blocks, with interrupt capabilities.</para>
+      </section>
+      <section id="id7315689">
+        <title>Overview</title>
+        <para id="id5102916">The purpose of this laboratory is to build a sound generator using Timer_B. The PWM signal produced by this peripheral drives the buzzer, producing a sequence of musical notes at regular time intervals. At the same time, LED1 and LED2 switch state alternately. The volume of sound produced by the buzzer can be controlled by push buttons SW1 and SW2.</para>
+      </section>
+      <section id="id7241090">
+        <title>Resources</title>
+        <para id="id6568535">The implementation of this application 
+
+(<link url="http://cnx.org/content/m23529/latest/Lab4_Timers.c" window="new"> Lab4_Timers.c </link>)
+ requires the production of specific frequency signals corresponding to musical notes. For each frequency, the duty-cycle can be modified in order to control the volume of sound produced. This task is carried out using Timer_B and one of its compare units. The buzzer is operated by Port P3.5, configured to work in its special function as TB4 compare unit output. This output corresponds to the TBCCR4 output compare unit.</para>
+        <para id="id6593808">The push buttons SW1 and SW2 are connected to ports P1.0 and P1.1 respectively. An interrupt is generated when either of these buttons are pressed. The duty-cycle of the generated note is modified in response.</para>
+        <para id="id6569149">Basic Timer1 is configured to generate an interrupt once every second. The interrupt service routine updates the musical notes produced by the buzzer, which are stored in an array.</para>
+        <para id="id6575684">LED1 and LED2 are driven from P2.2 and P2.1 respectively, and their state is switched alternately once every second.</para>
+        <para id="id6304489">The module FLL+ is configured to a 7.995392 MHz frequency, for the MCLK and SMCLK clock signals. </para>
+        <para id="id6791278">The resources used by the application are:</para>
+        <para id="id7240566">- Timer_B;</para>
+        <para id="id7327584">- Basic Timer1;</para>
+        <para id="id7327588">- I/O ports;</para>
+        <para id="id6253635">- FLL+;</para>
+        <para id="id7325577">- Interrupts.</para>
+      </section>
+      <section id="id7327187">
+        <title>Software application organization</title>
+        <para id="id7323853">The application consists of the routine <code display="inline">main()</code>, which is used to configure all system resources, before entering into a standby mode, waiting for one of two interrupts.</para>
+        <para id="id7275491">This routine starts by disabling the watchdog timer and starting the module FLL+ to produce the desired clock signals of the correct frequency for the SMCLK and MCLK. Then, the Basic Timer1 and Timer_B are configured in order to perform the desired functions.</para>
+        <para id="id6275262">The ports connected to the LEDs, buttons and buzzer are then initialized.</para>
+        <para id="id7369891">Finally, the interrupts are activated, and the application waits for the execution of one of two interrupts.</para>
+        <para id="id7295968">The Basic Timer1 interrupt executes at a frequency of once every second. When this interrupt is occurs, it begins by switching the state of LED1 and LED2. Afterwards, it accesses the memory to fetch the next musical note to be performed. The routine ends with memory pointer management.</para>
+        <para id="id6485833">The Port 1 ISR begins by evaluating the source of the interrupt. The sound volume is reduced if the button SW1 is pressed. The sound volume is increased if button SW2 is pressed.</para>
+      </section>
+      <section id="id7333972">
+        <title>System configuration</title>
+        <section id="id5950154">
+          <title>Timer_B</title>
+          <para id="id5103928">It is the responsibility of Timer_B to produce the PWM signal that activates the Buzzer. Timer_B counts until the value contained in the TBCCR0 register is reached. It does not generate an interrupt, and must be sourced by SMCLK clock signal:</para>
+          <para id="id6792021">
+            <code display="inline">TBCTL = TBSSEL_2 | CNTL_0 | TBCLGRP_0 |MC_1 | ID_0;</code>
+          </para>
+          <para id="id7276847">Each PWM signal produced by Timer_B corresponds to a musical note. The relationship between the frequency and the musical note is given in Table 1.</para>
+          <table id="id7276852" summary="">
+            <tgroup cols="10">
+              <colspec colnum="1" colname="c1"/>
+              <colspec colnum="2" colname="c2"/>
+              <colspec colnum="3" colname="c3"/>
+              <colspec colnum="4" colname="c4"/>
+              <colspec colnum="5" colname="c5"/>
+              <colspec colnum="6" colname="c6"/>
+              <colspec colnum="7" colname="c7"/>
+              <colspec colnum="8" colname="c8"/>
+              <colspec colnum="9" colname="c9"/>
+              <colspec colnum="10" colname="c10"/>
+              <tbody>
+                <row>
+                  <entry>Note</entry>
+                  <entry>SI0</entry>
+                  <entry>DO</entry>
+                  <entry>RE</entry>
+                  <entry>MI</entry>
+                  <entry>FA</entry>
+                  <entry>SOL</entry>
+                  <entry>LA</entry>
+                  <entry>SI</entry>
+                  <entry>DO2</entry>
+                </row>
+                <row>
+                  <entry>Freq [Hz]</entry>
+                  <entry>503 </entry>
+                  <entry>524</entry>
+                  <entry>587</entry>
+                  <entry>662</entry>
+                  <entry>701</entry>
+                  <entry>787</entry>
+                  <entry>878</entry>
+                  <entry>1004</entry>
+                  <entry>1048</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+          <para id="id5544538">Timer_B has a frequency clock input equal to 7.995392 MHz.</para>
+          <para id="id4918323">The value to write in the TBCCR0 register in order to generate the desired frequency is:</para>
+          <code id="id5482882" display="block">// TBCCR0 value of the musical notes
+#define SI0 15895
+#define DO 15258
+#define RE 13620
+#define MI 12077
+#define FA 11405
+#define SOL 10159
+#define LA 9106
+#define SI 7963
+#define DO2 7629
+    
+TBCCTL4 = OUTMOD_3; // CCR4 interrupt enabled
+TBCCR4 = space[0]/2;
+    </code>
+        </section>
+        <section id="id6317328">
+          <title>Timer_A configuration</title>
+          <code id="id4189788" display="block">TACTL = TASSEL_2 |MC_2 | ID_0 | TAIE; // SMCLK, continuous mode up to 0xffff
+
+TACCTL1 = CM1 | CCIS_0 | CAP | CCIE;// Capture on rising edge, Cap mode,
+                                    // Cap/Com int. enable, TACCR1 input signal selected
+    
+//*********************************************************
+// Timer A ISR
+//*********************************************************
+#pragma vector=TIMERA1_VECTOR
+__interrupt void TimerA1_ISR (void)
+{
+ switch (TAIV)
+ {
+  case TAIV_TACCR1: 
+  if (capture == 0){
+  T1 = TACCR1;
+  flag = 1;
+  capture = 1;
+ }
+ else {
+  if (flag == 1) {
+   T2 = TACCR1;
+   if (T2 &gt; T1)
+    T = T2-T1; 
+   }
+   else{
+    TAR = 0;
+   }
+   capture = 0;
+   flag = 0;
+  } 
+ break;
+    </code>
+          <code id="id4282843" display="block">case TAIV_TACCR2:
+    break;
+    
+    case TAIV_TAIFG:
+    tick++;
+    if (tick == 60){
+    LCD_freq();
+    tick = 0;
+    }
+    if (flag == 1)flag = 0;
+    </code>
+          <code id="id5500996" display="block">break; 
+    </code>
+          <code id="id6192874" display="block">default:
+    break; 
+    }
+}
+    </code>
+          <para id="id3674628"/>
+        </section>
+        <section id="id3625203">
+          <title>Basic Timer1</title>
+          <para id="id5256781">The Basic Timer1 generates an interrupt once every second. It uses two counters in series, where the BTCNT2 counter input uses the BTCNT1 counter output divided by 256. The BTCNT1 counter input is the ACLK clock signal with a frequency of 32.768 kHz.</para>
+          <para id="id7242910">If BTCNT2 counter selected output is divided by 128, what is the time period associated with the Basic Timer1 interrupt? _________</para>
+          <para id="id7242915">What are the values to write to the configuration registers?</para>
+          <code id="id6197570" display="block">BTCTL = BTDIV | BT_fCLK2_DIV128; // (ACLK/256)/128
+IE2 |= BTIE; // enable BT interrupt
+    
+//*********************************************************
+// Basic Timer ISR. Run with 1 sec period
+//*********************************************************
+#pragma vector=BASICTIMER_VECTOR
+__interrupt void basic_timer_ISR(void)
+{
+unsigned int read_data; // read data from file , frequency in kHz
+   
+P2OUT^=0x06; // toogle LED1 and LED2
+counter++;
+    
+if (counter == 5){
+    counter = 0;
+     read_data = 200;
+     TBCCR0 = 7995392/read_data;
+     TBCCR4 = TBCCR0/2;
+    }
+}
+    </code>
+        </section>
+        <section id="id3690095">
+          <title>I/O Ports configuration</title>
+          <code id="id3526085" display="block">// SW1 and SW2 configuration (Port1)
+P1SEL &amp;= 0x00; // P1.0 and P1.2 I/O
+P1DIR &amp;= 0x00; // P1.0 and P1.2 as inputs
+P1IFG = 0x00;
+P1IES &amp;= 0xFF // high-to-low transition interrupt
+P1IE |= 0xFF; // enable port interrupts
+    
+// LED1 and LED2 configuration (Port2):
+P2DIR |= 0x06; // P2.2 and P2.1 as outputs
+P2OUT = 0x04; // LED1 on and LED2 off
+    
+// Buzzer port configuration (Port3)
+P3SEL |= 0x20; // P3.5 as special function
+P3DIR |= 0x20; // P3.5 as digital output
+    </code>
+        </section>
+        <section id="id5366805">
+          <title>FLL+ configuration</title>
+          <code id="id5240602" display="block">FLL_CTL0 |= DCOPLUS + XCAP18PF; //DCO+ set,freq=xtal*D*N+1
+SCFI0 |= FN_4; // x2 DCO freq, 8MHz nominal DCO
+SCFQCTL = 121; // (121+1) x 32768 x 2 = 7.99 MHz
+    </code>
+        </section>
+      </section>
+      <section id="id4334945">
+        <title>Analysis of operation</title>
+        <section id="id5138356">
+          <title>System clocks inspection</title>
+          <para id="id5228606">The MCLK, SMCLK and ACLK system clocks are available at ports P1.1, P1.4 and P1.5 respectively. These ports are located on the SW2, RESET_CC and VREG_EN lines, which are available on the H2 Header pins 2, 5 and 6. All these resources are available because the Chipcon RF module is not installed and SW2 is not used.</para>
+          <para id="id4332526">Using the Registers view, set bits 1, 4 and 5 of P1SEL and P1DIR registers to choose the secondary function of their ports, that is, configured as outputs. Connect an oscilloscope probe at these positions to monitor the clock signals.</para>
+          <para id="id4270373">What are the values measured for each of the system clocks?</para>
+          <para id="id4334495"/>
+          <para id="id4334500">ACLK: _____________________</para>
+          <para id="id4332761">SMCLK: ____________________</para>
+          <para id="id4328241">MCLK: _____________________</para>
+        </section>
+        <section id="id6240955">
+          <title>TBCCR4 unit output frequency</title>
+          <para id="id3752137">With the help of an oscilloscope, it is possible to evaluate the operation of the application. Alternatively, it is possible to listen to the sound produced. By removing jumper JP1 and connecting the oscilloscope to this pin, it is possible to view the PWM signal produced by the microcontroller. The duty-cycle can be reduced or increased by pressing the push buttons SW1 and SW2.</para>
+        </section>
+        <section id="id3752142">
+          <title>Port P1 interrupt source decoding</title>
+          <para id="id4163031">All Port P1 interrupt lines share the same interrupt vector. The decoding is done through the P1IFG register.</para>
+          <para id="id4163036">This process can be observed by entering a breakpoint at the first line of the ISR code.</para>
+          <para id="id5338449">Execute the application.</para>
+          <para id="id4232199">The application’s execution is suspended at the breakpoint by pressing either button SW1 or SW2. From this point onwards, run the lines of code step-by-step and observe changes in the register values.</para>
+        </section>
+        <section id="id3523175">
+          <title>Measurement of electrical current drawn</title>
+          <para id="id5121861">The power consumption was discussed in the previous point. The electrical power required by the system during operation is measured by replacing the jumper on the Header PWR1 by an ammeter, which indicates the electric current taken by device during operation.</para>
+          <para id="id3466602">What is the value read? __________</para>
+          <para id="id3411345">This example and many others are available on the MSP430 Teaching ROM. </para>
+          <para id="id4332268">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

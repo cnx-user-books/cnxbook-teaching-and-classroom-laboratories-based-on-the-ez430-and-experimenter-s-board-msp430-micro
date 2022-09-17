@@ -1,0 +1,55 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory GPIO: Lab2 - Blinking the LED half the speed</title>
+  <metadata>
+  <md:content-id>m23540</md:content-id><md:title>Laboratory GPIO: Lab2 - Blinking the LED half the speed</md:title>
+  <md:abstract>Using the MSP430-EXP430FG4618 Development Tool and the eZ430 kits blink the LED1 half the speed.</md:abstract>
+  <md:uuid>36f79259-8951-4f66-b1c5-8c4c3bfb09b5</md:uuid>
+</metadata>
+
+<content>
+    <section id="id12534659">
+      <title>Laboratory GPIO: Lab2 - Blinking the LED half the speed</title>
+      <section id="id14829725">
+        <title>Introduction</title>
+        <para id="id14435829">The hands-on laboratory consists of configuring the I/O ports, setting up the input lines to read push buttons and the output lines to feed LEDs. The following exercises have been developed for the three hardware development tools. </para>
+        <para id="id15847564">The first to be discussed is the MSP-EXP430FG4618 Experimenter’s board. Modifications are later made to suit the other development boards. The main differences between the boards are related to the specific ports in which the buttons and LED are (or can be) connected. For the development of this laboratory, Code Composer Essentials v3 has been used.</para>
+      </section>
+      <section id="id14829678">
+        <title>Procedure</title>
+        <para id="id11137036">Using the <emphasis effect="italics">Lab1: Blinking the LED</emphasis> example, independently of the hardware development tool, reduce the value of the software delay to half its previous value.</para>
+        <para id="id11572234"><code id="eip-id5043288" display="block">#include "msp430xG46x.h"
+
+void main (void){
+ volatile unsigned int i;
+ WDTCTL = WDTPW | WDTHOLD; // Stop Watchdog Timer
+ P2DIR |= 0x04;            // Configure P2.2 as Output
+ while(1){                 // Infinite loop  
+  i=30000;                 // Delay 
+  do (i--);
+  while (i !=0);
+   P2OUT ^= 0x04;          // Toggle Port P2.2 using an exclusive-OR
+ }
+}
+</code>
+</para>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <para id="id14530881">- In order for a rate of two blinking LED state transition each second, the software delay loop should count to approximately 15000 {15000 / 32768 = 0.5 sec};</para>
+        <para id="id12987743">
+          <code display="inline">i=15000; //Delay </code>
+        </para>
+        <para id="id12744036">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id16522353">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

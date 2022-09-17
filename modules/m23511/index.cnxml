@@ -1,0 +1,80 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Creating a Project</title>
+  <metadata>
+  <md:content-id>m23511</md:content-id><md:title>Creating a Project</md:title>
+  <md:abstract/>
+  <md:uuid>f7591cc4-8ec2-4e9e-9136-c983f5623fed</md:uuid>
+</metadata>
+
+<content>
+    <section id="id16065217">
+      <title>Creating a Project</title>
+      <para id="id19798048">Select the option <emphasis effect="bold">File&gt; New &gt; Managed Make C\ASM Project</emphasis> (recommended) to create a project. Other project options are available, but with the above option, the project process creation is more automated. The <emphasis effect="italics">Figure 1</emphasis> shows the window where the option should be selected.</para>
+      <figure id="id16243518">
+        <title>CCE workbench – Project creation process window.</title>
+        <media id="id16243518_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics1-7f75.png" id="id16243518__onlineimage" height="442" width="590"/>
+        </media>
+      </figure>
+      <para id="id16827710">After choosing this option, a procedure for the creation of projects for the MSP430 family of microcontrollers is provided. The user must answer the first question concerning the project’s name. By default, all the project files are stored within a folder, with the name of the project in the directory chosen for the <emphasis effect="italics">workspace</emphasis>. The New Project window is shown in the <emphasis effect="italics">Figure 2</emphasis>.</para>
+      <para id="id19485759">
+        <figure id="id19485763">
+          <title>CCE workbench – New project name window.</title>
+          <media id="id19485763_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics2-1626.png" id="id19485763__onlineimage" height="235" width="252"/>
+          </media>
+        </figure>
+      </para>
+      <para id="id12043996">Afterwards, some additional settings are made to the project, such as whether there is any dependency of this project on another. If this condition is true, the dependency should be established through the window shown in <emphasis effect="italics">Figure 3</emphasis>.</para>
+      <figure id="id19523879">
+        <title>CCE workbench – Project dependency window.</title>
+        <media id="id19523879_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics3-da4c.png" id="id19523879__onlineimage" height="263" width="282"/>
+        </media>
+      </figure>
+      <para id="id19520454">Information indexing functionality is part of the C/C++ Project. It uses a parser to create a database of the contents of the project files. This feature is used during the information search, the project navigation, and in the content assistant. The indexing task is performed in the background and reacts to changes in content such as: C/C++ project creation or deletion; file creation or deletion; file import; content of files changes.</para>
+      <para id="id19524351">There are three options for setting up the operation of this functionality:</para>
+      <para id="id19520460">- Without Project contents indexing (No Indexer);</para>
+      <para id="id18735575">- Fast C/C++ or;</para>
+      <para id="id18735579">- Full Indexer C/C++ Indexer).</para>
+      <para id="id18735584">These two last options differ mainly in the required processing time of the indexing task and results quality. The configuration window of this feature is displayed in <emphasis effect="italics">Figure 3</emphasis>.</para>
+      <figure id="id19047060">
+        <title>CCE workbench – Project indexing window.</title>
+        <media id="id19047060_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics4-eb46.png" id="id19047060__onlineimage" height="264" width="281"/>
+        </media>
+      </figure>
+      <para id="id19546575">In the final window displayed during the project’s creation procedure (see <emphasis effect="italics">Figure 4</emphasis>), the device with which the project is being developed must be chosen. By choosing the device, the appropriate linker command file and supporting libraries are selected automatically.</para>
+      <figure id="id19597536">
+        <title>CCE workbench – Device selection window.</title>
+        <media id="id19597536_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics5-dcbd.png" id="id19597536__onlineimage" height="261" width="277"/>
+        </media>
+      </figure>
+      <para id="id19538676">The project’s creation can then be finalised by choosing the option <emphasis effect="bold">Finish</emphasis>. At any time, it is possible to go back to previous windows by choosing the option <emphasis effect="bold">Back</emphasis>.</para>
+      <para id="id19073691">The next step is to add the source code file to the project. Choose <emphasis effect="bold">File &gt; New &gt; Source File</emphasis>. In this menu the option to create <emphasis effect="italics">.C</emphasis> type file should be selected, as shown in <emphasis effect="italics">Figure 5</emphasis>.</para>
+      <figure id="id19054060">
+        <title>CCE workbench – Source code file creation procedure.</title>
+        <media id="id19054060_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics6-abdb.png" id="id19054060__onlineimage" height="357" width="474"/>
+        </media>
+      </figure>
+      <para id="id19538779">The name of the file is then requested in the window as shown in <emphasis effect="italics">Figure 6</emphasis>. Do not forget to add the file extension such as “myfile.c” so that it is recognized as a C file.</para>
+      <figure id="id19512988">
+        <title>CCE workbench – Source code file creation window.</title>
+        <media id="id19512988_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics7-21a0.png" id="id19512988__onlineimage" height="261" width="285"/>
+        </media>
+      </figure>
+      <para id="id19570607">The project is automatically selected as the default project. Although the workspace allows several projects to be opened simultaneously, it allows only one of them to be active. To select an active project, its name must be selected with the mouse’s right button in <emphasis effect="bold">C/C++ </emphasis><emphasis effect="bold">Project </emphasis>view, in order to show the context menu. Then the option <emphasis effect="bold">set as active project</emphasis> must be selected. From here, the expression [<emphasis effect="bold">Active-Debug</emphasis>] will appear. In the context menu there are other options to manage the project: add or remove files, import or export resources, edit the properties and so on.</para>
+      <figure id="id19785195">
+        <title>CCE workbench – Set as an active project window.</title>
+        <media id="id19785195_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics8-704e.png" id="id19785195__onlineimage" height="397" width="117"/>
+        </media>
+      </figure>
+      <para id="id18797141">At this point, it is possible to start editing the project’s source code. CCE has all the capabilities inherited from the Eclipse edition. Adding the file lab1.c, which already exists, is done through the option <emphasis effect="bold">add file to project</emphasis>. This file can be found in <emphasis effect="bold">Project &gt; add file to project</emphasis>, as in the context menu of the view <emphasis effect="bold">C/C++ Projects</emphasis>. The file lab1.c can be removed from the project by simply selecting it in the view and selecting the option <emphasis effect="bold">delete</emphasis>. Note that when the file is removed, it will be cleared from the directory.</para>
+      <para id="id19551937">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

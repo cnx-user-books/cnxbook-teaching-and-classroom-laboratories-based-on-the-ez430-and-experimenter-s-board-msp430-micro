@@ -1,0 +1,33 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Import and Export functionality</title>
+  <metadata>
+  <md:content-id>m23518</md:content-id><md:title>Import and Export functionality</md:title>
+  <md:abstract/>
+  <md:uuid>193b7bd5-b7f0-4ee7-9733-0b5be3bafda7</md:uuid>
+</metadata>
+
+<content>
+    <section id="id21427710">
+      <title>Import and Export functionality</title>
+      <para id="id7528826">CCE has the capability to import and export different types of information. In the context menu of the view <emphasis effect="bold">C/C++ Projects</emphasis> it is possible to activate the import process choosing the option <emphasis effect="bold">Import</emphasis>. This process allows importing resources such as those listed in the following figure (<emphasis effect="italics">Figure 1</emphasis>).</para>
+      <figure id="id4840357">
+        <title>CCE workbench – Import options window.</title>
+        <media id="id4840357_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics1-e9f0.png" id="id4840357__onlineimage" height="395" width="336"/>
+        </media>
+      </figure>
+      <para id="id21439846">Following the instructions given by the import wizard: <emphasis effect="bold">Archive File</emphasis> (imports files stored in a compressed file); <emphasis effect="bold">Import Breakpoints</emphasis> (imports a breakpoints scenario previously defined in another or in the same project); <emphasis effect="bold">Existing Project into Workspace</emphasis> (imports a project into the actual workspace); <emphasis effect="bold">File System</emphasis> (imports a file); <emphasis effect="bold">Preferences</emphasis> (imports the CCE configuration preferences), etc.</para>
+      <para id="id7614110">When the <emphasis effect="bold">Export</emphasis> option from the context menu is selected, the window with the export procedures is displayed, as shown in <emphasis effect="italics">Figure 2</emphasis>.</para>
+      <para id="id4847395">
+        <figure id="id4847398">
+          <title>CCE workbench – Export options window.</title>
+          <media id="id4847398_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics2-e203.png" id="id4847398__onlineimage" height="394" width="333"/>
+          </media>
+        </figure>
+      </para>
+      <para id="id11554802">Similar to the import procedure, the resources belonging to a Project can be exported: <emphasis effect="bold">Archive File</emphasis>; <emphasis effect="bold">Export Breakpoints</emphasis>; <emphasis effect="bold">File System</emphasis>, <emphasis effect="bold">Preferences</emphasis>, etc…</para>
+      <para id="id21548310">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

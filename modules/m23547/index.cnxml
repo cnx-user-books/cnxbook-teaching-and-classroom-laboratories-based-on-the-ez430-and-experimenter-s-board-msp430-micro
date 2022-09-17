@@ -1,0 +1,84 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory GPIO: Lab3 - Toggle the LED state by pressing the push button</title>
+  <metadata>
+  <md:content-id>m23547</md:content-id><md:title>Laboratory GPIO: Lab3 - Toggle the LED state by pressing the push button</md:title>
+  <md:abstract>Use the S1 button in the MSP430-EXP430FG4618 development tool and in the eZ430-RF2500 kit to toggle the state of LED1. You must use interrupts to catch the button press and you should ensure that the MSP430 is in Lower Power Mode 3 when is not in use.</md:abstract>
+  <md:uuid>6cfc5846-bd82-4e91-b726-317f737d670f</md:uuid>
+</metadata>
+
+<content>
+    <section id="id19910183">
+      <title>Laboratory GPIO: Lab3 - Toggle the LED state by pressing the push button</title>
+      <section id="id19399043">
+        <title>Introduction</title>
+        <para id="id19710356">The hands-on laboratory consists of configuring the I/O ports, setting up the input lines to read push buttons and the output lines to feed LEDs. The following exercises have been developed for the three hardware development tools. </para>
+        <para id="id11868056">The first to be discussed is the MSP-EXP430FG4618 Experimenter’s board. Modifications are later made to suit the other development boards. The main differences between the boards are related to the specific ports in which the buttons and LED are (or can be) connected. For the development of this laboratory, Code Composer Essentials v3 has been used.</para>
+      </section>
+      <section id="id13870220">
+        <title>Procedure</title>
+        <para id="id15406326">By analysis of the schematics, determine to which port pin the push button is connected:</para>
+        <para id="id17689981">- Consult the MSP430FG4618/F2013 Experimenter’s Board User's Guide &lt;slau213a.pdf&gt;:</para>
+        <para id="id19001467"> - Button S1 is connected to Port 1.0;</para>
+        <para id="id4933212">- Consult the eZ430-RF2500 Development Tool User's Guide &lt;slau227a.pdf&gt;:</para>
+        <para id="id17560225"> - Button S1 is connected to Port 1.2;</para>
+        <para id="id12394121"> - The eZ430-RF2500 uses a device in 2xx family, so you need to additionally configure the button as pull-up or pull-down, in the P1REN register.</para>
+        <para id="id11783125">Ports control registers:</para>
+        <para id="id17678743">- Set push button pin port as an input</para>
+        <para id="id17636201"> - P1DIR: Port 1.0 is set as an input:</para>
+        <para id="id5352310">
+          <code display="inline">P1DIR &amp;= ~0x01 // to force the pin setting to 0. It is uses an AND operation ( &amp; ) between P1DIR and 0xFE</code>
+        </para>
+        <para id="id19650405">- Enable interrupts to this pin port;</para>
+        <para id="id19007475"> - P1IE: Enable interrupt to port 1.0:</para>
+        <para id="id14235994">
+          <code display="inline">P1IE |= 0x01; // Interrupt Enable in P1.0</code>
+        </para>
+        <para id="id12201027"> - PIIES: Call the port interrupt on a high-to-low transition:</para>
+        <para id="id15211886">
+          <code display="inline">P1IES |= 0x01; // P1.0 Interrupt flag high-to-low transition</code>
+        </para>
+        <para id="id19329872">- Configure the watchdog timer to prevent a PUC during the program execution;</para>
+        <para id="id19341447">
+          <code display="inline">WDTCTL = WDTPW | WDTHOLD; //Stop Watchdog Timer</code>
+        </para>
+        <para id="id7504157">- Enable Global Interrupts and configure low power mode 3;</para>
+        <para id="id17495631">
+          <code display="inline">_BIS_SR (LPM3_bits + GIE); //Low Power Mode with interrupts enabled</code>
+        </para>
+        <para id="id7409436">- Create a interrupt service routine, that includes:</para>
+        <para id="id20466140"> - Toggle LED1 pin port;</para>
+        <para id="id19699310"> - Delay for button debounce;</para>
+        <para id="id6793835"> - Clear interrupt flag.</para>
+        <para id="id18310650"><code id="eip-id18724884" display="block">#pragma vector=PORT1_VECTOR
+__interrupt void Port_1 (void) {
+ volatile unsigned int i;
+ P2OUT ^= 0x04;            // Toggle Port P2.2
+ i=1500;                   // Delay, button debounce 
+ do (i--);
+ while (i !=0);
+  while (! (P1IN &amp; 0x01)); // Wait for the release of the button
+   i=1500;                 // Delay, button debounce 
+   do (i--);
+    while (i !=0);
+    P1IFG &amp; = ~0x01;        // Clean P1.0 Interrupt Flag
+}
+</code>
+</para>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <para id="id7045276">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id12206965">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

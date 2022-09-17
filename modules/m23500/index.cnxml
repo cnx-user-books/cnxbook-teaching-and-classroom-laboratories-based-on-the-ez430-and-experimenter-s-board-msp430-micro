@@ -1,0 +1,575 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Addressing modes</title>
+  <metadata>
+  <md:content-id>m23500</md:content-id><md:title>Addressing modes</md:title>
+  <md:abstract/>
+  <md:uuid>fff6aea2-d9ed-4290-b83a-2e18b10fadcd</md:uuid>
+</metadata>
+
+<content>
+    <para id="id1170220073649">Addressing modes</para>
+    <para id="id1170226028904">The MSP430 supports seven addressing modes for the source operand and four addressing modes for the destination operand (see bellow). The following sections describe each of the addressing modes, with a brief description, an example and the number of CPU clock cycles required for an instruction, depending on the instruction format and the addressing modes used.</para>
+    <table id="id1170222498887" summary="">
+      <tgroup cols="4">
+        <colspec colnum="1" colname="c1"/>
+        <colspec colnum="2" colname="c2"/>
+        <colspec colnum="3" colname="c3"/>
+        <colspec colnum="4" colname="c4"/>
+        <tbody>
+          <row>
+            <entry>Mode</entry>
+            <entry>Source operand</entry>
+            <entry>Destination operand</entry>
+            <entry>Description</entry>
+          </row>
+          <row>
+            <entry>Register mode</entry>
+            <entry>X</entry>
+            <entry>X</entry>
+            <entry>Single cycle</entry>
+          </row>
+          <row>
+            <entry>Indexed mode</entry>
+            <entry>X</entry>
+            <entry>X</entry>
+            <entry>Table processing</entry>
+          </row>
+          <row>
+            <entry>Symbolic mode</entry>
+            <entry>X</entry>
+            <entry>X</entry>
+            <entry>Easy to read code, PC relative</entry>
+          </row>
+          <row>
+            <entry>Absolute mode</entry>
+            <entry>X</entry>
+            <entry>X</entry>
+            <entry>Directly access any memory location</entry>
+          </row>
+          <row>
+            <entry>Indirect register mode</entry>
+            <entry>X</entry>
+            <entry/>
+            <entry>Access memory with pointers</entry>
+          </row>
+          <row>
+            <entry>Indirect auto increment mode</entry>
+            <entry>X</entry>
+            <entry/>
+            <entry>Table processing</entry>
+          </row>
+          <row>
+            <entry>Immediate mode</entry>
+            <entry>X</entry>
+            <entry/>
+            <entry>Unrestricted constant values</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+    <para id="id1170214200577">Before describing the addressing modes, it is important to mention the clock cycles required by interrupts and resets.</para>
+    <table id="id1170206769288" summary="">
+      <tgroup cols="3">
+        <colspec colnum="1" colname="c1"/>
+        <colspec colnum="2" colname="c2"/>
+        <colspec colnum="3" colname="c3"/>
+        <tbody>
+          <row>
+            <entry>Action</entry>
+            <entry>Cycles</entry>
+            <entry>Length (words)</entry>
+          </row>
+          <row>
+            <entry>Return from interrupt</entry>
+            <entry>5</entry>
+            <entry>1</entry>
+          </row>
+          <row>
+            <entry>Interrupt accepted</entry>
+            <entry>6</entry>
+            <entry>-</entry>
+          </row>
+          <row>
+            <entry>Watchdog timer reset</entry>
+            <entry>4</entry>
+            <entry>-</entry>
+          </row>
+          <row>
+            <entry>Hard reset</entry>
+            <entry>4</entry>
+            <entry>-</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+    <section id="id1170215526436">
+      <title>Register Mode</title>
+      <para id="id1170226454324">Register mode operations work directly on the processor registers, R4 through R15, or on special function registers, such as the program counter or status register. They are very efficient in terms of both instruction speed and code space.</para>
+      <para id="id1170215696071"><emphasis effect="italics">Description:</emphasis> Register contents are operands.</para>
+      <para id="id1170215836959"><emphasis effect="italics">Source mode bits:</emphasis> As = 00 (source register defined in the opcode).</para>
+      <para id="id1170211950722"><emphasis effect="italics">Destination mode bit:</emphasis> Ad=0 (destination register defined in the opcode).</para>
+      <para id="id1170215505862"><emphasis effect="italics">Syntax:</emphasis> Rn.</para>
+      <para id="id1170207500646"><emphasis effect="italics">Length:</emphasis> One or two words.</para>
+      <para id="id1170203133705"><emphasis effect="italics">Comment:</emphasis> Valid for source and destination.</para>
+      <para id="id1170213515737"><emphasis effect="bold">Example 1:</emphasis> Move (copy) the contents of source (register R4) to destination (register R5). Register R4 is not affected.</para>
+      <para id="id1170206829385">Before operation: R4=A002h R5=F50Ah PC = PC<sub>pos</sub></para>
+      <para id="id1170215627961">Operation:  MOV R4, R5</para>
+      <para id="id1170211967820">After operation: R4=A002h R5=A002h PC = PC<sub>pos</sub> + 2</para>
+      <para id="id1170221187014">The first operand is in register mode and depending on the second operand mode, the cycles required to complete an instruction will differ. The next table shows the cycles required to complete an instruction, depending on the second operand mode.</para>
+      <table id="id1170222554061" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Operands</entry>
+              <entry>
+                <emphasis effect="bold">2</emphasis>
+                <emphasis effect="bold">nd</emphasis>
+                <emphasis effect="bold"> operand mode</emphasis>
+              </entry>
+              <entry>Operator</entry>
+              <entry>Cycles</entry>
+              <entry>Length (words)</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Register</entry>
+              <entry>Any</entry>
+              <entry>1*</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Indexed, Symbolic or Absolute</entry>
+              <entry>Any</entry>
+              <entry>4</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>RRA, RRC, SWPB or SXT</entry>
+              <entry>1</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>PUSH</entry>
+              <entry>3</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>CALL</entry>
+              <entry>4</entry>
+              <entry>1</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1170220319458">
+      <title>Indexed mode</title>
+      <para id="id1170205701533">The Indexed mode commands are formatted as X(Rn), where X is a constant and Rn is one of the CPU registers. The absolute memory location X+Rn is addressed. Indexed mode addressing is useful for applications such as lookup tables.</para>
+      <para id="id1170221432192"><emphasis effect="italics">Description:</emphasis> (Rn + X) points to the operand. X is stored in the next word.</para>
+      <para id="id1170207873598"><emphasis effect="italics">Source mode bits:</emphasis> As = 01 (memory location is defined by the word immediately following the opcode).</para>
+      <para id="id1170213233814"><emphasis effect="italics">Destination mode bit:</emphasis> Ad=1 (memory location is defined by the word immediately following the opcode).</para>
+      <para id="id1170213573842"><emphasis effect="italics">Syntax:</emphasis> X(Rn).</para>
+      <para id="id1170213487302"><emphasis effect="italics">Length:</emphasis> Two or three words.</para>
+      <para id="id1170215833540"><emphasis effect="italics">Comment:</emphasis> Valid for source and destination.</para>
+      <para id="id1170214539275"><emphasis effect="bold">Example 2:</emphasis> Move (copy) the contents at source address (F000h + R5) to destination (register R4).</para>
+      <para id="id1170205537542">Before operation: R4=A002h R5=050Ah Loc:0xF50A=0123h</para>
+      <para id="id1170219155265">Operation:  MOV F000h(R5), R4</para>
+      <para id="id1170220013859">After operation: R4=0123h R5=050Ah Loc:0xF50A=0123h</para>
+      <table id="id1170214480501" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Operands</entry>
+              <entry>
+                <emphasis effect="bold">2</emphasis>
+                <emphasis effect="bold">nd</emphasis>
+                <emphasis effect="bold"> operand mode</emphasis>
+              </entry>
+              <entry>Operator</entry>
+              <entry>Cycles</entry>
+              <entry>Length (words)</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Register</entry>
+              <entry>Any</entry>
+              <entry>3</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Indexed, Symbolic or Absolute</entry>
+              <entry>Any</entry>
+              <entry>6</entry>
+              <entry>3</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>RRA, RRC, SWPB or SXT</entry>
+              <entry>4</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>CALL or PUSH</entry>
+              <entry>5</entry>
+              <entry>2</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1170206802220">
+      <title>Symbolic mode</title>
+      <para id="id1170227832725">Symbolic mode allows the assignment of labels to fixed memory locations, so that those locations can be addressed. This is useful for the development of embedded programs.</para>
+      <para id="id1170206611438"><emphasis effect="italics">Description:</emphasis> (PC + X) points to the operand. X is stored in the next word. Indexed mode X(PC) is used.</para>
+      <para id="id1170207873194"><emphasis effect="italics">Source mode bits:</emphasis> As = 01 (memory location is defined by the word immediately following the opcode).</para>
+      <para id="id1170214450987"><emphasis effect="italics">Destination mode bit:</emphasis> Ad=1 (memory location is defined by the word immediately following the opcode).</para>
+      <para id="id1170213508205"><emphasis effect="italics">Syntax:</emphasis> ADDR.</para>
+      <para id="id1170226208840"><emphasis effect="italics">Length:</emphasis> Two or three words.</para>
+      <para id="id1170222492254"><emphasis effect="italics">Comment:</emphasis> Valid for source and destination.</para>
+      <para id="id1170220038937"><emphasis effect="bold">Example 3:</emphasis> Move the content of source address XPT (x pointer) to the destination address YPT (y pointer).</para>
+      <para id="id1170205592154">Before operation: XPT=A002h Location YPT=050Ah</para>
+      <para id="id1170210969626">Operation:  MOV XPT, YPT</para>
+      <para id="id1170207841365">After operation: XPT= A002h Location YPT=A002h</para>
+      <table id="id1170215779279" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Operands</entry>
+              <entry>
+                <emphasis effect="bold">2</emphasis>
+                <emphasis effect="bold">nd</emphasis>
+                <emphasis effect="bold"> operand mode</emphasis>
+              </entry>
+              <entry>Operator</entry>
+              <entry>Cycles</entry>
+              <entry>Length (words)</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Register</entry>
+              <entry>Any</entry>
+              <entry>3</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Indexed, Symbolic or Absolute</entry>
+              <entry>Any</entry>
+              <entry>6</entry>
+              <entry>3</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>RRA, RRC, SWPB or SXT</entry>
+              <entry>4</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>CALL or PUSH</entry>
+              <entry>5</entry>
+              <entry>2</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1170214519096">
+      <title>Absolute mode</title>
+      <para id="id1170218665095">Similar to Symbolic mode, with the difference that the label is preceded by “&amp;”.</para>
+      <para id="id1170220316556"><emphasis effect="italics">Description:</emphasis> The word following the instruction contains the absolute address. X is stored in the next word. Indexed mode X(SR) is used.</para>
+      <para id="id1170214618697"><emphasis effect="italics">Source mode bits:</emphasis> As = 01 (memory location is defined by the word immediately following the opcode).</para>
+      <para id="id1170206665007"><emphasis effect="italics">Destination mode bit:</emphasis> Ad=1 (memory location is defined by the word immediately following the opcode).</para>
+      <para id="id1170229082832"><emphasis effect="italics">Syntax:</emphasis> &amp;ADDR.</para>
+      <para id="id1170214500030"><emphasis effect="italics">Length:</emphasis> Two or three words.</para>
+      <para id="id1170215771690"><emphasis effect="italics">Comment:</emphasis> Valid for source and destination.</para>
+      <para id="id1170221424961"><emphasis effect="bold">Example 4:</emphasis> Move the content of source address XPT to the destination address YPT.</para>
+      <para id="id1170229182970">Before operation: Location XPT=A002h Location YPT=050Ah</para>
+      <para id="id1170220091266">Operation:  MOV &amp;XPT, &amp;YPT</para>
+      <para id="id1170206690673">After operation: Location XPT= A002h Location YPT=A002h</para>
+      <para id="id1170216912018"/>
+      <table id="id1170215563104" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Operands</entry>
+              <entry>
+                <emphasis effect="bold">2</emphasis>
+                <emphasis effect="bold">nd</emphasis>
+                <emphasis effect="bold"> operand mode</emphasis>
+              </entry>
+              <entry>Operator</entry>
+              <entry>Cycles</entry>
+              <entry>Length (words)</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Register</entry>
+              <entry>Any</entry>
+              <entry>3</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Indexed, Symbolic or Absolute</entry>
+              <entry>Any</entry>
+              <entry>6</entry>
+              <entry>3</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>RRA, RRC, SWPB or SXT</entry>
+              <entry>4</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>CALL or PUSH</entry>
+              <entry>5</entry>
+              <entry>2</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1170229026591">
+      <title>Indirect register mode</title>
+      <para id="id1170223240373">The data word addressed is located in the memory location pointed to by Rn. Indirect mode is not valid for destination operands, but can be emulated with the indexed mode format 0(Rn).</para>
+      <para id="id1170220291598"><emphasis effect="italics">Description:</emphasis> Rn is used as a pointer to the operand.</para>
+      <para id="id1170206577432"><emphasis effect="italics">Source mode bits:</emphasis> As = 10.</para>
+      <para id="id1170220318348"><emphasis effect="italics">Syntax:</emphasis> @Rn.</para>
+      <para id="id1170215751289"><emphasis effect="italics">Length:</emphasis> One or two words.</para>
+      <para id="id1170214342824"><emphasis effect="italics">Comment</emphasis>: Valid only for source operand. The substitute for destination operand is 0(Rn).</para>
+      <para id="id1170226215485"><emphasis effect="bold">Example 5:</emphasis> Move the contents of the source address (contents of R4) to the destination (register R5). Register R4 is not modified.</para>
+      <para id="id1170220894030">Before operation: R4=A002h R5=050Ah Loc:0xA002=0123h</para>
+      <para id="id1170207484668">Operation:  MOV @(R4), R5</para>
+      <para id="id1170214195561">After operation: R4= A002h R5=0123h Loc:0xA002=0123h</para>
+      <table id="id1170214316645" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Operands</entry>
+              <entry>
+                <emphasis effect="bold">2</emphasis>
+                <emphasis effect="bold">nd</emphasis>
+                <emphasis effect="bold"> operand mode</emphasis>
+              </entry>
+              <entry>Operator</entry>
+              <entry>Cycles</entry>
+              <entry>Length (words)</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Register</entry>
+              <entry>Any</entry>
+              <entry>2*</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Indexed, Symbolic or Absolute</entry>
+              <entry>Any</entry>
+              <entry>5</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>RRA, RRC, SWPB or SXT</entry>
+              <entry>3</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>CALL or PUSH</entry>
+              <entry>4</entry>
+              <entry>1</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1170214488056">
+      <title>Indirect auto increment mode</title>
+      <para id="id1170228006853">Similar to indirect register mode, but with indirect auto increment mode, the operand is incremented as part of the instruction. The format for operands is @Rn+. This is useful for working on blocks of data.</para>
+      <para id="id1170228101909"><emphasis effect="italics">Description:</emphasis> Rn is used as a pointer to the operand. Rn is incremented afterwards by 1 for byte instructions and by 2 for word instructions.</para>
+      <para id="id1170225709085"><emphasis effect="italics">Source mode bits:</emphasis> As = 11.</para>
+      <para id="id1170218886603"><emphasis effect="italics">Syntax:</emphasis> @Rn+.</para>
+      <para id="id1170215754509"><emphasis effect="italics">Length:</emphasis> One or two words.</para>
+      <para id="id1170206777377"><emphasis effect="italics">Comment</emphasis>: Valid only for source operand. The substitute for destination operand is 0(Rn) plus second instruction INCD Rn.</para>
+      <para id="id1170221434715"><emphasis effect="bold">Example 6:</emphasis> Move the contents of the source address (contents of R4) to the destination (register R5), then increment the value in register R4 to point to the next word.</para>
+      <para id="id1170229153749">Before operation: R4=A002h R5=050Ah Loc:0xA002=0123h</para>
+      <para id="id1170219901873">Operation:  MOV @R4+, R5</para>
+      <para id="id1170223460145">After operation: R4= A004h R5=0123h Loc:0xA002=0123h</para>
+      <table id="id1170210975313" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Operands</entry>
+              <entry>
+                <emphasis effect="bold">2</emphasis>
+                <emphasis effect="bold">nd</emphasis>
+                <emphasis effect="bold"> operand mode</emphasis>
+              </entry>
+              <entry>Operator</entry>
+              <entry>Cycles</entry>
+              <entry>Length (words)</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Register</entry>
+              <entry>Any</entry>
+              <entry>2*</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Indexed, Symbolic or Absolute</entry>
+              <entry>Any</entry>
+              <entry>5</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>RRA, RRC, SWPB or SXT</entry>
+              <entry>3</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>PUSH</entry>
+              <entry>4</entry>
+              <entry>1</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>CALL</entry>
+              <entry>5</entry>
+              <entry>1</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1170206682954">
+      <title>Immediate mode</title>
+      <para id="id1170214286851">Immediate mode is used to assign constant values to registers or memory locations.</para>
+      <para id="id1170220207342"><emphasis effect="italics">Description:</emphasis> The word following the instruction contains the immediate constant N. Indirect autoincrement mode @PC+ is used.</para>
+      <para id="id1170229082680"><emphasis effect="italics">Source mode bits:</emphasis> As = 11.</para>
+      <para id="id1170219059365"><emphasis effect="italics">Syntax:</emphasis> #N.</para>
+      <para id="id1170216480337"><emphasis effect="italics">Length:</emphasis> Two or three words. It is one word less if a constant in CG1 or CG2 can be used.</para>
+      <para id="id1170222418086"><emphasis effect="italics">Comment</emphasis>: Valid only for source operand.</para>
+      <para id="id1170211954248"><emphasis effect="bold">Example 7:</emphasis> Move the immediate constant E2h to the destination (register R5).</para>
+      <para id="id1170214227354">Before operation: R4=A002h R5=050Ah</para>
+      <para id="id1170214593760">Operation:  MOV #E2h, R5</para>
+      <para id="id1170214459031">After operation: R4= A002h R5=00E2h</para>
+      <table id="id1170220931202" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Operands</entry>
+              <entry>
+                <emphasis effect="bold">2</emphasis>
+                <emphasis effect="bold">nd</emphasis>
+                <emphasis effect="bold"> operand mode</emphasis>
+              </entry>
+              <entry>Operator</entry>
+              <entry>Cycles</entry>
+              <entry>Length (words)</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Register</entry>
+              <entry>Any</entry>
+              <entry>2*</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>2</entry>
+              <entry>Indexed, Symbolic or Absolute</entry>
+              <entry>Any</entry>
+              <entry>5</entry>
+              <entry>3</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>RRA, RRC, SWPB or SXT</entry>
+              <entry>N/A</entry>
+              <entry>N/A</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>PUSH</entry>
+              <entry>4</entry>
+              <entry>2</entry>
+            </row>
+            <row>
+              <entry>1</entry>
+              <entry>N/A</entry>
+              <entry>CALL</entry>
+              <entry>5</entry>
+              <entry>2</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1170216631155">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

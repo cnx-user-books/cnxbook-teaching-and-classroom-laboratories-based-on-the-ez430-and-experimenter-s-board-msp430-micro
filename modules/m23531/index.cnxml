@@ -1,0 +1,89 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Timers: Lab2 - Real Time Clock with Basic Timer1</title>
+  <metadata>
+  <md:content-id>m23531</md:content-id><md:title>Laboratory Timers: Lab2 - Real Time Clock with Basic Timer1</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool and the MSP430FG4618 device implement a Real Time Clock with the RTC peripheral.</md:abstract>
+  <md:uuid>a29ff6a7-5f5b-4495-94f1-fb4e11a05f71</md:uuid>
+</metadata>
+
+<content>
+    <section id="id3423728">
+      <title>Laboratory Timers: Lab2 - Real Time Clock with Basic Timer1</title>
+      <section id="id3413568">
+        <title>Introduction</title>
+        <para id="id4603792">Correct system timing is a fundamental requirement for the proper operation of a real-time application. The timing definition can dictate how the data information processed during the execution of the application program. The clock implementations vary between devices in the MSP430 family. Each device provides different clock sources, controls and uses. This chapter discusses the clock controls included in the platforms used.
+The MSP430 4xx family has two general-purpose 16-bit or 8-bit counters and event timers, named Timer_A, Timer_B, and a Basic Timer. The Basic Timer module is only implemented in ‘4xx devices. The 2xx device family also has Timer_A and Timer_B, but the clock signals are provided by the basic clock module+.
+The timers may receive an internal or external clock. Timer_A and Timer_B also include multiple independent capture and compare blocks, with interrupt capabilities.
+</para>
+      </section>
+      <section id="id3278587">
+        <title>Overview</title>
+        <para id="id3406064">The Real Time Clock (RTC) has a 32-bit counter, to automatically control the clock calendar. This peripheral is present on the MSP430FG461x devices. The application developed in the laboratory <emphasis effect="italics">Timers: Lab1 - Memory clock with Basic Timer1</emphasis> will now be modified to incorporate this module.</para>
+      </section>
+      <section id="id4067922">
+        <title>Resources</title>
+        <para id="id3210406">This application (<link url="http://cnx.org/content/m23531/latest/Lab2_Timers.c" window="new"> Lab2_Timers.c </link>) is based on the same resources used in the laboratory <emphasis effect="italics">Timers: Lab1 - Memory clock with Basic Timer1</emphasis>. In addition, there is an additional RTC peripheral and two push buttons, SW1 and SW2. The first module works in automatic mode to manage the clock calendar, while the push buttons switch the information displayed on the LCD between the clock and calendar.</para>
+      </section>
+      <section id="id4007166">
+        <title>Software application organization</title>
+        <para id="id3328009">The organization of the software is identical to that of laboratory <emphasis effect="italics">Timers: Lab1 - Memory clock with Basic Timer1</emphasis>. The Basic Timer1, LCD and LEDs continue to perform the same functions. They are configured similarly, but with the changes described below.</para>
+        <para id="id3414509">In routine <code display="inline">main()</code>, the configurations for RTC and SW1/SW2 are added.</para>
+        <para id="id8164212">The memory addresses corresponding to the clock calendar values are initialized with the default values, that is zero hours, zero minutes and zero seconds, on August 9, 2008. The RTC is then activated in calendar mode, with the interrupt disabled. This mode affects the Basic Timer1 operation.</para>
+        <para id="id4029241">The switches SW1 and SW2 are connected to the microcontroller ports P1.0 and P1.1 respectively. Hence, these ports are configured as inputs and their interrupts activated by a high-to-low transition at the input.</para>
+      </section>
+      <section id="id7560658">
+        <title>System configuration</title>
+        <section id="id8479538">
+          <title>Real Time Clock configuration</title>
+          <para id="id3222692">The RTC is configured in calendar mode and enabled. The counting registers provide the values of seconds, minutes, hours, days, day of the week, day of the month, month and year. The registers are stored in BCD format to speed up the data writing process to the LCD. The interrupt for this peripheral should be disabled (disabling the Basic Timer1 interrupt). Given these objectives:</para>
+          <para id="id3222696"><code display="inline">RTCCTL = RTCBCD | RTCHOLD | RTCMODE_3; // BCD mode, RTC and BT disable</code>
+</para>
+          
+          <para id="id3371814">The RTC operation in calendar mode automatically configures some of the Basic Timer1 features. The content of the bits BTSSEL, BTHOLD and BTDIV of BTCNT register are ignored. Thus, the BTCNT1 and BTCNT2 counters work in cascade. The clock source of the BTCNT1 counter is the ACLK clock signal. The output of the BTCNT1.Q7 counter is selected as the input of the BTCNT2 counter (frequency: ACLK/256). The RTC uses the BTCNT2.Q6 output as clock source (frequency: ACLK/32768).</para>
+        </section>
+        <section id="id4049794">
+          <title>Basic Timer1 configuration</title>
+          <para id="id7557323">This peripheral is automatically configured with the RTC in calendar mode. To enable the interrupt once every 0.5 seconds:</para>
+          <para id="id8308307"><code id="eip-id19998413" display="block">
+BTCTL = BT_fCLK2_DIV64; // (ACLK/256)/64
+IE2 |= BTIE;            // Enable BT interrupt with 0.5 period
+</code>
+</para>
+          
+          <para id="id3478025"/>
+        </section>
+        <section id="id8288365">
+          <title>Ports P1.0 and P1.1 configuration</title>
+          <para id="id3382986">The switches SW1 and SW2 are connected to ports P1.0 and P1.1 respectively. How should the following registers be configured in order to set just the bits that affect the digital inputs, with high-to-low transition interrupts?</para>
+          <para id="id4025879"><code id="eip-id28041102" display="block">P1SEL &amp;= ~0x03;  // P1.0 and P1.1 I/O ports
+P1DIR &amp;= ~0x03;  // P1.0 and P1.1 digital inputs
+P1IFG  = 0x00;       // Clear P1 flags
+P1IES &amp;= ~0x03;  // high-to-low transition interrupts
+P1IE |= 0x03;        // enable port interrupts
+</code>
+</para>
+          
+          
+          
+          
+        </section>
+      </section>
+      <section id="id4086506">
+        <title>Analysis of operation</title>
+        <section id="id8155718">
+          <title>ISR execution time</title>
+          <para id="id4925868">Performing similar procedures to those described in laboratory <emphasis effect="italics">Timers: Lab1 - Memory clock with Basic Timer1</emphasis> measure the ISR execution time. What is the value measured?</para>
+          <para id="id7816459">LCD refresh: ______ </para>
+          <para id="id3997007">The LCD write routines were changed. Taking advantage of storing the data in the BCD format, the division operation can be ignored, resulting in the reduction of execution time of the Basic Timer1 ISR. Is the processing time required to refresh the LCD constant? _____</para>
+        </section>
+        <section id="id3326320">
+          <title>Measurement of electrical current drawn</title>
+          <para id="id3445627">The power consumption was discussed in the previous point. The electrical power required by the system during operation is measured by replacing the jumper on the Header PWR1 by an ammeter, which indicates the electric current taken by device during operation.</para>
+          <para id="id3192246">What is the value read? __________</para>
+          <para id="id3385101">This example and many others are available on the MSP430 Teaching ROM. </para>
+          <para id="id8345773">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

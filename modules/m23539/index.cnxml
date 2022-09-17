@@ -1,0 +1,133 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Signal Acquisition: Lab1 - SAR ADC10 conversion</title>
+  <metadata>
+  <md:content-id>m23539</md:content-id><md:title>Laboratory Signal Acquisition: Lab1 - SAR ADC10 conversion</md:title>
+  <md:abstract>Using the eZ430-RF2500 Development Tool use ADC10 to perform a single temperature sample on channel A10 (on-chip temperature sensor) each minute during 1 hour.</md:abstract>
+  <md:uuid>f5acd127-149c-45ae-8a7d-82cd281e6bd6</md:uuid>
+</metadata>
+
+<content>
+    <section id="id7900374">
+      <title>Laboratory Signal Acquisition: Lab1 - SAR ADC10 conversion</title>
+      <section id="id7169571">
+        <title>Introduction</title>
+        <para id="id9245872">This laboratory gives examples of the uses of the ADC types available in the hardware development kits. A different laboratory is developed for each kit, taking into account that both the ADC10 and the SD16_A laboratories implement a temperature data logger. The ADC12 laboratory also uses operational amplifiers to perform the analogue signal conditioning.</para>
+      </section>
+      <section id="id9245877">
+        <title>Overview</title>
+        <para id="id8622319">This laboratory (<link url="http://cnx.org/content/m23539/latest/Lab1_ADC.c" window="new"> Lab1_ADC.c</link>) implements a temperature data logger using the hardware kit’s integrated temperature sensor. The device is configured to perform an acquisition each minute for one hour. Each temperature’s (ºC) value is transferred to flash info memory segment B and C. When the microcontroller is not performing any task, it enters into low power mode.</para>
+      </section>
+      <section id="id8856929">
+        <title>Resources</title>
+        <para id="id7957256">The ADC10 module uses V<sub>REF+</sub> = 1.5 V as the reference voltage.</para>
+        <para id="id8884198">It is necessary to configure the ADC10 to use the integrated temperature sensor (A10) as an input. Timer_A generates an interrupt once every second that starts conversion in the ADC10. At the end of a conversion, an interrupt is requested by the converter and the temperature value is written to flash memory.</para>
+        <para id="id9232149">The voltage value is converted into temperature following the equation provided in ADC10 section of the MSP430 User’s Guide &lt;slau144e.pdf&gt;. After transferring the value to the flash memory, the system returns to low power mode LPM3.</para>
+        <para id="id8135027">The resources used by the application are:</para>
+        <para id="id7513288">- ADC10;</para>
+        <para id="id7513292">- Timer_A;</para>
+        <para id="id9103461">- Ports I/O;</para>
+        <para id="id9235461">- Interrupts;</para>
+        <para id="id9235465">- Low power mode.</para>
+      </section>
+      <section id="id8835874">
+        <title>Software application organization</title>
+        <para id="id7031617">The application starts by stopping the Watchdog Timer.</para>
+        <para id="id8885365">The system checks for calibration constants on info memory segment A. The CPU execution will be trapped if it does not find this information.</para>
+        <para id="id4199962">Digitally controller oscillator (DCO) is set to 1 MHz, providing clock source for MCLK and SMCLK, while the Basic Clock System+ is configured to set ACLK to 1.5 kHz.</para>
+        <para id="id8809117">Controller’s flash timing is obtained from MCLK divided by three to comply with the device specifications.</para>
+        <para id="id8139109">Port P1.0 is configured as an output and will blink the once LED every second.</para>
+        <para id="id7149798">The ADC10 is configured to use the input channel corresponding to the on-chip temperature sensor (channel A10). The configuration includes the activation of the internal reference voltage V<sub>REF+</sub> = 1.5 V and the selection of ADC10OSC as clock signal. The converter is configured to perform a single-channel single-conversion. At the end of conversion, an interrupt is requested.</para>
+        <para id="id3779348">The Timer_A is configured to generate an interrupt once every second. ACLK/8 is selected as the clock signal using the VLOCLK as clock source and will count until the TACCR0 value is reached (in up mode). The system then enters into low power mode and waits for an interrupt.</para>
+        <para id="id9174934">Flash memory pointers and interrupt counters are initialized. The Timer_A ISR increments the variable <emphasis>counter</emphasis> and when this variable reaches the value 60 (1 minute), the software start of conversion is requested. At the end of this ISR, the system returns to low power mode.</para>
+        <para id="id7233978">When the ADC10 ends the conversion, an interrupt is requested. While variable <emphasis>min</emphasis> is lower than 60, the temperature is written to flash memory. The memory pointer is increased by two (word). When <code display="inline">min = 60</code>, the system stops operation.</para>
+      </section>
+      <section id="id7954910">
+        <title>System configuration</title>
+        <section id="id6966177">
+          <title>DCO configuration</title>
+          <para id="id6307003">Adjust the DCO frequency to 1 MHz by software using the calibrated DCOCTL and BCSCTL1 register settings stored in information memory segment A.</para>
+          <code id="id8103164" display="block">if (CALBC1_1MHZ == 0xFF || CALDCO_1MHZ == 0xFF)
+    {
+      while(1); // If calibration constants erased
+      // do not load, trap CPU!!
+    }
+    
+DCOCTL = CALDCO_1MHZ; // Set DCO to 1 MHz
+    </code>
+        </section>
+        <section id="id9470248">
+          <title>Basic Clock module+ configuration</title>
+          <para id="id8601213">Set MCLK and SMCLK to 1 MHz. Use the internal very low power VLOCLK source clock to ACLK/8 clock signal as low frequency oscillator (12 kHz):</para>
+          <code id="id9176489" display="block">BCSCTL1 = DIVA_3; // ACLK = 1.5 kHz
+BCSCTL3 = LFXT1S_2; // Set VLOCLK (12 kHz)
+    </code>
+        </section>
+        <section id="id7525793">
+          <title>ADC10 configuration</title>
+          <para id="id8894569">The ADC10’s input channel is the integrated temperature sensor (A10) and it uses the signal V<sub>REF+</sub> (1.5 V) as reference voltage. The ADC10 clock source is ADC10OSC, the clock signal being ADC10CLK/4. Configure the ADC10 sample-and-hold time: 64xADC10CLKs, to perform a single-channel single-conversion and enable its interrupts. What are the values to write to the configuration registers?</para>
+          <code id="id4282425" display="block">ADC10CTL1 = INCH_10 + ADC10DIV_3; // Temp Sensor (A10),
+// ADC10CLK/4,
+// clock source: ADC10OSC
+ADC10CTL0=SREF_1 + ADC10SHT_3 + REFON + ADC10ON +ADC10IE;
+// Internal reference voltage Vref+ = 1.5 V
+// ADC10 sample-and-hold time: 64 x ADC10CLKs
+// Reference-generator voltage = 1.5 V
+// ADC10 on + ADC10 interrupt enable
+    
+//*********************************************************
+// ADC10 Interrupt Service Routine
+//*********************************************************
+#pragma vector=ADC10_VECTOR
+__interrupt void ADC10ISR(void)
+{
+  unsigned int temperature;
+    </code>
+          <code id="id8775213" display="block">if (min &lt;= 60)
+    {
+      temperature = ((ADC10MEM - 673) * 423) / 1024; 
+      write_int_flash(memo_ptr,temperature);
+      memo_ptr += 2;
+    } 
+    else
+    {
+      _NOP();
+    } 
+}
+    </code>
+        </section>
+        <section id="id8892848">
+          <title>Timer_A configuration</title>
+          <para id="id6269739">Configure Timer_A register to enable an interrupt once every second. Use the ACLK clock signal as the clock source. This timer is configured in up counter mode in order to count until the TAR value reaches the TACCR0 value.</para>
+          <code id="id7513540" display="block">TACCTL0 = CCIE; // TACCR0 interrupt enabled
+TACCR0 = 1500; // this count corresponds to 1 sec
+TACTL = TASSEL_1 | MC_1 | ID_0;// ACLK, up mode to TACCR0
+    
+//**********************************************************
+// Timer_A Interrupt Service Routine
+//**********************************************************
+#pragma vector=TIMERA0_VECTOR
+__interrupt void TimerA0_ISR (void)
+{
+    counter++;
+    P1OUT ^= 0x01; // LED toogle
+    
+    if (counter == 60)
+    {
+      min++;
+      counter = 0;
+      ADC10CTL0 |= ENC + ADC10SC; // Sampling/Conversion start
+    } 
+}
+    </code>
+        </section>
+      </section>
+      <section id="id8597003">
+        <title>Analysis of operation</title>
+        <para id="id7091242">After compiling the project, start the debug session and before running the application, put a breakpoint at the line of code with the <code display="inline">_NOP()</code> instruction. Go to breakpoint properties and set action to <emphasis>Write data to file</emphasis>. Name the file as <emphasis>Temp.dat</emphasis> and define the <emphasis>data format</emphasis> as <emphasis>integer</emphasis>. The data starts at address <code display="inline">0x01040</code>, with a length of <code display="inline">3C</code>. Run the application and let the temperature data logger acquire the values for 1 hour. Use a heater or a fan to force temperature variations during the measurement period. When execution reaches the breakpoint, the file will be available in your file system. Construct a graph in Excel or a similar tool, in order to plot the temperature variation obtained by the data logger.</para>
+        <para id="id7818902"/>
+        <para id="id7513041">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id8003778">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

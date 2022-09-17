@@ -1,0 +1,107 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Central Processing Unit (MSP430X CPU)</title>
+  <metadata>
+  <md:content-id>m23498</md:content-id><md:title>Central Processing Unit (MSP430X CPU)</md:title>
+  <md:abstract/>
+  <md:uuid>ef8549a8-cd18-47d6-be9b-994388ddb62a</md:uuid>
+</metadata>
+
+<content>
+    <section id="id1166971083733">
+      <title>Central Processing Unit (MSP430X CPU)</title>
+      <section id="id1166971338213">
+        <title>Main features of the MSP430X CPU architecture</title>
+        <para id="id1166971143521">The MSP430X CPU extends the addressing capabilities of the MSP430 family beyond 64 kB to 1 MB. To achieve this, there are some changes to the addressing modes and two new types of instructions. One type of new instructions allows access to the entire address space, and the other is designed for address calculations. </para>
+        <para id="id1166976722395">The MSP430X CPU address bus is 20 bits, but the data bus is still 16 bits. The CPU supports 8-bit, 16-bit and 20-bit memory accesses. Despite these changes, the MSP430X CPU remains compatible with the MSP430 CPU, having a similar number of registers. A block diagram of the MSP430X CPU is shown in the figure below:</para>
+        <para id="id1166971083197">
+          <figure id="id1166971188420">
+            <title>MSP430X CPU block diagram.</title>
+            <media id="id1166971188420_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics1-abe0.png" id="id1166971188420__onlineimage" height="615" width="296"/>
+            </media>
+          </figure>
+        </para>
+        <para id="id1166971069608">Although the MSP430X CPU structure is similar to that of the MSP430 CPU, there are some differences that will now be discussed. </para>
+        <para id="id1166972505200">With the exception of the status register SR, all MSP430X registers are 20 bits. The CPU can now process 20-bit or 16-bit data.</para>
+      </section>
+      <section id="id1166972458554">
+        <title>MSP430X CPU registers</title>
+        <section id="id1166972446771">
+          <title>R0 (PC) - Program Counter</title>
+          <para id="id1166971120166">Has the same function as the MSP430 CPU, although now it has 20 bits.</para>
+        </section>
+        <section id="id1166972535205">
+          <title>R1 (SP) - Stack Pointer</title>
+          <para id="id1166971178955">Has the same function as the MSP430 CPU, although now it has 20 bits.</para>
+        </section>
+        <section id="id1166971173943">
+          <title>R2 (SR) - Status Register</title>
+          <para id="id1166971451313">Has the same function as the MSP430 CPU, but still only has 16 bits.</para>
+          <figure id="id1166972714328">
+            <title>Description of the SR bits.</title>
+            <media id="id1166972714328_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics2-eb67.png" id="id1166972714328__onlineimage" height="422" width="423"/>
+            </media>
+          </figure>
+          <figure id="id1166971415748">
+            <media id="id1166971415748_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics3-67bd.png" id="id1166971415748__onlineimage" height="73" width="426"/>
+            </media>
+          </figure>
+        </section>
+        <section id="id1166972549328">
+          <title>R2 (CG1) and R3 (CG2) - Constant Generators</title>
+          <para id="id1166972714605">The registers R2 and R3 can be used to generate six different constants commonly used in programming, without the need to add an extra 16-bit word of code to the instruction. The constants below are chosen based on the bit (As) of the instruction that selects the addressing mode.</para>
+          <figure id="id1166976642157">
+            <title>Values of constant generators.</title>
+            <media id="id1166976642157_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics4-65df.png" id="id1166976642157__onlineimage" height="173" width="385"/>
+            </media>
+          </figure>
+          <para id="id1166972565542">Whenever the operand is one of these six constants, the registers are selected automatically. Therefore, when used in constant mode, registers R2 and R3 cannot be addressed explicitly by acting as source registers.</para>
+        </section>
+        <section id="id1166975802187">
+          <title>R4-R15 – General-purpose registers</title>
+          <para id="id1166972642723">These registers have the same function as the MSP430 CPU, although they now have 20 bits. They can store 8-bit, 16-bit or 20-bit data. Any byte written to one of these registers clears bits 19:8. Any word written to one of these registers clears bits 19:16. The exception to this rule is the instruction SXT, which extends the sign value to fill the 20-bit register. </para>
+          <para id="id1166972451559">The following figures illustrate how the operations are conducted for the exchange of information between memory and registers, for the following formats: byte (8 bits), word (16 bits) and address (20 bits).</para>
+          <para id="id1166971114342">The following figure illustrates the handling of a byte (8 bits) using the suffix .B.</para>
+          <figure id="id1166972731120">
+            <title>Example: Register-Byte/Byte-Register operation.</title>
+            <media id="id1166972731120_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics5-33c9.png" id="id1166972731120__onlineimage" height="241" width="460"/>
+            </media>
+          </figure>
+          <para id="id1166971403295">The following figure illustrates the handling of a word (16-bit) using the suffix .W.</para>
+          <para id="id1166973413894">
+            <figure id="id1166974753000">
+              <title>Example: Register-Word/Word-Register operation.</title>
+              <media id="id1166974753000_media" alt="">
+                <image mime-type="image/png" src="../../media/graphics6-3281.png" id="id1166974753000__onlineimage" height="272" width="268"/>
+              </media>
+            </figure>
+            <figure id="id1166985906466">
+              <title>Example: Register-Word/Word-Register operation.</title>
+              <media id="id1166985906466_media" alt="">
+                <image mime-type="image/png" src="../../media/graphics7-fa40.png" id="id1166985906466__onlineimage" height="268" width="265"/>
+              </media>
+            </figure>
+          </para>
+          <para id="id1166972635117">The following figure illustrates the manipulation of an address (20 bits) using the suffix .A.</para>
+          <figure id="id1166972596016">
+            <title>Example: Register - Address-Word operation.</title>
+            <media id="id1166972596016_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics8-1baa.png" id="id1166972596016__onlineimage" height="221" width="298"/>
+            </media>
+          </figure>
+          <figure id="id1166974911752">
+            <title>Example: Address-Word - Register operation.</title>
+            <media id="id1166974911752_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics9-eddd.png" id="id1166974911752__onlineimage" height="225" width="303"/>
+            </media>
+          </figure>
+          <para id="id1166976165131">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

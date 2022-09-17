@@ -1,0 +1,1042 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>MSP430 instruction set</title>
+  <metadata>
+  <md:content-id>m23503</md:content-id><md:title>MSP430 instruction set</md:title>
+  <md:abstract/>
+  <md:uuid>71a9ce5f-11e0-4ff7-b9bf-156cfa09d238</md:uuid>
+</metadata>
+
+<content>
+    <para id="id1163702357043">Instruction set</para>
+    <para id="id1163695492800">The MSP430 instruction set consists of 27 core instructions. Additionally, it supports 24 emulated instructions. The core instructions have unique op-codes decoded by the CPU, while the emulated ones need assemblers and compilers to generate their mnemonics. </para>
+    <para id="id1163706373753">There are three core-instruction formats:</para>
+    <para id="id1163721105084">- Double operand;</para>
+    <para id="id1163707656674">- Single operand;</para>
+    <para id="id1163708727794">- Program flow control - Jump.</para>
+    <para id="id1163723329315">Byte, word and address instructions are accessed using the .B, .W or .A extensions. If the extension is omitted, the instruction is interpreted as a word instruction.</para>
+    <section id="id1163701020929">
+      <title>Double operand instructions</title>
+      <para id="id1163717523887">The double operand instruction is formatted as follows:</para>
+      <table id="id1163702303800" summary="">
+        <tgroup cols="17">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <colspec colnum="6" colname="c6"/>
+          <colspec colnum="7" colname="c7"/>
+          <colspec colnum="8" colname="c8"/>
+          <colspec colnum="9" colname="c9"/>
+          <colspec colnum="10" colname="c10"/>
+          <colspec colnum="11" colname="c11"/>
+          <colspec colnum="12" colname="c12"/>
+          <colspec colnum="13" colname="c13"/>
+          <colspec colnum="14" colname="c14"/>
+          <colspec colnum="15" colname="c15"/>
+          <colspec colnum="16" colname="c16"/>
+          <colspec colnum="17" colname="c17"/>
+          <tbody>
+            <row>
+              <entry>15</entry>
+              <entry>14</entry>
+              <entry>13</entry>
+              <entry>12</entry>
+              <entry>11</entry>
+              <entry>10</entry>
+              <entry>9</entry>
+              <entry namest="c8" nameend="c9">8</entry>
+              <entry>7</entry>
+              <entry>6</entry>
+              <entry>5</entry>
+              <entry>4</entry>
+              <entry>3</entry>
+              <entry>2</entry>
+              <entry>1</entry>
+              <entry>0</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c4">opcode</entry>
+              <entry namest="c5" nameend="c8">S-Reg</entry>
+              <entry namest="c9" nameend="c10">Ad</entry>
+              <entry>B/W</entry>
+              <entry namest="c12" nameend="c13">As</entry>
+              <entry namest="c14" nameend="c17">D-Reg</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <table id="id1163702295959" summary="">
+        <tgroup cols="3">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <tbody>
+            <row>
+              <entry>Bit</entry>
+              <entry/>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry>15-12</entry>
+              <entry>opcode</entry>
+              <entry/>
+            </row>
+            <row>
+              <entry>11-8</entry>
+              <entry>S-Reg</entry>
+              <entry>The working register used for the source operand (src)</entry>
+            </row>
+            <row>
+              <entry>7</entry>
+              <entry>Ad</entry>
+              <entry>The addressing bits responsible for the addressing mode used for the destination operand (dst)</entry>
+            </row>
+            <row>
+              <entry>6</entry>
+              <entry>B/W</entry>
+              <entry>Byte or word operation:B/W=0: word operation; B/W=1: byte operation</entry>
+            </row>
+            <row>
+              <entry>5-4</entry>
+              <entry>As</entry>
+              <entry>The addressing bits responsible for the addressing mode used for the source operand (src)</entry>
+            </row>
+            <row>
+              <entry>3-0</entry>
+              <entry>D-Reg</entry>
+              <entry>The working register used for the destination operand (dst)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1163712001069">The next table<emphasis effect="italics"/>shows the double operand instructions that are not emulated.</para>
+      <table id="id1163697592140" summary="">
+        <tgroup cols="3">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <tbody>
+            <row>
+              <entry>Mnemonic</entry>
+              <entry>Operation</entry>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c3">Arithmetic instructions</entry>
+            </row>
+            <row>
+              <entry>ADD(.B or .W) src,dst</entry>
+              <entry>src+dst→dst</entry>
+              <entry>Add source to destination</entry>
+            </row>
+            <row>
+              <entry>ADDC(.B or .W) src,dst</entry>
+              <entry>src+dst+C→dst</entry>
+              <entry>Add source and carry to destination</entry>
+            </row>
+            <row>
+              <entry>DADD(.B or .W) src,dst</entry>
+              <entry>src+dst+C→dst (dec)</entry>
+              <entry>Decimal add source and carry to destination</entry>
+            </row>
+            <row>
+              <entry>SUB(.B or .W) src,dst</entry>
+              <entry>dst+.not.src+1→dst</entry>
+              <entry>Subtract source from destination</entry>
+            </row>
+            <row>
+              <entry>SUBC(.B or .W) src,dst</entry>
+              <entry>dst+.not.src+C→dst</entry>
+              <entry>Subtract source and not carry from destination</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c3">Logical and register control instructions</entry>
+            </row>
+            <row>
+              <entry>AND(.B or .W) src,dst</entry>
+              <entry>src.and.dst→dst</entry>
+              <entry>AND source with destination</entry>
+            </row>
+            <row>
+              <entry>BIC(.B or .W) src,dst</entry>
+              <entry>.not.src.and.dst→dst</entry>
+              <entry>Clear bits in destination</entry>
+            </row>
+            <row>
+              <entry>BIS(.B or .W) src,dst</entry>
+              <entry>src.or.dst→dst</entry>
+              <entry>Set bits in destination</entry>
+            </row>
+            <row>
+              <entry>BIT(.B or .W) src,dst</entry>
+              <entry>src.and.dst</entry>
+              <entry>Test bits in destination</entry>
+            </row>
+            <row>
+              <entry>XOR(.B or .W) src,dst</entry>
+              <entry>src.xor.dst→dst</entry>
+              <entry>XOR source with destination</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c3">Data instructions</entry>
+            </row>
+            <row>
+              <entry>CMP(.B or .W) src,dst</entry>
+              <entry>dst-src</entry>
+              <entry>Compare source to destination</entry>
+            </row>
+            <row>
+              <entry>MOV(.B or .W) src,dst</entry>
+              <entry>src→dst</entry>
+              <entry>Move source to destination</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1163717904702">Depending on the double operand instruction result, the status bits may be affected. The following gives the conditions for setting and resetting the status bits.</para>
+      <table id="id1163718990737" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry/>
+              <entry namest="c2" nameend="c5">Status bits</entry>
+            </row>
+            <row>
+              <entry>Mnemonic</entry>
+              <entry>V</entry>
+              <entry>N</entry>
+              <entry>Z</entry>
+              <entry>C</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Arithmetic instructions</entry>
+            </row>
+            <row>
+              <entry>ADD(.B or .W) src,dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, carry from result=0, if not</entry>
+            </row>
+            <row>
+              <entry>ADDC(.B or .W) src,dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, carry from MSB result=0, if not</entry>
+            </row>
+            <row>
+              <entry>DADD(.B or .W) src,dst</entry>
+              <entry>-</entry>
+              <entry>=1, MSB=1=0, otherwise</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, result &gt; 99(99)</entry>
+            </row>
+            <row>
+              <entry>SUB(.B or .W) src,dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, if no borrow=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>SUBC(.B or .W) src,dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, if no borrow=0, otherwise</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Logical and register control instructions</entry>
+            </row>
+            <row>
+              <entry>AND(.B or .W) src,dst</entry>
+              <entry>=0</entry>
+              <entry>=1, MSB result set=0, if not set</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, not zero=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>BIC(.B or .W) src,dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>BIS(.B or .W) src,dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>BIT(.B or .W) src,dst</entry>
+              <entry>=0</entry>
+              <entry>=1, MSB result set=0, otherwise</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, not zero=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>XOR(.B or .W) src,dst</entry>
+              <entry>=1, both operands negative</entry>
+              <entry>=1, MSB result set=0, otherwise</entry>
+              <entry>=1, null result,=0, otherwise</entry>
+              <entry>=1, not zero=0, otherwise</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Data instructions</entry>
+            </row>
+            <row>
+              <entry>CMP(.B or .W) src,dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, src&gt;=dst=0, src&lt;dst</entry>
+              <entry>=1, src=dst=0, otherwise</entry>
+              <entry>=1, carry from MSB result=0, if not</entry>
+            </row>
+            <row>
+              <entry>MOV(.B or .W) src,dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1163699009770">
+      <title>Single operand instructions</title>
+      <para id="id1163704520149">The single operand instruction is formatted as follows:</para>
+      <table id="id1163700714760" summary="">
+        <tgroup cols="16">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <colspec colnum="6" colname="c6"/>
+          <colspec colnum="7" colname="c7"/>
+          <colspec colnum="8" colname="c8"/>
+          <colspec colnum="9" colname="c9"/>
+          <colspec colnum="10" colname="c10"/>
+          <colspec colnum="11" colname="c11"/>
+          <colspec colnum="12" colname="c12"/>
+          <colspec colnum="13" colname="c13"/>
+          <colspec colnum="14" colname="c14"/>
+          <colspec colnum="15" colname="c15"/>
+          <colspec colnum="16" colname="c16"/>
+          <tbody>
+            <row>
+              <entry>15</entry>
+              <entry>14</entry>
+              <entry>13</entry>
+              <entry>12</entry>
+              <entry>11</entry>
+              <entry>10</entry>
+              <entry>9</entry>
+              <entry>8</entry>
+              <entry>7</entry>
+              <entry>6</entry>
+              <entry>5</entry>
+              <entry>4</entry>
+              <entry>3</entry>
+              <entry>2</entry>
+              <entry>1</entry>
+              <entry>0</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c9">opcode</entry>
+              <entry>B/W</entry>
+              <entry namest="c11" nameend="c12">Ad</entry>
+              <entry namest="c13" nameend="c16">D/S-Reg</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <table id="id1163710879662" summary="">
+        <tgroup cols="3">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <tbody>
+            <row>
+              <entry>Bit</entry>
+              <entry/>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry>15-7</entry>
+              <entry>opcode</entry>
+              <entry/>
+            </row>
+            <row>
+              <entry>6</entry>
+              <entry>B/W</entry>
+              <entry>Byte or word operation:B/W=0: word operation; B/W=1: byte operation</entry>
+            </row>
+            <row>
+              <entry>5-4</entry>
+              <entry>Ad</entry>
+              <entry>The addressing bits responsible for the addressing mode used for the source operand (src)</entry>
+            </row>
+            <row>
+              <entry>3-0</entry>
+              <entry>D/S-Reg</entry>
+              <entry>The working register used for the destination operand (dst) or for the source operand (src)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1163700726999">The next table shows the single operand instructions that are not emulated.</para>
+      <table id="id1163702266000" summary="">
+        <tgroup cols="3">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <tbody>
+            <row>
+              <entry>Mnemonic</entry>
+              <entry>Operation</entry>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c3">Logical and register control instructions</entry>
+            </row>
+            <row>
+              <entry>RRA(.B or .W) dst</entry>
+              <entry>MSB→MSB→…LSB→C</entry>
+              <entry>Roll destination right</entry>
+            </row>
+            <row>
+              <entry>RRC(.B or .W) dst</entry>
+              <entry>C→MSB→…LSB→C</entry>
+              <entry>Roll destination right through (from) carry</entry>
+            </row>
+            <row>
+              <entry>SWPB(.B or .W) dst</entry>
+              <entry>Swap bytes</entry>
+              <entry>Swap bytes in destination</entry>
+            </row>
+            <row>
+              <entry>SXT dst</entry>
+              <entry>bit 7→bit 8…bit 15</entry>
+              <entry>Sign extend destination</entry>
+            </row>
+            <row>
+              <entry>PUSH(.B or .W) src</entry>
+              <entry>SP-2→SP, src→@SP</entry>
+              <entry>Push source to stack</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c3">Program flow control instructions</entry>
+            </row>
+            <row>
+              <entry>CALL(.B or .W) dst</entry>
+              <entry>SP-2→SP, PC+2→@SPdst→PC</entry>
+              <entry>Subroutine call to destination</entry>
+            </row>
+            <row>
+              <entry>RETI</entry>
+              <entry>TOS→SR, SP+2→SPTOS→PC, SP+2→SP</entry>
+              <entry>Return from interrupt</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1163708817414">Conditions for status bits, depending on the single operand instruction result.</para>
+      <table id="id1163703336325" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry/>
+              <entry namest="c2" nameend="c5">Status bits</entry>
+            </row>
+            <row>
+              <entry>Mnemonic</entry>
+              <entry>V</entry>
+              <entry>N</entry>
+              <entry>Z</entry>
+              <entry>C</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Logical and register control instructions</entry>
+            </row>
+            <row>
+              <entry>RRA(.B or .W) dst</entry>
+              <entry>=0</entry>
+              <entry>=1, negative result=0, otherwise</entry>
+              <entry>=1, null result,=0, otherwise</entry>
+              <entry>Loaded from LSB</entry>
+            </row>
+            <row>
+              <entry>RRC(.B or .W) dst</entry>
+              <entry>=1, dst positive &amp; C=1=0, otherwise</entry>
+              <entry>=1, negative result=0, otherwise</entry>
+              <entry>=1, null result,=0, otherwise</entry>
+              <entry>Loaded from LSB</entry>
+            </row>
+            <row>
+              <entry>SWPB(.B or .W) dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>SXT dst</entry>
+              <entry>=0</entry>
+              <entry>=1, negative result=0, otherwise</entry>
+              <entry>=1, null result,=0, otherwise</entry>
+              <entry>=1, not zero=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>PUSH(.B or .W) src</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Data instructions</entry>
+            </row>
+            <row>
+              <entry>CALL(.B or .W) dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>--</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>RETI</entry>
+              <entry>restored from stack</entry>
+              <entry>restored from stack</entry>
+              <entry>restored from stack</entry>
+              <entry>restored from stack</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1163712335122">
+      <title>Program flow control - Jumps</title>
+      <para id="id1163709034817">The jump instruction is formatted as follows:</para>
+      <table id="id1163722342360" summary="">
+        <tgroup cols="18">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <colspec colnum="6" colname="c6"/>
+          <colspec colnum="7" colname="c7"/>
+          <colspec colnum="8" colname="c8"/>
+          <colspec colnum="9" colname="c9"/>
+          <colspec colnum="10" colname="c10"/>
+          <colspec colnum="11" colname="c11"/>
+          <colspec colnum="12" colname="c12"/>
+          <colspec colnum="13" colname="c13"/>
+          <colspec colnum="14" colname="c14"/>
+          <colspec colnum="15" colname="c15"/>
+          <colspec colnum="16" colname="c16"/>
+          <colspec colnum="17" colname="c17"/>
+          <colspec colnum="18" colname="c18"/>
+          <tbody>
+            <row>
+              <entry>15</entry>
+              <entry>14</entry>
+              <entry namest="c3" nameend="c4">13</entry>
+              <entry>12</entry>
+              <entry>11</entry>
+              <entry namest="c7" nameend="c8">10</entry>
+              <entry>9</entry>
+              <entry>8</entry>
+              <entry>7</entry>
+              <entry>6</entry>
+              <entry>5</entry>
+              <entry>4</entry>
+              <entry>3</entry>
+              <entry>2</entry>
+              <entry>1</entry>
+              <entry>0</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c3">opcode</entry>
+              <entry namest="c4" nameend="c7">C</entry>
+              <entry namest="c8" nameend="c18">10 bit PC offset</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <table id="id1163703403494" summary="">
+        <tgroup cols="3">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <tbody>
+            <row>
+              <entry>Bit</entry>
+              <entry/>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry>15-13</entry>
+              <entry>opcode</entry>
+              <entry/>
+            </row>
+            <row>
+              <entry>12-10</entry>
+              <entry>C</entry>
+              <entry/>
+            </row>
+            <row>
+              <entry>9-0</entry>
+              <entry>PC offset</entry>
+              <entry>PCnew = PCold + 2 + PCoffset × 2</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1163697568110">The following table shows the program flow control (jump) instructions that are not emulated.</para>
+      <table id="id1163703031497" summary="">
+        <tgroup cols="2">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <tbody>
+            <row>
+              <entry>Mnemonic</entry>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c2">Program flow control instructions</entry>
+            </row>
+            <row>
+              <entry>JEQ/JZ label</entry>
+              <entry>Jump to label if zero flag is set</entry>
+            </row>
+            <row>
+              <entry>JNE/JNZ label</entry>
+              <entry>Jump to label if zero flag is reset</entry>
+            </row>
+            <row>
+              <entry>JC label</entry>
+              <entry>Jump to label if carry flag is set</entry>
+            </row>
+            <row>
+              <entry>JNC label</entry>
+              <entry>Jump to label if carry flag is reset</entry>
+            </row>
+            <row>
+              <entry>JN label</entry>
+              <entry>Jump to label if negative flag is set</entry>
+            </row>
+            <row>
+              <entry>JGE label</entry>
+              <entry>Jump to label if greater than or equal</entry>
+            </row>
+            <row>
+              <entry>JL label</entry>
+              <entry>Jump to label if less than</entry>
+            </row>
+            <row>
+              <entry>JMP label</entry>
+              <entry>Jump to label unconditionally</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1163724309335">
+      <title>Emulated instructions</title>
+      <para id="id1163704573383">The next gives the different emulated instructions. This table also contains the type of operation and the emulated instruction based on the core instructions.</para>
+      <table id="id1163704441064" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry>Mnemonic</entry>
+              <entry>Operation</entry>
+              <entry>Emulation</entry>
+              <entry namest="c4" nameend="c5">Description</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Arithmetic instructions</entry>
+            </row>
+            <row>
+              <entry>ADC(.B or .W) dst</entry>
+              <entry>dst+C→dst</entry>
+              <entry namest="c3" nameend="c4">ADDC(.B or .W) #0,dst</entry>
+              <entry>Add carry to destination</entry>
+            </row>
+            <row>
+              <entry>DADC(.B or .W) dst</entry>
+              <entry>dst+C→dst (decimally)</entry>
+              <entry namest="c3" nameend="c4">DADD(.B or .W) #0,dst</entry>
+              <entry>Decimal add carry to destination</entry>
+            </row>
+            <row>
+              <entry>DEC(.B or .W) dst</entry>
+              <entry>dst-1→dst</entry>
+              <entry namest="c3" nameend="c4">SUB(.B or .W) #1,dst</entry>
+              <entry>Decrement destination</entry>
+            </row>
+            <row>
+              <entry>DECD(.B or .W) dst</entry>
+              <entry>dst-2→dst</entry>
+              <entry namest="c3" nameend="c4">SUB(.B or .W) #2,dst</entry>
+              <entry>Decrement destination twice</entry>
+            </row>
+            <row>
+              <entry>INC(.B or .W) dst</entry>
+              <entry>dst+1→dst</entry>
+              <entry namest="c3" nameend="c4">ADD(.B or .W) #1,dst</entry>
+              <entry>Increment destination</entry>
+            </row>
+            <row>
+              <entry>INCD(.B or .W) dst</entry>
+              <entry>dst+2→dst</entry>
+              <entry namest="c3" nameend="c4">ADD(.B or .W) #2,dst</entry>
+              <entry>Increment destination twice</entry>
+            </row>
+            <row>
+              <entry>SBC(.B or .W) dst</entry>
+              <entry>dst+0FFFFh+C→dstdst+0FFh→dst</entry>
+              <entry namest="c3" nameend="c4">SUBC(.B or .W) #0,dst</entry>
+              <entry>Subtract source and borrow /.NOT. carry from dest.</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Logical and register control instructions</entry>
+            </row>
+            <row>
+              <entry>INV(.B or .W) dst</entry>
+              <entry>.NOT.dst→dst</entry>
+              <entry namest="c3" nameend="c4">XOR(.B or .W) #0(FF)FFh,dst</entry>
+              <entry>Invert bits in destination</entry>
+            </row>
+            <row>
+              <entry>RLA(.B or .W) dst</entry>
+              <entry>CMSBMSB-1…LSB+1LSB0</entry>
+              <entry namest="c3" nameend="c4">ADD(.B or .W) dst,dst</entry>
+              <entry>Rotate left arithmetically</entry>
+            </row>
+            <row>
+              <entry>RLC(.B or .W) dst</entry>
+              <entry>CMSBMSB-1…LSB+1LSBC</entry>
+              <entry namest="c3" nameend="c4">ADDC(.B or .W) dst,dst</entry>
+              <entry>Rotate left through carry</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Data instructions</entry>
+            </row>
+            <row>
+              <entry>CLR(.B or .W) dst</entry>
+              <entry>0→dst</entry>
+              <entry namest="c3" nameend="c4">MOV(.B or .W) #0,dst</entry>
+              <entry>Clear destination</entry>
+            </row>
+            <row>
+              <entry>CLRC</entry>
+              <entry>0→C</entry>
+              <entry namest="c3" nameend="c4">BIC #1,SR</entry>
+              <entry>Clear carry flag</entry>
+            </row>
+            <row>
+              <entry>CLRN</entry>
+              <entry>0→N</entry>
+              <entry namest="c3" nameend="c4">BIC #4,SR</entry>
+              <entry>Clear negative flag</entry>
+            </row>
+            <row>
+              <entry>CLRZ</entry>
+              <entry>0→Z</entry>
+              <entry namest="c3" nameend="c4">BIC #2,SR</entry>
+              <entry>Clear zero flag</entry>
+            </row>
+            <row>
+              <entry>POP(.B or .W) dst</entry>
+              <entry>@SP→tempSP+2→SPtemp→dst</entry>
+              <entry namest="c3" nameend="c4">MOV(.B or .W) @SP+,dst</entry>
+              <entry>Pop byte/word from stack to destination</entry>
+            </row>
+            <row>
+              <entry>SETC</entry>
+              <entry>1→C</entry>
+              <entry namest="c3" nameend="c4">BIS #1,SR</entry>
+              <entry>Set carry flag</entry>
+            </row>
+            <row>
+              <entry>SETN</entry>
+              <entry>1→N</entry>
+              <entry namest="c3" nameend="c4">BIS #4,SR</entry>
+              <entry>Set negative flag</entry>
+            </row>
+            <row>
+              <entry>SETZ</entry>
+              <entry>1→Z</entry>
+              <entry namest="c3" nameend="c4">BIS #2,SR</entry>
+              <entry>Set zero flag</entry>
+            </row>
+            <row>
+              <entry>TST(.B or .W) dst</entry>
+              <entry>dst + 0FFFFh + 1dst + 0FFh + 1</entry>
+              <entry namest="c3" nameend="c4">CMP(.B or .W) #0,dst</entry>
+              <entry>Test destination</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Program flow control</entry>
+            </row>
+            <row>
+              <entry>BR dst</entry>
+              <entry>dst→PC</entry>
+              <entry namest="c3" nameend="c4">MOV dst,PC</entry>
+              <entry>Branch to destination</entry>
+            </row>
+            <row>
+              <entry>DINT</entry>
+              <entry>0→GIE</entry>
+              <entry namest="c3" nameend="c4">BIC #8,SR</entry>
+              <entry>Disable (general) interrupts</entry>
+            </row>
+            <row>
+              <entry>EINT</entry>
+              <entry>1→GIE</entry>
+              <entry namest="c3" nameend="c4">BIS #8,SR</entry>
+              <entry>Enable (general) interrupts</entry>
+            </row>
+            <row>
+              <entry>NOP</entry>
+              <entry>None</entry>
+              <entry namest="c3" nameend="c4">MOV #0,R3</entry>
+              <entry>No operation</entry>
+            </row>
+            <row>
+              <entry>RET</entry>
+              <entry>@SP→PCSP+2→SP</entry>
+              <entry namest="c3" nameend="c4">MOV @SP+,PC</entry>
+              <entry>Return from subroutine</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1163717544486">Conditions for status bits, depending on the emulated instruction result.</para>
+      <table id="id1163710822573" summary="">
+        <tgroup cols="5">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <tbody>
+            <row>
+              <entry/>
+              <entry namest="c2" nameend="c5">Status bits</entry>
+            </row>
+            <row>
+              <entry>Mnemonic</entry>
+              <entry>V</entry>
+              <entry>N</entry>
+              <entry>Z</entry>
+              <entry>C</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Arithmetic instructions</entry>
+            </row>
+            <row>
+              <entry>ADC(.B or .W) dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result=0, otherwise</entry>
+              <entry>=1, dst from 0FFFFh to 0000=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>DADC(.B or .W) dst</entry>
+              <entry>-</entry>
+              <entry>=1, MSB=1=0, otherwise</entry>
+              <entry>=1, dst=0=0, otherwise</entry>
+              <entry>=1, dst from 99(99) to 00(00)=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>DEC(.B or .W) dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, dst contained 1=0, otherwise</entry>
+              <entry>=1, dst contained 0=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>DECD(.B or .W) dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, dst contained 2=0, otherwise</entry>
+              <entry>=1, dst contained 0 or 1=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>INC(.B or .W) dst</entry>
+              <entry>=1, dst contained 07(FF)h=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, dst contained FF(FF)h=0, otherwise</entry>
+              <entry>=1, dst contained FF(FF)h=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>INCD(.B or .W) dst</entry>
+              <entry>=1, dst contained 07(FFE)h=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, dst contained FF(FE)h=0, otherwise</entry>
+              <entry>=1, dst contained FF(FF)h or FF(FE)h=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>SBC(.B or .W) dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result,=0, otherwise</entry>
+              <entry>=1, if no borrow=0, otherwise</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Logical and register control instructions</entry>
+            </row>
+            <row>
+              <entry>INV(.B or .W) dst</entry>
+              <entry>=1, negative initial dst=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, dst contained FF(FF)h=0, otherwise</entry>
+              <entry>=1, not zero=0, otherwise</entry>
+            </row>
+            <row>
+              <entry>RLA(.B or .W) dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result,=0, otherwise</entry>
+              <entry>Loaded from MSB</entry>
+            </row>
+            <row>
+              <entry>RLC(.B or .W) dst</entry>
+              <entry>=1, Arithmetic overflow=0, otherwise</entry>
+              <entry>=1, negative result=0, if positive</entry>
+              <entry>=1, null result,=0, otherwise</entry>
+              <entry>Loaded from MSB</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Data instructions</entry>
+            </row>
+            <row>
+              <entry>CLR(.B or .W) dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>CLRC</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>=0</entry>
+            </row>
+            <row>
+              <entry>CLRN</entry>
+              <entry>-</entry>
+              <entry>=0</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>CLRZ</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>=0</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>POP(.B or .W) dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>SETC</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>=1</entry>
+            </row>
+            <row>
+              <entry>SETN</entry>
+              <entry>-</entry>
+              <entry>=1</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>SETZ</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>=1</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>TST(.B or .W) dst</entry>
+              <entry>=0</entry>
+              <entry>=1, dst negative=0, otherwise</entry>
+              <entry>=1, dst contains zero=0, otherwise</entry>
+              <entry>=1</entry>
+            </row>
+            <row>
+              <entry namest="c1" nameend="c5">Program flow control</entry>
+            </row>
+            <row>
+              <entry>BR dst</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>DINT</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>EINT</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>NOP</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry>RET</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1163717753569">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

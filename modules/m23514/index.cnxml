@@ -1,0 +1,19 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>File history</title>
+  <metadata>
+  <md:content-id>m23514</md:content-id><md:title>File history</md:title>
+  <md:abstract/>
+  <md:uuid>e0f10665-8587-42c9-9480-f48c22994b70</md:uuid>
+</metadata>
+
+<content>
+    <section id="id14502191">
+      <title>File history</title>
+      <para id="id10780801">Another of the features included in CCE allows comparisons between two files or previous versions of it, using file history stored during the work sessions. This feature allows searching and integrating the different versions between files.</para>
+      <para id="id12150086">The file to compare with the local history must be selected in one of the navigation views. In the context menu (select the file, mouse right button click), choose the <emphasis effect="bold">Compare With &gt; Local history</emphasis> option. In response to this selection, the <emphasis effect="bold">Compare With Local History</emphasis> window is opened. A previous state presented in the <emphasis effect="bold">Local History</emphasis> list can be chosen. The text comparison editor will then be open. The navigation between changes is made through the buttons <emphasis effect="bold">Select Next Change</emphasis> and <emphasis effect="bold">Select Previous Change</emphasis>. </para>
+      <para id="id11148499">It is possible to recover a resource that has been cleared of the workspace. The procedure is as follows: the project to which is to be restored to a previous state must be chosen in the navigation view. In the context menu, the <emphasis effect="bold">Restore from Local History...</emphasis> option should be chosen. The <emphasis effect="bold">Restore From Local History</emphasis> window will open on the right hand side of the screen. It will display all the files that were previously part of the project. The last file version, or any of those previous, can be fully recovered by choosing it in the <emphasis effect="bold">Local History</emphasis> list. The restore will be done after clicking <emphasis effect="bold">Restore</emphasis>.</para>
+      <para id="id10595930">The file history feature can be configured according to Project needs. In the preferences page <emphasis effect="bold">General &gt; Workspace &gt; Local History</emphasis>, it is possible to establish the number of days that a particular file history should remain available and the maximum number of entries per file. If the defined value is exceeded, the oldest changes are removed in order to provide memory space for the latest. The maximum size available to store the file history can also be defined. If its size is exceeded, the file history ceases to be performed.</para>
+      <para id="id7134987">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

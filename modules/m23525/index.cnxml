@@ -1,0 +1,77 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory GPIO: Lab1 - Blinking the LED</title>
+  <metadata>
+  <md:content-id>m23525</md:content-id><md:title>Laboratory GPIO: Lab1 - Blinking the LED</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool and the eZ430 kits blink the LED1.</md:abstract>
+  <md:uuid>7b86fafd-c1f7-44a0-b416-e40ba70e50ce</md:uuid>
+</metadata>
+<featured-links>
+  <!-- WARNING! The 'featured-links' section is read only. Do not edit below.
+       Changes to the links section in the source will not be saved. -->
+    <link-group type="example">
+      <link url="http://cnx.org/GroupWorkspaces/wg1386/m23525/slau176b.pdf/view" strength="3">slau176b.pdf</link>
+      <link url="http://cnx.org/GroupWorkspaces/wg1386/m23525/slau227a.pdf/view" strength="3">slau227a.pdf</link>
+      <link url="http://cnx.org/GroupWorkspaces/wg1386/m23525/slau213a.pdf/view" strength="3">slau213a.pdf</link>
+    </link-group>
+  <!-- WARNING! The 'featured-links' section is read only. Do not edit above.
+       Changes to the links section in the source will not be saved. -->
+</featured-links>
+<content>
+    <section id="id7248618">
+      <title>Laboratory GPIO: Lab1 - Blinking the LED</title>
+      <section id="id7348623">
+        <title>Introduction</title>
+        <para id="id7337570">The hands-on laboratory consists of configuring the I/O ports, setting up the input lines to read push buttons and the output lines to feed LEDs. The following exercises have been developed for the three hardware development tools. </para>
+        <para id="id7348717">The first to be discussed is the MSP-EXP430FG4618 Experimenter’s board. Modifications are later made to suit the other development boards. The main differences between the boards are related to the specific ports in which the buttons and LED are (or can be) connected. For the development of this laboratory, Code Composer Essentials v3 has been used.</para>
+      </section>
+      <section id="id7344415">
+        <title>Procedure</title>
+        <para id="id7337911">By analysis of the schematics, determine which I/O port pin is connected to the LED on the board:</para>
+        <para id="id7339175">- Consult the MSP430FG4618/F2013 Experimenter’s Board User's Guide <link url="http://cnx.org/content/m23525/latest/slau213a.pdf" window="new"> slau213a.pdf </link></para>
+        <para id="id7339199"> - LED1 is connected to Port 2.2</para>
+        <para id="id7133458">- Consult the eZ430-F2013 Development Tool User's Guide <link url="http://cnx.org/content/m23525/latest/slau176b.pdf" window="new"> slau176b.pdf </link></para>
+        <para id="id6997581"> - LED1 is connected to Port 1.1</para>
+        <para id="id6997586">- Consult the eZ430-RF2500 Development Tool User's Guide <link url="http://cnx.org/content/m23525/latest/slau227c.pdf" window="new"> slau227c.pdf </link></para>
+        <para id="id7272583"> - LED is connected to Port 1.0</para>
+        <para id="id7272588">Include the standard register and bit definitions for the TI MSP430 microcontroller device (example for the MSP430FG18/MSP430F2013 Experimenter's board):</para>
+        <para id="id7344088">
+          <code display="inline">#include &lt;msp430xG46x.h&gt;</code>
+        </para>
+        <para id="id7328851">Define the main routine:</para>
+        <para id="id7328307">
+          <code display="inline">void main (void){</code>
+        </para>
+        <para id="id7344042">The watchdog timer must be prevented from generating a PUC. Write 0x5A to the eight MSBs of the Watchdog timer control register, WDTCTL:</para>
+        <para id="id7344050">
+          <code display="inline">WDTCTL = WDTHOLD | WDTPW;</code>
+        </para>
+        <para id="id7348326">Port control registers:</para>
+        <para id="id7348331"> - Set the LED port pin as an output;</para>
+        <para id="id7348336">  P2DIR: Port 2.2 is set as an output:</para>
+        <para id="id7348342">
+          <code display="inline">P2DIR |= 0x04; // to force the pin setting. It is uses an OR operation ( | ) with P2DIR and 0x04</code>
+        </para>
+        <para id="id7348354">Use an infinite loop to modify the state of the port;</para>
+        <para id="id7345207">Use a software delay loop to generate the pause interval. (a long software delay loop is used here for simplicity - in real applications, a timer would be used)</para>
+        <para id="id7345214"> - Because no clock is defined, the device will use the 32.768 kHz watch crystal. In order for a rate of one blinking LED state transition each second, the software delay loop should count to approximately 30000 {30000/32768 = +/- 1 sec};</para>
+        <para id="id7345224">volatile unsigned int i;</para>
+        <para id="id7345228"><code id="eip-id6945540" display="block">while(1){  //Infinite loop  
+ i=30000;  //Delay 
+ do (i--);
+ while (i !=0);
+</code>
+</para>
+        
+        
+        
+        <para id="id7345278"> - Port control registers inside the loop:</para>
+        <para id="id7348049">  P2OUT: To switch the port state between low and high state during program execution:</para>
+        <code id="id7348056" display="block">P2OUT ^= 0x04}}; // It uses an XOR operation ( ^ ) between P2OUT and 0x04:
+    </code>
+        <para id="id7348068"> - The programming code for the other hardware kits follows the same sequence as given above, requiring only configuration the port.</para>
+        <para id="id7348076">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id7348081">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

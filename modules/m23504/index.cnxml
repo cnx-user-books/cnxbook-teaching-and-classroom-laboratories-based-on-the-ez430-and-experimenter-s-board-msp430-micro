@@ -1,0 +1,37 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Code Composer Essentials</title>
+  <metadata>
+  <md:content-id>m23504</md:content-id><md:title>Code Composer Essentials</md:title>
+  <md:abstract/>
+  <md:uuid>91e7f3cf-250a-4ed9-877f-1c99235699bd</md:uuid>
+</metadata>
+
+<content>
+    <section id="id43166714">
+      <title>Code Composer Essentials </title>
+      <para id="id40687110">TI recently launched Code Composer Essentials v3. This IDE’s latest version (version 3) supports all available MSP430 devices.</para>
+      <para id="id42926829">The new features of CCE v3 include:</para>
+      <para id="id40765762">- Free 16 kB code-limited version;</para>
+      <para id="id43061229">- Supports the large memory model (Place data &gt;64k);</para>
+      <para id="id43061234">- Enhanced Compatibility with IAR C-code:</para>
+      <para id="id40884509">- #pragma (ISR declarations), most intrinsics.</para>
+      <para id="id40414319">- GDB Debugger replaced by TI proprietary debugger that allows faster single stepping;</para>
+      <para id="id40765411">- Hardware Multiplier libraries (16-bit and 32-bit multiplies);</para>
+      <para id="id40789963">- CCE v2 project support (auto convert);</para>
+      <para id="id40830206">- Breakpoints:</para>
+      <para id="id40813583">- Extended Emulation Module (EEM) support via unified breakpoint manager;</para>
+      <para id="id41867814">- Using of EEM (predefined Use Cases);</para>
+      <para id="id41867819">- Unlimited Breakpoints</para>
+      <para id="id42962454">Eclipse is a software development platform, developed in Java, which allows it to be used on different operating systems. One of its main features is that it is fully based on plug-ins, which gives it great versatility. Code Composer Essentials (CCE) version 3 is based on Eclipse release 3.2 (Callisto). On the market there are hundreds of plug-ins that can be added in order to enhance or optimize a particular aspect of CCE. One of the available repositories for plug-ins developed for the Eclipse is the Eclipse Plugin Central located at http://www.eclipseplugincentral.com/. This development tool has advanced capabilities to support the development of applications for the MSP430 family. Among them are the support for the use of breakpoints, either hardware or software. CCE supports code debugging activities, with support for features such as code step-by-step execution, or fast and efficient access to registers and memory locations. There is complete compatibility between the C programming language syntax used and the great diversity of code examples available.</para>
+      <para id="id40687873">In addition, others plug-ins are also part of the default version, the important ones being:</para>
+      <para id="id40687877">- Concurrent Version System (CVS): For control of code versions in production.</para>
+      <para id="id40883988">- Plug-in Development Environment (PDE): Relevant for those who want to expand the functionality of IDE through plug-ins.</para>
+      <para id="id40883993">- JUnit: Framework for code validation and test</para>
+      <section id="id43239119">
+        <title>CCE installation</title>
+        <para id="id40834522">Most of the installation of CCE is automated. It is only necessary to provide some user indications as to how the program installation should continue.</para>
+        <para id="id40548757">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

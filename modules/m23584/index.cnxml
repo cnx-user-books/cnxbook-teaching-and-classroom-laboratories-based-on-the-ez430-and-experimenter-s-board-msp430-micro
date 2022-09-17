@@ -1,0 +1,82 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Hardware Multiplier: Lab2 - Multiplication with hardware multiplier</title>
+  <metadata>
+  <md:content-id>m23584</md:content-id><md:title>Laboratory Hardware Multiplier: Lab2 - Multiplication with hardware multiplier</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool and the MSP430FG4618 device analyse the MSP430’s performance when makes a multiplication operation with the hardware multiplier. Two different situations are analysed: - Using the “*” operator; - Accessing the hardware multiplier registers directly. The execution time is measured with an oscilloscope.</md:abstract>
+  <md:uuid>e4e176bb-f030-49ba-a089-5148585d2384</md:uuid>
+</metadata>
+
+<content>
+    <section id="id27499238">
+      <title>Laboratory Hardware Multiplier: Lab2 - Multiplication with hardware multiplier</title>
+      <section id="id3295675">
+        <title>Introduction</title>
+        <para id="id24533720">This laboratory explores the hardware multiplier peripheral. It is composed of three different tasks, each of which evaluates a different characteristic of the hardware multiplier peripheral:</para>
+        <para id="id15498462">- Multiplication operation execution time, with and without the hardware multiplier.</para>
+        <para id="id23706270">-Differences between the use of the operator “*” and direct write to the hardware multiplier registers.</para>
+        <para id="id2965051">- Task operational analysis, in which the active power and the RMS value of an electrical system are calculated.</para>
+      </section>
+      <section id="id27635921">
+        <title>Overview</title>
+        <para id="id11546142">This laboratory explores and analyses the MSP430’s performance when it performs multiply operations using the hardware multiplier peripheral. Two different variants are analysed:</para>
+        <para id="id27615108">- Using the “*” operator;</para>
+        <para id="id14701700">-Accessing the hardware multiplier registers directly.</para>
+        <para id="id2945313">The execution times are measured with an oscilloscope.</para>
+      </section>
+      <section id="id9860983">
+        <title>Resources</title>
+        <para id="id13575932">This laboratory only uses Port P2.1 connected to LED2 in order to measure the execution time of the multiplication operation, when it is performed by the hardware multiplier.</para>
+        <para id="id15496325">The default configuration of the FLL+ is used. All the clock signals required for the operation of the components of the device take their default values.</para>
+      </section>
+      <section id="id14115556">
+        <title>Software application organization</title>
+        <para id="id2807708">The application begins by stopping the Watchdog Timer;</para>
+        <para id="id25269741">Port P2.1 is configured as an output with the pin at a low level;</para>
+        <para id="id25182956">The code can be broken down into two parts:</para>
+        <para id="id6113500">- In the first part of the code, the multiplication is performed with the “*” operator. This task is performed between P2.1 toggles, in order to determine the time required to perform this operation;</para>
+        <para id="id14513183">- The remaining part of the code is separated by some <code display="inline">_NOP()</code> operations. This coding allows analysis of the execution time using an oscilloscope. Here, the multiplication operation is performed by directly accessing the hardware multiplier registers. The multiplication of the variables is performed between toggle P2.1 instructions;</para>
+        <para id="id14899327">This application ends with the device entering low power mode LPM4.</para>
+      </section>
+      <section id="id27531425">
+        <title>System configuration</title>
+        <para id="id14915619">Go to <emphasis>Properties &gt; TI Debug Settings</emphasis> and select the <emphasis>Target</emphasis> tab. Uncheck the <emphasis>automatically step over functions without debug information when source stepping</emphasis> in order to allow stepping into the multiply routine;</para>
+        <para id="id8069476">Go to <emphasis>Properties &gt; C/C++ Build &gt; Linker MSP430 Linker v3.0 &gt; General options</emphasis> and choose the option <emphasis>16 (default)</emphasis> at the <emphasis>Link in hardware version of RTS mpy routine</emphasis>. With this linker option, the application (<link url="http://cnx.org/content/m23584/latest/Lab2_HM.c" window="new"> Lab2_HM.c </link>) will be built with the 16-bit hardware multiplier peripheral contained in the Experimenter’s board.</para>
+        <para id="id26860887"><emphasis>Rebuild</emphasis> the project and download to the target.</para>
+      </section>
+      <section id="id14271320">
+        <title>Analysis of operation</title>
+        <section id="id26937681">
+          <title>Analysis of hardware multiply routine with the “*” operator</title>
+          <para id="id22770918">- Connect the oscilloscope probe to port P2.1, which is connected to Header 4 pin 2;</para>
+          <para id="id14683280">- Put the cursor at line of code 55 {<code display="inline">c = a*b</code>} and <emphasis>Run to line</emphasis>;</para>
+          <para id="id12647468">- Go to <emphasis>Disassembly</emphasis> view and switch to <emphasis>mixed disassembly</emphasis> view in order to show both C and Assembly code;</para>
+          <para id="id13607181">- Observe that the variables <emphasis>a</emphasis> and <emphasis>b</emphasis> are passed to registers and <code display="inline">#__mpyi_hw</code> routine is called;</para>
+          <para id="id3312573">- Run the code step-by-step with the <emphasis>Disassembly</emphasis> view active. This action will lead to the multiply operation being performed by the hardware multiplier;</para>
+          <para id="id15308240">- As the hardware multiply routine source code is not available, switch to <emphasis>Assembly</emphasis> view only;</para>
+          <para id="id27496019">- The routine starts by pushing the Status Register onto the system stack (<code display="inline">PUSH</code> instruction) and disabling the interrupts (this always occurs when using the hardware multiplier peripheral);</para>
+          <para id="id12405443">- The next line of code exchanges data with the hardware multiplier;</para>
+          <para id="id9956610">- Then the SR is popped (<code display="inline">POP</code> instruction) from the system stack, restoring the system environment (data interrupt state restored);</para>
+          <para id="id2921954">- The routine finishes with a <code display="inline">RETA</code> instruction.</para>
+        </section>
+        <section id="id27633957">
+          <title>Analysis of hardware multiply operation with direct registers access</title>
+          <para id="id14441173">- Switch to the <emphasis>C</emphasis> view;</para>
+          <para id="id24371365">- Put the cursor at line of code 72 {<code display="inline">MPY = a</code>} and <emphasis>Run to line</emphasis>;</para>
+          <para id="id12533555">- The routine call operation is avoided, as shown in the <emphasis>Disassembly</emphasis> view. This exemplifies an energy saving procedure because it shows how less CPU clock cycles can be used.</para>
+        </section>
+        <section id="id6109919">
+          <title>Measurement of execution time of the multiply operation</title>
+          <para id="id27686760">- Restart the application. It will run from the beginning;</para>
+          <para id="id12965765">- Put the cursor at line of code 77 <code display="inline">{_BIS_SR(LPM4)</code>} and <emphasis>Run to line</emphasis>;</para>
+          <para id="id27150351">- Measure the pulse widths using the oscilloscope;</para>
+          <para id="id25112178">- The first time pulse corresponds to the hardware multiply routine with the operator “*”, and has a width of 42 μsec;</para>
+          <para id="id2912135">- The second time pulse corresponds to the hardware multiply register operation and has a width of 19 μsec;</para>
+          <para id="id23427191">- Comparing both time pulses and the time pulse obtained in <emphasis effect="italics">Lab1: Multiplication without the hardware multiplier</emphasis>, it can be seen that with the hardware multiplier there is a significant reduction of the time required to perform a multiply operation;</para>
+          <para id="id12984650">- The smaller time pulse corresponds to the hardware multiply operation writing directly to the hardware multiplier registers. This reduction in time means less power consumption, which is very useful for the design of low-power applications.</para>
+          <para id="id14272899">This example and many others are available on the MSP430 Teaching ROM. </para>
+          <para id="id14309971">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

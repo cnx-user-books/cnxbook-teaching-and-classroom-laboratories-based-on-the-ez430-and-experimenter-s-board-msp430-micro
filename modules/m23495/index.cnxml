@@ -1,0 +1,263 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Address space</title>
+  <metadata>
+  <md:content-id>m23495</md:content-id><md:title>Address space</md:title>
+  <md:abstract/>
+  <md:uuid>0ff870ac-c29e-4852-a432-d7d5cdfd4e73</md:uuid>
+</metadata>
+
+<content>
+    <para id="id1169720865116">Address space</para>
+    <para id="id1169722449591">All memory, including RAM, Flash/ROM, information memory, special function registers (SFRs), and peripheral registers are mapped into a single, contiguous address space.</para>
+    <para id="id1169717189665"><emphasis effect="bold">Note:</emphasis> See the device-specific datasheets for specific memory maps. Code access is always performed on even addresses. Data can be accessed as bytes or words.</para>
+    <para id="id1169721124874">The MSP430 is available with either Flash or ROM memory types. The memory type is identified by the letter immediately following “MSP430” in the part numbers.</para>
+    <para id="id1169717025385"><emphasis effect="bold">Flash devices</emphasis>: Identified by the letter “F” in the part numbers, having the advantage that the code space can be erased and reprogrammed. </para>
+    <para id="id1169720296827"><emphasis effect="bold">ROM devices</emphasis>: Identified by the letter “C” in the part numbers. They have the advantage of being very inexpensive because they are shipped pre-programmed, which is the best solution for high-volume designs.</para>
+    <para id="id1169728866472"><figure id="id1169720245459"><media id="id1169720245459_media" alt=""><image mime-type="image/png" src="../../media/graphics1-79b6.png" id="id1169720245459__onlineimage" height="378" width="589"/></media></figure>* Depending on device family.</para>
+    <para id="id1169725191236">For all devices, each memory location is formed by 1 data byte. The CPU is capable of addressing data values either as bytes (8 bits) or words (16 bits). Words are always addressed at an even address, which contain the least significant byte, followed by the next odd address, which contains the most significant byte. For 8-bit operations, the data can be accessed from either odd or even addresses, but for 16-bit operations, the data values can only be accessed from even addresses.</para>
+    <section id="id8185547">
+      <title>Interrupt vector table</title>
+      <para id="id1169719628091">The interrupt vector table is mapped at the very end of memory space (upper 16 words of Flash/ROM), in locations 0FFE0h through to 0FFFEh (see the device-specific datasheets). The priority of the interrupt vector increases with the word address.</para>
+      <para id="id1169721117236">Interrupt vector table for MSP430 families.</para>
+      <table id="id1169716553911" summary="">
+        <tgroup cols="7">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <colspec colnum="5" colname="c5"/>
+          <colspec colnum="6" colname="c6"/>
+          <colspec colnum="7" colname="c7"/>
+          <tbody>
+            <row>
+              <entry>Vector Address</entry>
+              <entry>Priority</entry>
+              <entry>
+                <emphasis effect="bold">’</emphasis>
+                <emphasis effect="bold">11xx and </emphasis>
+                <emphasis effect="bold">’</emphasis>
+                <emphasis effect="bold">12xx</emphasis>
+              </entry>
+              <entry>
+                <emphasis effect="bold">’</emphasis>
+                <emphasis effect="bold">13x and </emphasis>
+                <emphasis effect="bold">’</emphasis>
+                <emphasis effect="bold">14x</emphasis>
+              </entry>
+              <entry>‘2xx</entry>
+              <entry>
+                <emphasis effect="bold">’</emphasis>
+                <emphasis effect="bold">3xx</emphasis>
+              </entry>
+              <entry>
+                <emphasis effect="bold">’</emphasis>
+                <emphasis effect="bold">4xx</emphasis>
+              </entry>
+            </row>
+            <row>
+              <entry>0xFFFE</entry>
+              <entry>31, Highest</entry>
+              <entry>Hard Reset/ Watchdog</entry>
+              <entry>Hard Reset/ Watchdog</entry>
+              <entry>Hard Reset/ Watchdog</entry>
+              <entry>Hard Reset/ Watchdog</entry>
+              <entry>Hard Reset/ Watchdog</entry>
+            </row>
+            <row>
+              <entry>0xFFFC</entry>
+              <entry>30</entry>
+              <entry>Oscillator/ Flash/NMI</entry>
+              <entry>Oscillator/ Flash/NMI</entry>
+              <entry>Oscillator/ Flash/NMI</entry>
+              <entry>Oscillator/ Flash/NMI</entry>
+              <entry>Oscillator/ Flash/NMI</entry>
+            </row>
+            <row>
+              <entry>0xFFFA</entry>
+              <entry>29</entry>
+              <entry>Unused</entry>
+              <entry>Timer_B</entry>
+              <entry>Timer_B (22x2, 22x4, 23x, 24x, 26x only)</entry>
+              <entry>Dedicated I/O</entry>
+              <entry>Timer_B(’43x and’44x only)</entry>
+            </row>
+            <row>
+              <entry>0xFFF8</entry>
+              <entry>28</entry>
+              <entry>Unused</entry>
+              <entry>Timer_B</entry>
+              <entry>Timer_B (22x2, 22x4, 23x, 24x only)</entry>
+              <entry>Dedicated I/O</entry>
+              <entry>Timer_B(’43x and’44x only)</entry>
+            </row>
+            <row>
+              <entry>0xFFF6</entry>
+              <entry>27</entry>
+              <entry>Comparator</entry>
+              <entry>Comparator</entry>
+              <entry>Comparator_A+ (20x1 only, 21x1, 23x, 24x, 26x)</entry>
+              <entry>Unused</entry>
+              <entry>Comparator</entry>
+            </row>
+            <row>
+              <entry>0xFFF4</entry>
+              <entry>26</entry>
+              <entry>Watchdog Timer</entry>
+              <entry>Watchdog Timer</entry>
+              <entry>Watchdog Timer+</entry>
+              <entry>Watchdog Timer</entry>
+              <entry>Watchdog Timer</entry>
+            </row>
+            <row>
+              <entry>0xFFF2</entry>
+              <entry>25</entry>
+              <entry>Timer_A</entry>
+              <entry>USART Rx</entry>
+              <entry>Timer_A</entry>
+              <entry>Timer_A</entry>
+              <entry>USART0 Rx(’43x and’44x only)</entry>
+            </row>
+            <row>
+              <entry>0xFFF0</entry>
+              <entry>24</entry>
+              <entry>Timer_A</entry>
+              <entry>USART0 Tx</entry>
+              <entry>Timer_A</entry>
+              <entry>Timer_A</entry>
+              <entry>USART0 Tx(’43x and’44x only)</entry>
+            </row>
+            <row>
+              <entry>0xFFEE</entry>
+              <entry>23</entry>
+              <entry>USART0 Rx (’12xx only)</entry>
+              <entry>ADC</entry>
+              <entry>USCI Rx(22x2, 22x4, 23x, 24x, 26x only)I2C status (23x, 24x)</entry>
+              <entry>USART Rx</entry>
+              <entry>ADC(’43x and’44x only)</entry>
+            </row>
+            <row>
+              <entry>0xFFEC</entry>
+              <entry>22</entry>
+              <entry>USART0 Tx (’12xx only)</entry>
+              <entry>Timer_A</entry>
+              <entry>USCI Tx(22x2, 22x4, 23x, 24x, 26x only)I2C Rx/Tx (23x, 24x, 26x only)</entry>
+              <entry>USART Tx</entry>
+              <entry>Timer_A</entry>
+            </row>
+            <row>
+              <entry>0xFFEA</entry>
+              <entry>21</entry>
+              <entry>ADC10</entry>
+              <entry>Timer_A</entry>
+              <entry>ADC10 (20x2 22x2, 22x4 only)ADC12 (23x, 24x, 26x only)SD16_A (20x3 only)</entry>
+              <entry>ADC(’32x and ’33x) Timer/Port (’31x)</entry>
+              <entry>Timer_A</entry>
+            </row>
+            <row>
+              <entry>0xFFE8</entry>
+              <entry>20</entry>
+              <entry>Unused</entry>
+              <entry>Port 1</entry>
+              <entry>USI(20x2, 20x3 only)</entry>
+              <entry>Timer/Port(’32x and ’33x)</entry>
+              <entry>Port 1</entry>
+            </row>
+            <row>
+              <entry>0xFFE6</entry>
+              <entry>19</entry>
+              <entry>Port 2</entry>
+              <entry>USART1 Rx</entry>
+              <entry>Port P2</entry>
+              <entry>Port 2</entry>
+              <entry>USART1 Rx(’44x only)</entry>
+            </row>
+            <row>
+              <entry>0xFFE4</entry>
+              <entry>18</entry>
+              <entry>Port 1</entry>
+              <entry>USART1 Tx</entry>
+              <entry>Port P1</entry>
+              <entry>Port 1</entry>
+              <entry>USART1 Tx(’44x only)</entry>
+            </row>
+            <row>
+              <entry>0xFFE2</entry>
+              <entry>17</entry>
+              <entry>Unused</entry>
+              <entry>Port 2</entry>
+              <entry>USCI Rx (23x, 24x, 26x only)I2C status (241x, 261x only)</entry>
+              <entry>Basic Timer</entry>
+              <entry>Port 2</entry>
+            </row>
+            <row>
+              <entry>0xFFE0</entry>
+              <entry>16</entry>
+              <entry>Unused</entry>
+              <entry>Unused</entry>
+              <entry>USCI Tx (23x,24x only)I2C Rx/Tx (241x, 261x only)</entry>
+              <entry>Port 0</entry>
+              <entry>Basic Timer</entry>
+            </row>
+            <row>
+              <entry/>
+              <entry>15</entry>
+              <entry/>
+              <entry/>
+              <entry>DMA (241x, 261x only)</entry>
+              <entry/>
+              <entry/>
+            </row>
+            <row>
+              <entry/>
+              <entry>14</entry>
+              <entry/>
+              <entry/>
+              <entry>DAC12 (241x, 261 only)</entry>
+              <entry/>
+              <entry/>
+            </row>
+            <row>
+              <entry/>
+              <entry>13 to 0Lowest</entry>
+              <entry/>
+              <entry/>
+              <entry>Reserved</entry>
+              <entry/>
+              <entry/>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section id="id1169719004134">
+      <title>Flash/ROM</title>
+      <para id="id1169716871963">The start address of Flash/ROM depends on the amount of Flash/ROM present on the device. The start address varies between 01100h (60k devices) to 0F800h (2k devices) and always runs to the end of the address space at location 0FFFFh. Flash can be used for both code and data. Word or byte tables can also be stored and read by the program from Flash/ROM.</para>
+      <para id="id1169728134865">All code, tables, and hard-coded constants reside in this memory space.</para>
+    </section>
+    <section id="id1169720823528">
+      <title>Information memory (Flash devices only)</title>
+      <para id="id1169718993938">The MSP430 flash devices contain an address space for information memory. It is like an onboard EEPROM, where variables needed for the next power up can be stored during power down. It can also be used as code memory. Flash memory may be written one byte or word at a time, but must be erased in segments. The information memory is divided into two 128-byte segments. The first of these segments is located at addresses 01000h through to 0107Fh (Segment B), and the second is at address 01080h through to 010FFh (Segment A). This is the case in 4xx devices. It is 256 bytes (4 segments of 64 bytes each) in 2xx devices.</para>
+    </section>
+    <section id="id1169718001109">
+      <title>Boot memory (Flash devices only)</title>
+      <para id="id1169729085807">The MSP430 flash devices contain an address space for boot memory, located between addresses 0C00h through to 0FFFh. The “bootstrap loader” is located in this memory space, which is an external interface that can be used to program the flash memory in addition to the JTAG. This memory region is not accessible by other applications, so it cannot be overwritten accidentally. The bootstrap loader performs some of the same functions as the JTAG interface (excepting the security fuse programming), using the TI data structure protocol for UART communication at a fixed data rate of 9600 baud.</para>
+    </section>
+    <section id="id1169716796745">
+      <title>RAM</title>
+      <para id="id1169719398991">RAM always starts at address 0200h. The end address of RAM depends on the amount of RAM present on the device. RAM is used for both code and data.</para>
+    </section>
+    <section id="id1169719003598">
+      <title>Peripheral Modules</title>
+      <para id="id8828863">Peripheral modules consist of all on-chip peripheral registers that are mapped into the address space. These modules can be accessed with byte or word instructions, depending if the peripheral module is 8-bit or 16-bit respectively. The 16-bit peripheral modules are located in the address space from addresses 0100 through to 01FFh and the 8-bit peripheral modules are mapped into memory from addresses 0010h through to 00FFh.</para>
+    </section>
+    <section id="id1169717050613">
+      <title>Special Function Registers (SFRs)</title>
+      <para id="id1169724926499">Some peripheral functions are mapped into memory with special dedicated functions. The Special Function Registers (SFRs) are located at memory addresses from 0000h to 000Fh, and are the specific registers for:</para>
+      <para id="id1223832">- Interrupt enables (locations 0000h and 0001h);</para>
+      <para id="id1169724654444">- Interrupt flags (locations 0002h and 0003h);</para>
+      <para id="id1169715054449">- Enable flags (locations 0004h and 0005h).</para>
+      <para id="id1169718909351">SFRs must be accessed using byte instructions only. See the device-specific data sheets for the applicable SFR bits.</para>
+      <para id="id1169715384024">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

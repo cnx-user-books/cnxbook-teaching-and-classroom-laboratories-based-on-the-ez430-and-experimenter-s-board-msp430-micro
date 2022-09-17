@@ -1,0 +1,107 @@
+<col:collection xmlns="http://cnx.rice.edu/collxml" xmlns:md="http://cnx.rice.edu/mdml" xmlns:col="http://cnx.rice.edu/collxml" xml:lang="en" type="Course" authors="António Espírito Santo ,Pedro Dinis">
+  <metadata xmlns:md="http://cnx.rice.edu/mdml" mdml-version="0.5">
+    <md:content-id>col10706</md:content-id>
+    <md:title>Teaching and classroom laboratories based on the “eZ430” and "Experimenter's board" MSP430 microcontroller platforms and Code Composer Essentials</md:title>
+    <md:license url="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution License 3.0</md:license>
+    <md:language>en</md:language>
+    <md:uuid>e98b4c5b-f3d0-4c33-9e8f-d7a0947c2550</md:uuid>
+<md:slug>teaching-and-classroom-laboratories-based-on-the-ez430-and-experimenter-s-board-msp430-microcontroller-platforms-and-code-composer-essentials</md:slug>
+</metadata>
+  <col:content>
+    <col:subcollection>
+      <md:title>MSP430 Overview</md:title>
+      <col:content>
+        <col:module document="m23492"/>
+        <col:module document="m23490"/>
+        <col:module document="m23495"/>
+        <col:module document="m23497"/>
+        <col:module document="m23498"/>
+        <col:module document="m23500"/>
+        <col:module document="m23503"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Code Composer Essentials</md:title>
+      <col:content>
+        <col:module document="m23504"/>
+        <col:module document="m23508"/>
+        <col:module document="m23511"/>
+        <col:module document="m23513"/>
+        <col:module document="m23514"/>
+        <col:module document="m23518"/>
+        <col:module document="m23520"/>
+        <col:module document="m23521"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>General purpose Input/Output</md:title>
+      <col:content>
+        <col:module document="m23525"/>
+        <col:module document="m23540"/>
+        <col:module document="m23547"/>
+        <col:module document="m23556"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Timers</md:title>
+      <col:content>
+        <col:module document="m23532"/>
+        <col:module document="m23531"/>
+        <col:module document="m23530"/>
+        <col:module document="m23529"/>
+        <col:module document="m23527"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>LCD Controller</md:title>
+      <col:content>
+        <col:module document="m23558"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Data Acquisition</md:title>
+      <col:content>
+        <col:module document="m23539"/>
+        <col:module document="m23546"/>
+        <col:module document="m23563"/>
+        <col:module document="m23543"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Digital-to-Analog Converter (DAC)</md:title>
+      <col:content>
+        <col:module document="m23573"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Direct Memory Access (DMA)</md:title>
+      <col:content>
+        <col:module document="m23575"/>
+        <col:module document="m23577"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Hardware Multiplier</md:title>
+      <col:content>
+        <col:module document="m23581"/>
+        <col:module document="m23584"/>
+        <col:module document="m23582"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Flash Programming</md:title>
+      <col:content>
+        <col:module document="m23580"/>
+        <col:module document="m23578"/>
+      </col:content>
+    </col:subcollection>
+    <col:subcollection>
+      <md:title>Communication</md:title>
+      <col:content>
+        <col:module document="m23567"/>
+        <col:module document="m23571"/>
+        <col:module document="m23569"/>
+      </col:content>
+    </col:subcollection>
+  </col:content>
+</col:collection>

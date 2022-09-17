@@ -1,0 +1,149 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Communications: Lab2 - Echo test using SPI</title>
+  <metadata>
+  <md:content-id>m23571</md:content-id><md:title>Laboratory Communications: Lab2 - Echo test using SPI</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool establish a data exchange between the MSP430FG4618 and MSP430F2013 devices using the SPI mode. The MSP430FG4618 uses the USCI module while the MSP430F2013 uses the USI module.</md:abstract>
+  <md:uuid>8447e41a-67d0-416d-a56d-569fd995c6bf</md:uuid>
+</metadata>
+
+<content>
+    <section id="id16783914">
+      <title>Laboratory Communications: Lab2 - Echo test using SPI</title>
+      <section id="id7989475">
+        <title>Introduction</title>
+        <para id="id4215797">The MSP430 contains built-in features for both parallel and serial data communication. This chapter describes the operation of these peripherals, and discusses the protocols, data formats and specific techniques for each type of data communication.</para>
+        <para id="id3788216">The communication modules available for the MSP430 family of microcontrollers are USART (Universal Synchronous/Asynchronous Receiver/Transmitter), USCI (Universal Serial Communication Interface) and USI (Universal Serial Interface). These provide asynchronous data transmission between the MSP430 and other peripheral devices when configured in UART mode. They also support data transmission synchronized to a clock signal through a serial I/O port in Serial Peripheral Interface (SPI) and Inter Integrated Circuit (I2C) modes.</para>
+      </section>
+      <section id="id3788221">
+        <title>Overview</title>
+        <para id="id10657801">This laboratory explores the USCI and USI communication interfaces in SPI mode. The MSP430 devices included on the Experimenter’s board will exchange messages between themselves, one being the MSP430FG4618 (master) that will control operation of the other MSP430F2013 device (slave). The master, by reading the current state of the slave, will drive the slave to the new desired state, controlling its activity. In this particular case, switching the state of LED3 will be implemented.</para>
+      </section>
+      <section id="id10171961">
+        <title>Resources</title>
+        <para id="id18087054">This laboratory uses the USCI module of the MSP430FG4618 device and the USI module included on the MSP430F2013. Both units operate in SPI mode.</para>
+        <para id="id19025882">The Basic Timer1 of the master device is programmed to switch the status of the slave device once every 2 seconds.</para>
+        <para id="id3425825">The slave is notified of the arrival of information through the counting end interrupt of the USI module.</para>
+        <para id="id20986553">The resources used are:</para>
+        <para id="id20789578">- USCI module;</para>
+        <para id="id12194178">- USI module;</para>
+        <para id="id12194182">- Basic Timer1;</para>
+        <para id="id17416146">- Interrupts;</para>
+        <para id="id17416150">- I/O ports.</para>
+      </section>
+      <section id="id4128909">
+        <title>Software application organization</title>
+        <para id="id3659374">The software architecture for this laboratory is shown in Figure 1.</para>
+        <para id="id17476567">The master unit is composed of two software modules (<link url="http://cnx.org/content/m23571/latest/Lab2_Comm_1.c" window="new"> Lab2_Comm_1.c </link>):</para>
+        <para id="id4085800">- The "Main master task" module contains the operation algorithm of master unit;</para>
+        <para id="id4085805">- The "ISR Basic Timer" module wakes the "Main master task" once every 2 seconds. </para>
+        <para id="id20936368">The slave unit is also composed of two modules (<link url="http://cnx.org/content/m23571/latest/Lab2_Comm_2.c" window="new"> Lab2_Comm_2.c </link>):</para>
+        <para id="id3478777">- The "Main slave task" module contains the operation algorithm of the slave unit;</para>
+        <para id="id3478782">- The "USI ISR" module reads the data received, prepares the USI module for new reception and wakes the "Main slave task" to execute the algorithm associated with the reception of the new command.</para>
+        <para id="id9831239">Software architecture</para>
+        <figure id="id3746780">
+          <media id="id3746780_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics1-4798.png" id="id3746780__onlineimage" height="216" width="599"/>
+          </media>
+        </figure>
+      </section>
+      <section id="id20904403">
+        <title>System configuration</title>
+        <section id="id3775513">
+          <title>USCI_B (master) control registers configuration</title>
+          <para id="id3796164">The SPI connection will operate in the following mode:</para>
+          <para id="id3742797">- Clock phase -&gt; Data value is updated on the first UCLK edge and captured on the following edge;</para>
+          <para id="id4133836">- Clock polarity -&gt; the inactive state is low;</para>
+          <para id="id4180710">- MSB first;</para>
+          <para id="id3857630">- 8-bit data;</para>
+          <para id="id17489279">- Master mode;</para>
+          <para id="id17489283">- 3-Pin SPI;</para>
+          <para id="id12413202">- Source clock -&gt; SMCLK.</para>
+          <para id="id12141388">The following control registers are configured based on these characteristics:</para>
+          <code id="id12141393" display="block">UCB0CTL0 = 0x29;
+    //UCB0CTL0 =
+    // UCCKPH|UCCKPL|UCMSB|UC7BIT|UCMST|UCMODEx|UCSYNC|
+    //UCCKPH (Clock phase) = 0b -&gt; Data is changed on the
+    // first UCLK edge and captured on the following edge.
+    //UCCKPL (Clock polarity) = 0b -&gt; Inactive state is low
+    //UCMSB (MSB first select) = 1b -&gt; MSB first
+    //UC7BIT (Character length) = 0b -&gt; 8-bit data
+    //UCMST (Master mode) = 1b -&gt; Master mode
+    //UCMODEx (USCI mode) = 00b -&gt; 3-Pin SPI
+    //UCSYNC (Synch. mode enable) = 1b -&gt; Synchronous mode
+    
+UCB0CTL1 = 0x81;
+    //UCB0CTL1 = 
+    // UCSSELx | Unused |UCSWRST|
+    //UCSSELx (USCI clock source select)= 10b -&gt; SMCLK
+    //UCSWRST (Software reset) = 1b -&gt; normally set by a PUC
+    </code>
+          <para id="id22170153"/>
+        </section>
+        <section id="id16729057">
+          <title>Data rate USCI_B (master)</title>
+          <para id="id3652377">The system clock is configured to operate with a frequency of ~ 1048 kHz from the DCO. This frequency will be the working base frequency of the USCI module. The connection operates at a clock frequency of ~ 500 kHz. Configure the following registers:</para>
+          <code id="id4194572" display="block">UCB0BR0 = 0x02;
+UCB0BR1 = 0x00;
+    // DATA RATE
+    // Data rate = SMCLK/2 ~= 500kHz
+    // UCB0BR1 = 0x00 &amp; UCB0BR0 = 0x02
+    </code>
+        </section>
+        <section id="id8426129">
+          <title>Port configuration USCI_B (master)</title>
+          <para id="id8511767">In order to set the external interfaces at the USCI module, it is necessary to configure the I/O ports. Select the USCI peripheral in SPI mode, matching the connections provided at the Experimenter’s board:</para>
+          <para id="id12130556">
+            <code display="inline">P3SEL |= 0x0E; // P3.3, P3.2, P3.1 option select</code>
+          </para>
+        </section>
+        <section id="id8527214">
+          <title>USI (slave) control registers configuration</title>
+          <para id="id13626031">The SPI connection will operate on the following mode:</para>
+          <para id="id13626036">- MSB first;</para>
+          <para id="id12427763">- 8-bit data.</para>
+          <para id="id16023476">- Slave mode;</para>
+          <para id="id16023480">- Clock phase -&gt; Data is changed on the first SCLK edge and captured on the following edge;</para>
+          <para id="id14932743">- USI counter interrupt enable.</para>
+          <para id="id15936051">The following control registers are configured based on these characteristics:</para>
+          <code id="id18796786" display="block">USICTL0 = 0xE3;
+    //USICTL0 =
+    //USIPE7|USIPE6|USIPE5|USILSB|USIMST|USIGE|USIOE|USISWRST
+    //USIPE7 (USI SDI/SDA port enable) = 1b -&gt; USI enabled
+    //USIPE6 (USI SDO/SCL port enable) = 1b -&gt; USI enabled
+    //USIPE5 (USI SCLK port enable) = 1b -&gt; USI enabled
+    //USILSB (LSB first) = 0b -&gt; MSB first
+    //USIMST (Master) = 0b -&gt; Slave mode
+    //USIGE (Output latch control) = 0b -&gt; Output latch
+    // enable depends on shift clock
+    //USIOE (Serial data output enable) = 1b-&gt; Output enable
+    //USISWRST (USI software reset) = 1b -&gt; Software reset
+    
+USICTL1 = 0x10;
+    //USICTL1 =
+    //USICKPH|USII2C|USISTTIE|USIIE|USIAL|USISTP|USISTTIFG|USIIFG
+    //USICKPH (Clock phase select) = 0b -&gt; Data is changed
+    // on the first SCLK edge and captured on the following edge
+    //USII2C (I2C mode enable) = 0b -&gt; I2C mode disabled
+    //USISTTIE (START condition interrupt) = 0b -&gt; Not used
+    //USIIE (USI counter) = 1b -&gt; Interrupt enabled
+    //USIAL (Arbitration lost) = 0b -&gt; Not used
+    //USISTP (STOP condition received) = 0b -&gt; Not used
+    //USISTTIFG (START condition int. flag) = 0b -&gt; Not used
+    //USIIFG (USI counter int. flag) = 0b -&gt; No int. pending
+    </code>
+        </section>
+      </section>
+      <section id="id8002190">
+        <title>Analysis of operation</title>
+        <para id="id22082191">Once the USCI module is configured in accordance with the previous steps, initiate the experiment with the files Lab2_Comm_1.c (master – MSP430FG4618) and Lab2_Comm_2.c (slave – MSP430F2013), compiling them and running them on the Experimenter’s board.</para>
+        <para id="id11726731"/>
+        <para id="id11726735">For this laboratory, it is necessary to set the following jumper settings:</para>
+        <para id="id16419104">- PWR1/2, BATT, LCL1/2, JP2;</para>
+        <para id="id3124725">- SPI: H1- 1&amp;2, 3&amp;4, 5&amp;6, 7&amp;8.</para>
+        <para id="id3124730">Once the program code is running in the two microcontrollers, monitor LED3 on the Experimenter’s board. It will blink with a period of 4 seconds.</para>
+        <para id="id19937381">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id12001786">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

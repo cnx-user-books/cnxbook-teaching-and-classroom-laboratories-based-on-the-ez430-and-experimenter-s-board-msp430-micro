@@ -1,0 +1,65 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory DMA: Lab1 - Data Memory transfer triggered by software</title>
+  <metadata>
+  <md:content-id>m23575</md:content-id><md:title>Laboratory DMA: Lab1 - Data Memory transfer triggered by software</md:title>
+  <md:abstract>Using the DMA controller included in the MSP-EXP430FG4618 Development Tool analysed the data transfer between two regions of memory.</md:abstract>
+  <md:uuid>a2d2cb5b-7c63-4b4b-a32a-4bfc6d7c01f1</md:uuid>
+</metadata>
+
+<content>
+    <section id="id3410634">
+      <title>Laboratory DMA: Lab1 - Data Memory transfer triggered by software</title>
+      <section id="id12364049">
+        <title>Introduction</title>
+        <para id="id6177979">This laboratory gives an example of the use of the DMA peripheral available in the MSP-EXP430FG4618 Development Tool. It requires the configuration of the DMA Source and Destination Addresses Registers, DMA Size Address Register; DMA Control Registers and DMA Channel 0 Control Register in order to transfer data between two regions of memory.</para>
+      </section>
+      <section id="id18959030">
+        <title>Overview</title>
+        <para id="id19299674">During this laboratory (<link url="http://cnx.org/content/m23575/latest/Lab1_DMA.c" window="new"> Lab1_DMA.c </link>), the data transfer between two regions of memory is analyzed. The order of transfer is controlled by software.</para>
+      </section>
+      <section id="id3436424">
+        <title>Resources</title>
+        <para id="id3529674">The following resource is used in this laboratory:</para>
+        <para id="id19358474">- DMA controller.</para>
+      </section>
+      <section id="id3506035">
+        <title>Software application organization</title>
+        <para id="id3520108">The software begins by disabling the watchdog timer. Port P2.1 is set as an output with a logic low level.</para>
+        <para id="id15979315">The memory addresses of the data vectors are passed to the source data address DMA0SA and destination address DMA0DA registers.</para>
+        <para id="id3410762">The number of words to be transferred is loaded in the DMA0SZ (size) register.</para>
+        <para id="id7342680">The DMA channel 0 is configured so that the data transfer trigger is controlled by software, in order that after each transfer, the source and destination addresses are correctly incremented.</para>
+        <para id="id3059826">The application enters an infinite loop, where port P2.1 state is switched just before initiating the data transfer.</para>
+      </section>
+      <section id="id19944339">
+        <title>System configuration</title>
+        <section id="id20287725">
+          <title>DMA channel configuration:</title>
+          <para id="id19767458">The source address and destination address of the data must be loaded into their respective registers:</para>
+          <code id="id7110236" display="block">DMA0SA = (void (*)( )) &amp;tab_1; // Start block address
+    
+DMA0DA = (void (*)( )) &amp;tab_2; // Destination block address
+    </code>
+          <para id="id3798574">To move a total of 32 words, what is the value to write to the data size register?</para>
+          <para id="id6254409">
+            <code display="inline">DMA0SZ = 0x0020; // Block size</code>
+          </para>
+          <para id="id3559498">The DMA channel must be configured to transfer the word under software control. The source and destination addresses should be incremented immediately after each of the transfers.</para>
+          <code id="id3559502" display="block">DMA0CTL=DMADT_0 | DMASRCINCR_3 | DMADSTINCR_3 | DMAEN;
+    // Single transfer,
+    // DMA source and destination addresses increment,
+    // Enable DMA0
+    </code>
+        </section>
+      </section>
+      <section id="id11090278">
+        <title>Analysis of operation</title>
+        <para id="id5064407">In the Memory window, the addresses of data vector Tab_1 and Tab_2 addresses are displayed. The contents of these blocks must be identified in memory.</para>
+        <para id="id4175690">Add a breakpoint at line of code that performs the switching of port P2.1 state.</para>
+        <para id="id11722605">Execute the application, and whenever the breakpoint is reached, the execution of the application will be suspended. Observe the data being gradually transferred from source to destination.</para>
+        <para id="id3833528">The data transfer is suspended once the 32 elements of the source data vector have been transferred.</para>
+        <para id="id4150410">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id5676176">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

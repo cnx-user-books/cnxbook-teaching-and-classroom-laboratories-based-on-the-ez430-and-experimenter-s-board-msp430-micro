@@ -1,0 +1,89 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Code Editor</title>
+  <metadata>
+  <md:content-id>m23513</md:content-id><md:title>Code Editor</md:title>
+  <md:abstract/>
+  <md:uuid>5cde787a-38e8-433c-9a30-47cb46fdeee4</md:uuid>
+</metadata>
+
+<content>
+    <section id="id13271187">
+      <title>Code Editor</title>
+      <para id="id10937344">The text editor included in CCE is a versatile tool and very effective for helping with the code editing task. The C/C++ perspective is shown in <emphasis effect="italics">Figure 1</emphasis>.</para>
+      <figure id="id7357333">
+        <title>CCE workbench – C/C++ perspective.</title>
+        <media id="id7357333_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics1-47be.png" id="id7357333__onlineimage" height="428" width="590"/>
+        </media>
+      </figure>
+      <para id="id12182593">The text editor has a set of features that allow speeding up the code editing process. An overview of the text editor is shown in <emphasis effect="italics">Figure 2</emphasis>.</para>
+      <figure id="id14505630">
+        <title>CCE workbench – Text editor window.</title>
+        <media id="id14505630_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics2-04c5.png" id="id14505630__onlineimage" height="158" width="430"/>
+        </media>
+      </figure>
+      <para id="id10272638">Code editing is greatly facilitated using features such as search and replace. To accomplish this task, the user must select <emphasis effect="bold">Edit &gt; Find/Replace</emphasis>. In addition to the normal features of search and replace, the option <emphasis effect="bold">Search &gt; File</emphasis> allows the use of more elaborate expressions. For example, it provides the global replacement in all files of a specific directory. The search and replace tasks previously performed can be found on the <emphasis effect="bold">drop-list</emphasis>.</para>
+      <para id="id12291902">CCE can regularly save the opened files for editing in order to prevent losses caused by system crashes. To use this function, select <emphasis effect="bold">Window &gt; Preferences &gt; General &gt; Workspace</emphasis> and specify the time interval at which this task should be performed automatically. The project can also be saved whenever it goes through project build.</para>
+      <para id="id14068605">The content wizard is a very effective tool to support the writing of code. It is possible to automatically insert a code structure model, previously defined, as an alternative to writing it out completely (see an example in <emphasis effect="italics">Figure 3</emphasis>). To insert a model of a structure, it is only necessary to write the first letters in the text editor and then press the <emphasis effect="italics">Ctrl + Space</emphasis> keys in order to display a list of the corresponding models. The options in the list can be reduced by continuing writing the structure name. The <emphasis effect="italics">Arrow Up</emphasis> and <emphasis effect="italics">Arrow Down</emphasis> keys can be used to select the desired model and by pressing the <emphasis effect="italics">Enter</emphasis> key to accept the selection. At any time the <emphasis effect="italics">Esc</emphasis> key allows editing to continue without the use of the content wizard.</para>
+      <para id="id13363659">CCE workbench – Content wizard.</para>
+      <figure id="id8057310">
+        <media id="id8057310_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics3-c2e4.png" id="id8057310__onlineimage" height="155" width="398"/>
+        </media>
+      </figure>
+      <para id="id14454312">The behaviour of this feature can be configured in <emphasis effect="bold">Window &gt; Preferences</emphasis>. In <emphasis effect="italics">Figure 4</emphasis> shows the configuration page of the content wizard.</para>
+      <para id="id12135967">
+        <figure id="id14483784">
+          <title>CCE workbench – Preferences window.</title>
+          <media id="id14483784_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics4-a052.png" id="id14483784__onlineimage" height="453" width="482"/>
+          </media>
+        </figure>
+      </para>
+      <para id="id7417016">The search range can be restricted to only the edited file and to the files included therein (<emphasis effect="bold">Search current file and included files</emphasis>), or alternatively a search can be in the whole project (<emphasis effect="bold">Search current project</emphasis>). Automatic model insertion is allowed, as long as it is the only one at the options list (<emphasis effect="bold">Insert single proposals automatically</emphasis>). The user may also request that the suggestions list is presented in alphabetical order (<emphasis effect="bold">Present proposals in alphabetical order</emphasis>). Another aspect that can be configured is related to the time (in milliseconds) that the content wizard delays to suggest a list (<emphasis effect="bold">delay</emphasis>), or the duration of the validity of the suggestion (<emphasis effect="bold">Content Assist Parsing timeout</emphasis>).</para>
+      <para id="id8408120">In addition to the sequence of <emphasis effect="italics">Ctrl + Space</emphasis> keys, the content wizard can also be set automatically when the following characters are typed: "<emphasis effect="italics">.</emphasis>", "<emphasis effect="italics">-&gt;</emphasis>" or "<emphasis effect="italics">::</emphasis>".</para>
+      <para id="id10970522">CCE is already provided with a set of models. However, it is possible to create new models by opening the models editor. Expand the C/C++ perspective in <emphasis effect="bold">Window &gt; Preferences</emphasis>, and select <emphasis effect="bold">Editor &gt; Templates</emphasis>. The option <emphasis effect="bold">New</emphasis> must be selected to create a new model (see <emphasis effect="italics">Figure 5</emphasis>).</para>
+      <figure id="id6954668">
+        <title>CCE workbench – New template window.</title>
+        <media id="id6954668_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics5-e48b.png" id="id6954668__onlineimage" height="229" width="413"/>
+        </media>
+      </figure>
+      <para id="id10917152">A name must be given for the new model. The context in which the model is valid should be selected. In the <emphasis effect="bold">Description</emphasis> field a brief description of the model can be added. The model itself is described in the <emphasis effect="bold">Pattern</emphasis> field. To insert a variable, use the <emphasis effect="bold">Insert Variable</emphasis> option.</para>
+      <para id="id14290757">One way to learn how to create models, or even how to customize existing models, can be achieved using the model editing feature (see <emphasis effect="italics">Figure 6</emphasis>). To access this feature, the <emphasis effect="bold">Editor &gt; Templates</emphasis> option must be chosen, and is visible after expanding the C/C++ perspective in <emphasis effect="bold">Window &gt; Preferences</emphasis>.</para>
+      <figure id="id12104156">
+        <title>CCE workbench – Edit template window.</title>
+        <media id="id12104156_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics6-265b.png" id="id12104156__onlineimage" height="258" width="467"/>
+        </media>
+      </figure>
+      <para id="id8323117">The procedures to check on this page are identical to those described earlier for building new models.</para>
+      <para id="id14295983">The CCE supports the following intrinsic functions for the MSP430 family devices:</para>
+      <para id="id7510048">- void __no_operation(void);</para>
+      <para id="id12161214">- void __enable_interrupt(void);</para>
+      <para id="id12192276">- void __disable_interrupt(void);</para>
+      <para id="id12192281">- unsigned short __get_interrupt_state(void);</para>
+      <para id="id5356043">- void __set_interrupt_state(void);</para>
+      <para id="id4588631">- void __op_code(unsigned short);</para>
+      <para id="id4588636">- unsigned short __swap_bytes(unsigned short);</para>
+      <para id="id10244866">- void __bic_SR_register(unsigned short);</para>
+      <para id="id11450439">- void __bis_SR_register(unsigned short);</para>
+      <para id="id8132755">- unsigned short __get_SR_register(void);</para>
+      <para id="id8132760">- void __bic_SR_register_on_exit(unsigned short);</para>
+      <para id="id8081700">- void __bis_SR_register_on_exit(unsigned short);</para>
+      <para id="id11264180">- unsigned short __get_SR_register_on_exit(void);</para>
+      <para id="id11016497">- void __set_SP_register(unsigned short);</para>
+      <para id="id11016501">- unsigned short __get_SP_register(void);</para>
+      <para id="id12583830">- unsigned short __bcd_add_short(unsigned short, unsigned short);</para>
+      <para id="id7480273">- unsigned long __bcd_add_long(unsigned long, unsigned long);</para>
+      <para id="id4587608">- void __data20_write_char(unsigned long, unsigned char);</para>
+      <para id="id3797506">- void __data20_write_short(unsigned long, unsigned short);</para>
+      <para id="id7383206">- void __data20_write_long(unsigned long, unsigned long);</para>
+      <para id="id7383211">- unsigned char __data20_read_char(unsigned long);</para>
+      <para id="id4969115">- unsigned short __data20_read_short(unsigned long);</para>
+      <para id="id13366975">- unsigned long __data20_read_long(unsigned long);</para>
+      <para id="id14212040">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

@@ -1,0 +1,354 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Hardware Multiplier: Lab3 - RMS and active power calculation</title>
+  <metadata>
+  <md:content-id>m23582</md:content-id><md:title>Laboratory Hardware Multiplier: Lab3 - RMS and active power calculation</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool and the MSP430FG4618 device analyse the MSP430’s performance when makes a multiplication operation with the hardware multiplier. It is performed a task operational analysis in which is calculated the active power and the RMS value of an electrical system. The execution time is measured with an oscilloscope.</md:abstract>
+  <md:uuid>f21e3a5e-3142-44fe-adb5-d23c785ad73e</md:uuid>
+</metadata>
+
+<content>
+    <section id="id10437862">
+      <title>Laboratory Hardware Multiplier: Lab3 - RMS and active power calculation</title>
+      <section id="id10436122">
+        <title>Introduction</title>
+        <para id="id10160471">This laboratory explores the hardware multiplier peripheral. It is composed of three different tasks, each of which evaluates a different characteristic of the hardware multiplier peripheral:</para>
+        <para id="id10436188">- Multiplication operation execution time, with and without the hardware multiplier.</para>
+        <para id="id10436199">-Differences between the use of the operator “*” and direct write to the hardware multiplier registers.</para>
+        <para id="id10436213">- Task operational analysis, in which the active power and the RMS value of an electrical system are calculated.</para>
+      </section>
+      <section id="id10436226">
+        <title>Overview</title>
+        <para id="id9889771">This laboratory explores and analyses the MSP430 performance when it makes multiply operations using the hardware multiplier peripheral. In this laboratory, the active power and the RMS value of an electrical signal are calculated.</para>
+        <para id="id10189576">The execution times are measured using an oscilloscope.</para>
+      </section>
+      <section id="id10385535">
+        <title>Resources</title>
+        <para id="id9986192">This laboratory only uses Port P2.1 connected to LED2, in order to measure the execution time of the multiply operation when it is performed by the hardware multiplier.</para>
+        <para id="id10426308">The application uses the default configuration of the FLL+. All the clock signals required for the operation of the components of the device take their default values.</para>
+      </section>
+      <section id="id10217249">
+        <title>Software application organization</title>
+        <para id="id10200441">- The application starts by stopping the Watchdog Timer;</para>
+        <para id="id10218597">- Two <code display="inline">_NOP()</code> instructions are provided to associate breakpoints, in order to read current and voltage samples (<code display="inline">N = 200</code>) from files;</para>
+        <para id="id10398289">- Power is computed by applying the following formula:</para>
+        <equation id="id10167925">
+          <m:math>
+            <m:semantics>
+              <m:mrow>
+                <m:mstyle fontsize="12pt">
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mi>P</m:mi>
+                      <m:mrow>
+                        <m:mi/>
+                        <m:mo stretchy="false">=</m:mo>
+                        <m:mi/>
+                      </m:mrow>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mi>N</m:mi>
+                      </m:mfrac>
+                      <m:mrow>
+                        <m:munderover>
+                          <m:mo stretchy="false">∑</m:mo>
+                          <m:mstyle fontsize="8pt">
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mi>k</m:mi>
+                                <m:mrow>
+                                  <m:mi/>
+                                  <m:mo stretchy="false">=</m:mo>
+                                  <m:mi/>
+                                </m:mrow>
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mstyle>
+                          <m:mstyle fontsize="8pt">
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+                            </m:mrow>
+                          </m:mstyle>
+                        </m:munderover>
+                        <m:mrow>
+                          <m:mi>u</m:mi>
+                          <m:mmultiscripts>
+                            <m:mtext/>
+                            <m:mprescripts/>
+                            <m:mstyle fontsize="8pt">
+                              <m:mrow>
+                                <m:mi>k</m:mi>
+                              </m:mrow>
+                            </m:mstyle>
+                            <m:none/>
+                          </m:mmultiscripts>
+                          <m:mi/>
+                          <m:mi>i</m:mi>
+                          <m:mmultiscripts>
+                            <m:mtext/>
+                            <m:mprescripts/>
+                            <m:mstyle fontsize="8pt">
+                              <m:mrow>
+                                <m:mi>k</m:mi>
+                              </m:mrow>
+                            </m:mstyle>
+                            <m:none/>
+                          </m:mmultiscripts>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mrow>
+                  </m:mrow>
+                </m:mstyle>
+                <m:mrow/>
+              </m:mrow>
+              <m:annotation encoding="StarMath 5.0"> size 12{P``=`` {  {1}  over  {N} }  Sum cSub { size 8{k`=`1} }  cSup { size 8{N} }  {u"" lSub { size 8{k} } `i"" lSub { size 8{k} } } } {}</m:annotation>
+            </m:semantics>
+          </m:math>
+        </equation>
+        <para id="id10213737">- A signed multiply operation is performed by writing the first sample of current to <emphasis>MPYS</emphasis> and the first sample of voltage to <emphasis>OP2</emphasis>;</para>
+        <para id="id10436032">- The result of the multiplication is stored in the <emphasis>RESHI</emphasis> and <emphasis>RESLO</emphasis> registers;</para>
+        <para id="id10213905">- A loop is performed with a signed multiply and accumulate (<emphasis>MACS</emphasis>) operation;</para>
+        <para id="id10436060">- The final result is transferred from the <emphasis>RESHI</emphasis> and <emphasis>RESLO</emphasis> registers to the long variable <emphasis>result</emphasis>;</para>
+        <para id="id10232897">- The power is computed by dividing the variable <emphasis>result</emphasis> by the number of samples (N);</para>
+        <para id="id10213990">- Port P2.1 is active between <emphasis>MACS</emphasis> operations;</para>
+        <para id="id10390016">- The RMS current and voltage values are calculated from the following expressions:</para>
+        <equation id="id10213840">
+          <m:math>
+            <m:semantics>
+              <m:mrow>
+                <m:mstyle fontsize="12pt">
+                  <m:mrow>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>I</m:mi>
+                        <m:mstyle fontsize="8pt">
+                          <m:mrow>
+                            <m:mstyle fontstyle="italic">
+                              <m:mrow>
+                                <m:mtext>RMS</m:mtext>
+                              </m:mrow>
+                            </m:mstyle>
+                          </m:mrow>
+                        </m:mstyle>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mi/>
+                        <m:mo stretchy="false">=</m:mo>
+                        <m:mi/>
+                      </m:mrow>
+                      <m:msqrt>
+                        <m:mrow>
+                          <m:mfrac>
+                            <m:mn>1</m:mn>
+                            <m:mi>N</m:mi>
+                          </m:mfrac>
+                          <m:mrow>
+                            <m:munderover>
+                              <m:mo stretchy="false">∑</m:mo>
+                              <m:mstyle fontsize="8pt">
+                                <m:mrow>
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+                                    <m:mrow>
+                                      <m:mi/>
+                                      <m:mo stretchy="false">=</m:mo>
+                                      <m:mi/>
+                                    </m:mrow>
+                                    <m:mn>1</m:mn>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:mstyle>
+                              <m:mstyle fontsize="8pt">
+                                <m:mrow>
+                                  <m:mi>N</m:mi>
+                                </m:mrow>
+                              </m:mstyle>
+                            </m:munderover>
+                            <m:mrow>
+                              <m:mi>i</m:mi>
+                              <m:mmultiscripts>
+                                <m:mtext/>
+                                <m:mprescripts/>
+                                <m:mstyle fontsize="8pt">
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+                                  </m:mrow>
+                                </m:mstyle>
+                                <m:none/>
+                              </m:mmultiscripts>
+                              <m:mi/>
+                              <m:mi>i</m:mi>
+                              <m:mmultiscripts>
+                                <m:mtext/>
+                                <m:mprescripts/>
+                                <m:mstyle fontsize="8pt">
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+                                  </m:mrow>
+                                </m:mstyle>
+                                <m:none/>
+                              </m:mmultiscripts>
+                            </m:mrow>
+                          </m:mrow>
+                          <m:mi/>
+                        </m:mrow>
+                      </m:msqrt>
+                      <m:mi/>
+                    </m:mrow>
+                  </m:mrow>
+                </m:mstyle>
+                <m:mrow/>
+              </m:mrow>
+              <m:annotation encoding="StarMath 5.0"> size 12{I rSub { size 8{ ital "RMS"} } ``=`` sqrt { {  {1}  over  {N} }  Sum cSub { size 8{k`=`1} }  cSup { size 8{N} }  {i"" lSub { size 8{k} } `i"" lSub { size 8{k} } } ``} `} {}</m:annotation>
+            </m:semantics>
+          </m:math>
+        </equation>
+        <equation id="id10441276">
+          <m:math>
+            <m:semantics>
+              <m:mrow>
+                <m:mstyle fontsize="12pt">
+                  <m:mrow>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>U</m:mi>
+                        <m:mstyle fontsize="8pt">
+                          <m:mrow>
+                            <m:mstyle fontstyle="italic">
+                              <m:mrow>
+                                <m:mtext>RMS</m:mtext>
+                              </m:mrow>
+                            </m:mstyle>
+                          </m:mrow>
+                        </m:mstyle>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mi/>
+                        <m:mo stretchy="false">=</m:mo>
+                        <m:mi/>
+                      </m:mrow>
+                      <m:msqrt>
+                        <m:mrow>
+                          <m:mfrac>
+                            <m:mn>1</m:mn>
+                            <m:mi>N</m:mi>
+                          </m:mfrac>
+                          <m:mrow>
+                            <m:munderover>
+                              <m:mo stretchy="false">∑</m:mo>
+                              <m:mstyle fontsize="8pt">
+                                <m:mrow>
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+                                    <m:mrow>
+                                      <m:mi/>
+                                      <m:mo stretchy="false">=</m:mo>
+                                      <m:mi/>
+                                    </m:mrow>
+                                    <m:mn>1</m:mn>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:mstyle>
+                              <m:mstyle fontsize="8pt">
+                                <m:mrow>
+                                  <m:mi>N</m:mi>
+                                </m:mrow>
+                              </m:mstyle>
+                            </m:munderover>
+                            <m:mrow>
+                              <m:mi>u</m:mi>
+                              <m:mmultiscripts>
+                                <m:mtext/>
+                                <m:mprescripts/>
+                                <m:mstyle fontsize="8pt">
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+                                  </m:mrow>
+                                </m:mstyle>
+                                <m:none/>
+                              </m:mmultiscripts>
+                              <m:mi/>
+                              <m:mi>u</m:mi>
+                              <m:mmultiscripts>
+                                <m:mtext/>
+                                <m:mprescripts/>
+                                <m:mstyle fontsize="8pt">
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+                                  </m:mrow>
+                                </m:mstyle>
+                                <m:none/>
+                              </m:mmultiscripts>
+                            </m:mrow>
+                          </m:mrow>
+                          <m:mi/>
+                        </m:mrow>
+                      </m:msqrt>
+                      <m:mi/>
+                    </m:mrow>
+                  </m:mrow>
+                </m:mstyle>
+                <m:mrow/>
+              </m:mrow>
+              <m:annotation encoding="StarMath 5.0"> size 12{U rSub { size 8{ ital "RMS"} } ``=`` sqrt { {  {1}  over  {N} }  Sum cSub { size 8{k`=`1} }  cSup { size 8{N} }  {u"" lSub { size 8{k} } `u"" lSub { size 8{k} } } ``} `} {}</m:annotation>
+            </m:semantics>
+          </m:math>
+        </equation>
+        <para id="id9904366">- The two procedures are similar, with the exception of the square root (<code display="inline">sqrt</code>) operations;</para>
+        <para id="id10436168">- P2.1 is active during for all the RMS current calculation;</para>
+        <para id="id10436174">- The computation times of the sqrt and division operations are determined when the RMS voltage value is calculated;</para>
+        <para id="id9866109">- This application ends by putting the device into low power mode LPM4.</para>
+      </section>
+      <section id="id9866116">
+        <title>System configuration</title>
+        <para id="id9765973">Go to <emphasis>Properties &gt; TI Debug Settings</emphasis> and select the <emphasis>Target</emphasis> tab. Uncheck the <emphasis>automatically step over functions without debug information when source stepping</emphasis> in order to allow stepping into the multiply routine;</para>
+        <para id="id10437341">Go to <emphasis>Properties &gt; C/C++ Build &gt; Linker MSP430 Linker v3.0 &gt; General options</emphasis> and choose the option <emphasis>16 (default)</emphasis> at the <emphasis>Link in hardware version of RTS mpy routine</emphasis>. With this linker option, the application (<link url="http://cnx.org/content/m23582/latest/Lab3_HM.c" window="new"> Lab3_HM.c </link>) will be built with the 16-bit hardware multiplier peripheral contained in the Experimenter’s board.</para>
+        <para id="id10398409"><emphasis>Rebuild</emphasis> the project and download to the target.</para>
+      </section>
+      <section id="id10158009">
+        <title>Analysis of operation</title>
+        <section id="id10158016">
+          <title>Loading samples from files</title>
+          <para id="id10158022">- Insert a breakpoint at line of code 61 (first <code display="inline">_NOP()</code> operation);</para>
+          <para id="id10158033">- Edit <emphasis>Breakpoint Properties</emphasis> and choose the <emphasis>Read Data from file</emphasis> action;</para>
+          <para id="id10398332">- Configure the following data fields:</para>
+          <para id="id10398336"> File: i.txt</para>
+          <para id="id10398346"> Wrap around: <code display="inline">True</code></para>
+          <para id="id10398356"> Start address: <code display="inline">&amp;i</code></para>
+          <para id="id10213631"> Length: <code display="inline">200</code></para>
+          <para id="id10213641">- Include a breakpoint at line of code 63 (second <code display="inline">_NOP()</code> operation);</para>
+          <para id="id10213652">- Edit <emphasis>Breakpoint Properties</emphasis> and choose the <emphasis>Read Data from file</emphasis> action;</para>
+          <para id="id10213668">- Configure the following data fields:</para>
+          <para id="id10213673"> File: u.txt</para>
+          <para id="id10213682"> Wrap around: <emphasis>True</emphasis></para>
+          <para id="id10389684"> Start address: <emphasis>&amp;u</emphasis></para>
+          <para id="id10389694"> Length: <emphasis>200</emphasis></para>
+        </section>
+        <section id="id10389704">
+          <title>Computing active power</title>
+          <para id="id10389712">- Connect the oscilloscope probe to port P2.1, which is available at Header 4 pin 2;</para>
+          <para id="id10389718">- Put the cursor at the line of code 88 and <emphasis>Run to line</emphasis>;</para>
+          <para id="id10389729">- In the <emphasis>Variables</emphasis> view, add the global variable <emphasis>P</emphasis> and format it to decimal;</para>
+          <para id="id10389744">- The active power is in the region of 1204 W;</para>
+          <para id="id10389749">- The pulse width, as viewed on the oscilloscope, corresponds to the time to perform the 200 signed multiply and accumulate operations and is 5.4 msec.</para>
+        </section>
+        <section id="id10389757">
+          <title>Compute RMS current value</title>
+          <para id="id10389764">- Starting at the last step of the previous task, put the cursor at line of code 105 {<code display="inline">MPYS = u[0]</code>} and Run to line;</para>
+          <para id="id10389775">- Add the global variable <emphasis>I</emphasis> (RMS voltage);</para>
+          <para id="id10389785">- Set the value to 10;</para>
+          <para id="id10389790">- The pulse width, as viewed on the oscilloscope, corresponds to the time required to perform the 200 signed multiply and accumulate operations, 1 division operation and 1 square root operation, and is 12.6 msec;</para>
+        </section>
+        <section id="id10388270">
+          <title>Compute RMS voltage value</title>
+          <para id="id10388276">- Starting at the last step of the previous task, put the cursor at line of code 121 {<code display="inline">_BIS_SR(LPM4)</code>} and <emphasis>Run to line</emphasis>;</para>
+          <para id="id10388293">- Add the global variable <emphasis>U</emphasis> (RMS voltage);</para>
+          <para id="id10388303">- Set the value to 240;</para>
+          <para id="id10388308">- The pulse width, as viewed on the oscilloscope, corresponds to the time to perform the 200 signed multiply and accumulate operations, and is 6.8 msec;</para>
+          <para id="id10388314">This example and many others are available on the MSP430 Teaching ROM. </para>
+          <para id="id10388320">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

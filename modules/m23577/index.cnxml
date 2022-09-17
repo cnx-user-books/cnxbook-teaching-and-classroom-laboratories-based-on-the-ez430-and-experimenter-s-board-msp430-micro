@@ -1,0 +1,107 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory DMA: Lab2 - Sinusoidal waveform generator</title>
+  <metadata>
+  <md:content-id>m23577</md:content-id><md:title>Laboratory DMA: Lab2 - Sinusoidal waveform generator</md:title>
+  <md:abstract>Using the DMA controller included in the MSP-EXP430FG4618 Development Tool transfer a sinusoidal wave to the DAC12_0's output. Timer_A operates in upmode with TACCR1 loading DAC12_0 on rising edge and DAC12_0IFG triggering next DMA1 transfer. DAC12_0 uses internal 1.5V reference.</md:abstract>
+  <md:uuid>9130eec9-0693-4529-8cdd-29252dcbe129</md:uuid>
+</metadata>
+
+<content>
+    <section id="id9273139">
+      <title>Laboratory DMA: Lab2 - Sinusoidal waveform generator</title>
+      <section id="id9273146">
+        <title>Introduction</title>
+        <para id="id9273159">This laboratory gives an example of the use of the DMA peripheral available in the MSP-EXP430FG4618 Development Tool. It requires the configuration of the DMA Source and Destination Addresses Registers, DMA Size Address Register; DMA Control Registers, DMA Channel 0 Control Register, DAC12 control register and Timer_A control register in order to generate a sinusoidal waveform.</para>
+      </section>
+      <section id="id9273175">
+        <title>Overview</title>
+        <para id="id9273181">This laboratory (<link url="http://cnx.org/content/m23577/latest/Lab2_DMA.c" window="new"> Lab2_DMA.c </link>) uses the DMA controller to automatically transfer data between data memory and the DAC12 data register. A sinusoidal waveform is produced at the output of the DAC, without CPU intervention.</para>
+      </section>
+      <section id="id9273195">
+        <title>Resources</title>
+        <para id="id9273201">This laboratory uses the following peripherals:</para>
+        <para id="id9273206">- DMA controller;</para>
+        <para id="id9273210">- DAC;</para>
+        <para id="id9273215">- ADC (reference generator: V<sub>REF+</sub>);</para>
+        <para id="id9273224">- Timer_A;</para>
+        <para id="id9273228">- Low power mode.</para>
+      </section>
+      <section id="id9273233">
+        <title>Software application organization</title>
+        <para id="id9273240">The successive samples needed to produce the sinusoidal waveform using the DAC are stored in the data vector <emphasis>Sin_tab</emphasis>, which contains 32 points:</para>
+        <code id="id9273251" display="block">//---------------------------------------------------------
+// 12-bit Sine Lookup table with 32 steps
+//---------------------------------------------------------
+int Sin_tab[32] = {2048, 2447, 2831, 3185, 3495, 3750, 3939, 4056,
+                   4095, 4056, 3939, 3750, 3495, 3185, 2831, 2447,
+                   2048, 1648, 1264,  910,  600,  345,  156,   39,
+                      0,   39,  156,  345,  600,  910, 1264, 1648};
+    </code>
+        <para id="id9273334">The software begins by disabling the watchdog timer, followed by activating the internal reference voltage V<sub>REF+</sub>. The source and destination registers of the data vector to be transferred by the DMA channel are loaded into the data vector Sin_tab (source) address and with the DAC12 data register (destination) address. There are 32 data values to be transferred.</para>
+        <para id="id9273349">The data transfer is initiated whenever the DAC12IFG flag is enabled. In this application, the DAC interrupt should be disabled.</para>
+        <para id="id9273356">The DMA controller is configured to operate in repeat mode, to transfer a word whenever the previous event occurs. The data source address is set to increment after each transfer, while the destination address must remain constant.</para>
+        <para id="id9273364">The timer is set to generate the PWM signal through the capture/compare unit TACCR1. SMCLK is the clock signal that counts up to the value in the TACCR0 register.</para>
+        <para id="id9273371">Finally, the settings and interrupts are enabled and the device enters into low power mode LPM0.</para>
+      </section>
+      <section id="id9273378">
+        <title>System configuration</title>
+        <section id="id9273384">
+          <title>DAC12 reference voltage activation</title>
+          <para id="id9273390">The DAC12 requires a reference voltage. One of the options is to use the internal voltage V<sub>REF+</sub>. Set the ADC12CTLO register to activate this voltage:</para>
+          <para id="id9273402">
+            <code display="inline">ADC12CTL0 = REFON; // Internal reference</code>
+          </para>
+        </section>
+        <section id="id9273415">
+          <title>DMA Controller configuration:</title>
+          <para id="id9273421">Configure the registers DMA0SA (source), DMA0DA (destination) and DMA0SZ (size) to transfer 32 words between the source vector Sin_tab and the DAC12_0DAT data destination register:</para>
+          <para id="id9273428"/>
+          <code id="id9273432" display="block">DMA0SA = (void (*)( ))&amp;Sin_tab;    // Source block address
+    
+DMA0DA = (void (*)( ))&amp;DAC12_0DAT; // Destination single address
+    
+DMA0SZ = 0x20;                         // Block size
+    </code>
+          <para id="id9273464">Configure the register DMACTL0 to provide a data transfer whenever the DAC12IFG flag is set:</para>
+          <para id="id9273470">
+            <code display="inline">DMACTL0 = DMA0TSEL_5; // DAC12IFG trigger</code>
+          </para>
+          <para id="id9273478">Configure the register DMA0CTL to carry out a repeated simple data transfer, increasing the data source address:</para>
+          <code id="id9273484" display="block">DMA0CTL = DMADT_4 | DMASRCINCR_3 | DMAEN;
+    // Repeated single transfer,
+    // DMA source address increment,
+    // since DMASRCBYTE = 0, the source address increments by
+    // two (word-word)
+    </code>
+        </section>
+        <section id="id9273510">
+          <title>Setup DAC12</title>
+          <para id="id9273516">The DAC12 will update its output whenever there is the activation of the signal TA1. The DAC full-scale should be 1x reference voltage. Choose a medium relationship between the DAC’s current and average conversion speed:</para>
+          <code id="id9273528" display="block">DAC12_0CTL = DAC12LSEL_2 | DAC12IR | DAC12AMP_5 | DAC12IFG | DAC12ENC;
+    // Rising edge of Timer_A.OUT1 (TA1),
+    // DAC12 full-scale output: 1x reference voltage,
+    // Input and output buffers: Medium freq./current,
+    // Enable DAC12
+    </code>
+        </section>
+        <section id="id9273556">
+          <title>Timer_A configuration</title>
+          <para id="id9273564">Timer_A is responsible for synchronizing data transfers between memory and the DAC12. The Timer_A input receives as the SMCLK signal (1.048576 MHz) and must have a 30 msec counting period. What value needs to be written to TACCR0, in order to achieve this counting period:</para>
+          <code id="id9273576" display="block">TACCR0 = 32-1;           // Clock period of TACCR0
+TACTL = TASSEL_2 | MC_1; // SMCLK, continuous mode
+    </code>
+          <para id="id9273594">The capture/compare unit TACCR1 should generate a PWM signal in set/reset mode. Configure the unit appropriately:</para>
+          <code id="id9273600" display="block">TACCTL1 = OUTMOD_3; // TACCR1 set/reset
+TACCR1 = 20;        // TACCR1 PWM Duty Cycle
+    </code>
+        </section>
+      </section>
+      <section id="id9273620">
+        <title>Analysis of operation</title>
+        <para id="id9273627">The verification of this laboratory is achieved by using an oscilloscope probe to monitor the output of the DAC12 Channel 0, available on header 8 pin 6.</para>
+        <para id="id9273634">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id9273639">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

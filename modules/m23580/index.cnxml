@@ -1,0 +1,93 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Flash memory: Lab1 - Flash memory programming with the CPU executing the code from flash memory</title>
+  <metadata>
+  <md:content-id>m23580</md:content-id><md:title>Laboratory Flash memory: Lab1 - Flash memory programming with the CPU executing the code from flash memory</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool implement a flash memory programming with the CPU executing the code in the flash memory.</md:abstract>
+  <md:uuid>cc751124-faf8-4b57-aadf-c2dccb64ed09</md:uuid>
+</metadata>
+
+<content>
+    <section id="id41837504">
+      <title>Laboratory Flash memory: Lab1 - Flash memory programming with the CPU executing the code from flash memory</title>
+      <section id="id41750434">
+        <title>Introduction</title>
+        <para id="id42126276">The TI MSP430 has an internal flash memory that can be used for data storage. Two different methods of writing to the flash memory are studied in this laboratory. The first method requires the CPU execution of the code resident in flash memory. The consequences of this procedure are discussed. In the second part of the laboratory, the flash write and erase operations are conducted with the CPU executing the code resident in RAM. The important details are highlighted.</para>
+      </section>
+      <section id="id41986148">
+        <title>Overview</title>
+        <para id="id41900864">This laboratory programs the internal flash memory with the CPU executing the code resident in flash memory. It requires to configure: - Flash memory controller; - Segment erase routine; and the - Flash write routine. The execution time of the different operations can be obtained with an oscilloscope connected on pin 2 of the Header 4 or analyzing the state of the LED (digital output P2.1).</para>
+      </section>
+      <section id="id41528759">
+        <title>Resources</title>
+        <para id="id41877311">This laboratory uses the flash memory controller. The operation of this device is monitored using a digital output port (P2.1).</para>
+        <para id="id42147753">The project must be compiled using the files (<link url="http://cnx.org/content/m23580/latest/Lab1_Flash.c" window="new"> Lab1_Flash.c  </link>)and the command file lnk_msp430fg4618.cmd.</para>
+        <para id="id41553353">The code is resident in the flash memory, so whenever a flash write or erase operation occurs, the CPU access to this memory is automatically inhibited.</para>
+      </section>
+      <section id="id41879087">
+        <title>Software application organization</title>
+        <para id="id41552297">The software begins by disabling the Watchdog Timer. Then, port P2.1 is set as an output with a logic low level.</para>
+        <para id="id42007745">The flash memory controller is configured with the clock MCLK divided by 3. Thus the fFTG operating frequency lies within the specified limits of 257 kHz to 476 kHz.</para>
+        <para id="id42007750">A set of routines are provided to erase, write and copy the contents of a segment. The main tasks related to the flash memory handling are presented using this set of routines.</para>
+        <para id="id42104001">The information Segments A and B are erased first. Then, bytes are written to SegmentA and words are written to SegmentB. The contents of the information memory SegmentA are copied to the information SegmentB, overwriting the previous contents.</para>
+      </section>
+      <section id="id41981155">
+        <title>System configuration</title>
+        <section id="id41775497">
+          <title>Flash memory controller configuration</title>
+          <para id="id41964939">Configure the register FCTL2 to use clock MCLK divided by 3. Do not forget to enter the password to access the register.</para>
+          <para id="id41838666">
+            <code display="inline">FCTL2 = FWKEY | FSSEL0 | FN1; // MCLK/3 for Flash Timing Generator</code>
+          </para>
+        </section>
+        <section id="id42114768">
+          <title>Segment erase routine</title>
+          <para id="id41790356">Configure the registers FCTL1 and FCTL3 in order to initiate the flash segment erase process by writing an address belonging to the segment to be erased. Be sure to include the password to access the register.</para>
+          <code id="id42058772" display="block">FCTL1 = FWKEY | ERASE; // Set Erase bit
+FCTL3 = FWKEY;         // Clear Lock bit
+    </code>
+          <para id="id42064562">Block flash write and erase operations are carried out after erasing the segment:</para>
+          <code id="id41551681" display="block">//Flash block write and erase operations after erasing the segment:
+FCTL3 = FWKEY | LOCK; // Set LOCK bit
+    </code>
+        </section>
+        <section id="id42141085">
+          <title>Flash write routine</title>
+          <para id="id42029793">Configure the registers in order to start writing to the flash memory. Be sure to include the password to access the register.</para>
+          <code id="id41521133" display="block">FCTL1 = FWKEY | ERASE; // Set Erase bit
+FCTL3 = FWKEY;         // Clear Lock bit
+    </code>
+          <para id="id42144664">Configure flash block write and erase operations and disable the write bit:</para>
+          <code id="id41827216" display="block">// Flash block write and erase operations and disable the write bit
+// after the writing process to the segment:
+FCTL3 = FWKEY | LOCK; // Set LOCK bit
+    </code>
+        </section>
+      </section>
+      <section id="id42111662">
+        <title>Analysis of operation</title>
+        <section id="id41818818">
+          <title>Execution time for the information segments erase operation</title>
+          <para id="id42137920">Put the cursor at line of code 124, located just after the second port P2.1 switching state. Execute the software until the cursor position is reached. The erase operation timing can be seen on an oscilloscope with the probe connected to pin 2 of the Header 4.</para>
+        </section>
+        <section id="id42137924">
+          <title>Bytes write in the information memory A</title>
+          <para id="id41524483">The routine <code display="inline">write_char_flash</code> allows writing a byte to flash memory. It receives the memory address where the byte should be stored.</para>
+          <para id="id41989592">Open the <emphasis>memory</emphasis> window, and add the address of the information memory A. The content of this address becomes visible after ordering its <emphasis>rendering</emphasis>. As we are writing a byte to flash, we must change the presentation of the memory contents. Choose the option <emphasis>Column Size 1</emphasis>, from the context menu of the <emphasis>memory</emphasis> window, through the option <emphasis>Format</emphasis>.</para>
+          <para id="id41631930">Now, during the execution of the for loop, the flash contents is written sequentially.</para>
+        </section>
+        <section id="id42102849">
+          <title>Bytes written in the information B memory</title>
+          <para id="id41799887">This routine is similar to the previous one. Note that now the flash write address is increased by two because a word occupies two bytes of memory.</para>
+          <para id="id41515851">The information is more readily observed when the memory contents display mode is restored to its initial state. Reset the default conditions in the option <emphasis>Format</emphasis> of the context menu.</para>
+        </section>
+        <section id="id42107059">
+          <title>Copy the contents of the information A memory to information B memory </title>
+          <para id="id41878993">The output port P2.1 is enabled before the copy process begins. The copy routine receives the start address of the source information segment and the start address of the destination information segment. The information is then successively read and written from one segment to another.</para>
+          <para id="id41900403">Port P2.1 is disabled at the end of the copy process. Thus, the task execution time can be measured using an oscilloscope.</para>
+          <para id="id42012346">This example and many others are available on the MSP430 Teaching ROM. </para>
+          <para id="id42147849">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

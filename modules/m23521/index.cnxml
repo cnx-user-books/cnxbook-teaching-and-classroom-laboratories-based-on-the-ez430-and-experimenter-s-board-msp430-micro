@@ -1,0 +1,159 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Introduction to Debug with CCE</title>
+  <metadata>
+  <md:content-id>m23521</md:content-id><md:title>Introduction to Debug with CCE</md:title>
+  <md:abstract/>
+  <md:uuid>29d03113-76ac-45f4-b3ec-7959e7e84db1</md:uuid>
+</metadata>
+
+<content>
+    <section id="id4887544">
+      <title>Introduction to Debug with CCE</title>
+      <para id="id4992249">TI’s debugger generates an output file as a result of building the project. To debug a project after a build, it is only necessary to perform the following steps:</para>
+      <para id="id1967906">1. Select the project as active, or click <emphasis effect="bold">Run &gt; Debug Active Project</emphasis>. The debug perspective is open and it is possible to debug the code;</para>
+      <para id="id2490169">2. This resets and suspends the execution of code on the device. Running this command, the content of all status registers is modified to the power-up state defaults in accordance with the device specifications. The reset command is enabled by <emphasis effect="bold">&gt; Reset CPU</emphasis>;</para>
+      <para id="id5384120">3. To start a program execution, once loaded into the device's memory, select the option <emphasis effect="bold">Run &gt; Run</emphasis> (F8). Program execution will take place until the program finds a breakpoint;</para>
+      <para id="id4702332">4. The program execution may be suspended at any time by using the command <emphasis effect="bold">Run &gt; Halt</emphasis>;</para>
+      <para id="id3920081">5. To re-start the execution of the application use the command <emphasis effect="bold">Run &gt; Restart</emphasis>. This action does not modify the execution stage of the device. It only restores the PC to the application’s starting point loaded into memory;</para>
+      <para id="id4123549">6. The <emphasis effect="bold">Set PC to Cursor</emphasis> feature moves the execution of the application to a particular point in program memory. The execution of this command only modifies the contents of the PC register. No instruction will be executed in order to reach this point. The command can be found in the context menu of the C/C++ perspective in <emphasis effect="bold">Set PC to Cursor</emphasis>;</para>
+      <para id="id4918538">7. There are several different ways to run the code until a specific point:</para>
+      <para id="id4729619">- Use a breakpoint to specify that when this point is reached the program execution must be halted;</para>
+      <para id="id3298655">- Use the command Run &gt; Run to Line, available in the context menu of C/C++ perspective, to run the code until the specified location;</para>
+      <para id="id3169882">8. A special case is to run the code until the main function is reached. This feature enables a temporary breakpoint at the beginning of the main routine and starts the execution of the application. The breakpoint is removed and execution is suspended once the location is reached. This command provides a convenient method of starting C applications.</para>
+      <para id="id5325355">9. The stepping commands execute each instruction step-by-step. When a function is called, it is possible to move the execution to the function (step into) or perform the function and pass to the following instruction (step over). Once inside a function, the user can continue to execute each instruction individually, or run the rest of the function code until it ends (step out);</para>
+      <para id="id4290932">10. The execution of the next instruction is performed through <emphasis effect="bold">Run &gt; Step Into</emphasis> (F5). The next instruction is executed when this command is used. If the next statement is a function call, the debugger passes the execution to the first instruction of the function, and suspends execution at this point;</para>
+      <para id="id3694382">11. When the execution is on top of a function call, the step over operation can be enabled by selecting the<emphasis effect="bold"> Run &gt; Step Over</emphasis> (F6). The debugger then performs the function and then suspends execution when it returns. If it finds a breakpoint somewhere in the function, the execution may be suspended at this point. If the <emphasis effect="bold">Step Over</emphasis> is executed on an instruction that is not a function call, the debugger response will be the same as <emphasis effect="bold">Step Into</emphasis> command;</para>
+      <para id="id4266735">12. If the application is being executed inside a function in response to a function call, it is possible to force the return of this function through the command <emphasis effect="bold">Run &gt; Step Return</emphasis> (F7). The debugger will execute the rest of the function code and return the calling point. The execution will be suspended at this point;</para>
+      <para id="id5293515">13. The command <emphasis effect="bold">Terminate</emphasis> allows finishing of the application’s debugging.</para>
+      <section id="id4923341">
+        <title>EEM - Enhanced Emulation Module).</title>
+        <para id="id3285837">All the MSP430 family of devices have an advanced code debugging module (EEM - Enhanced Emulation Module). This module allows CCE to monitor the device’s operation in a non-intrusive way, and without using any resources. Thus, it facilitates the development of the application through the verification of its operation. Depending on the device, the EEM module implementations differ. Generally, the following features are present:</para>
+        <para id="id3311057">- Up to 8 hardware breakpoints;</para>
+        <para id="id5063885">- Operates in all range of frequencies and clock sources;</para>
+        <para id="id4654453">- Ability to set more complex breakpoints through association of triggers;</para>
+        <para id="id4995791">- Suspend the execution of the application on the occurrence of a program or data bus access;</para>
+        <para id="id5343996">- Access protection to protected data and program memory areas;</para>
+        <para id="id2392232">- All timers and counters can be inhibited (depending on the device);</para>
+        <para id="id3813524">- Inhibits PWM signals generation on the occurrence of the application’s suspension;</para>
+        <para id="id5024626">- Allows real-time execution of the applications in the modes: single step, step into; run to cursor; step over;</para>
+        <para id="id5323935">- Supports all low power modes.</para>
+        <para id="id3407629">The <emphasis effect="italics">Figure 1</emphasis> represents a simplified block diagram of one of the most complete implementations of EEM module.</para>
+        <para id="id5350012">
+          <figure id="id5208314">
+            <title>CCE workbench – EEM module block diagram.</title>
+            <media id="id5208314_media" alt="">
+              <image mime-type="image/png" src="../../media/graphics1-c460.png" id="id5208314__onlineimage" height="479" width="475"/>
+            </media>
+          </figure>
+        </para>
+        <para id="id3527916">Events within the device can generate triggers. These triggers can be classified as the event that causes them to:</para>
+        <para id="id1291348">- Access to addressing and data buses;</para>
+        <para id="id3299332">- Access to CPU registers.</para>
+        <para id="id1720527">Depending on the device, it is possible to associate two or more of these triggers, in order to build complex event detectors that help the detection of incorrect operation of applications. Generally, a trigger can be used to control the following functional blocks of the EEM: breakpoints, trace, and sequencer. The activation of a trigger is conditioned to an access to the data and program busses or access to CPU registers.</para>
+        <para id="id5298111">A breakpoint is set through one or more triggers. Through these it is possible to establish the following types of breakpoints:</para>
+        <para id="id1920726">- Address breakpoint;</para>
+        <para id="id3806320">- Data breakpoint;</para>
+        <para id="id3292112">- Register Breakpoint;</para>
+        <para id="id3436195">- Mask Register;</para>
+        <para id="id4265780">- Range breakpoint. </para>
+        <para id="id4914128"/>
+        <para id="id5034296">A simple breakpoint is defined using a trigger associated with an instruction read operation by the CPU. It is necessary to specify the instruction address where the trigger should occur.</para>
+        <para id="id3321851">By combining two triggers, it is possible to establish a Data Breakpoint. While one of the triggers is used to detect the occurrence of a particular address on the address bus, the other is used to detect the occurrence of a read or write operation at that address. It is possible to force the suspension of the execution of the application to only occur when there is a match between the value written or read and the one specified.</para>
+        <para id="id3326130">When the application is written in assembly language, it is sometimes necessary to analyse the accesses to some of the microcontroller’s registers. A Register Break Point uses a trigger to detect the access to a register. A Mask Register should be used when the register is composed of several fields, since it can apply a mask and test specific bits only.</para>
+        <para id="id3268836">An application in certain operating conditions may occasionally try to access to invalid or protected memory regions. Using a range breakpoint, it is possible to detect the occurrence of these events. It is thus possible to suspend the execution of the application on the occurrence of:</para>
+        <para id="id2799684">- Write to flash;</para>
+        <para id="id4141816">- Invalid access to memory;</para>
+        <para id="id4659699">- Access to an instruction in invalid program space;</para>
+        <para id="id1757432">- Access to data in invalid data space.</para>
+        <para id="id2976472">The hardware breakpoint properties are established through different fields. The action to make when all triggers are true can be defined in the Action option of the Hardware Configuration field. One of the following options can be chosen:</para>
+        <para id="id5398434">- Halt;</para>
+        <para id="id3621504">- Trigger storage;</para>
+        <para id="id4655156">- Halt and trigger storage.</para>
+        <para id="id4659860">In the trigger field, specify through various options, the check condition for a true trigger. The trigger can be:</para>
+        <para id="id3927135">- Memory Address bus;</para>
+        <para id="id3383462">- Memory Data bus;</para>
+        <para id="id4680645">- Register Write.</para>
+      </section>
+      <section id="id4147824">
+        <title>Depending on the type of trigger chosen, the options to specify may be</title>
+        <section id="id2293693">
+          <title>Memory Address Bus</title>
+          <para id="id4157663"><emphasis effect="bold">Location: </emphasis>Address of the program code line or data memory address (e.g.: &amp;a);</para>
+          <para id="id4860690"><emphasis effect="bold">Mask</emphasis>: the information introduced in this field is used in a logic AND operation with the contents;</para>
+          <para id="id5326050"><emphasis effect="bold">Operator</emphasis>: Logic operation with the data (==, &lt;=, &gt;=, !=);</para>
+          <para id="id4715379"><emphasis effect="bold">Access</emphasis>: Memory access type:</para>
+          <para id="id5415762">- Instruction fetch;</para>
+          <para id="id5416062">- Instruction fetch and hold trigger;</para>
+          <para id="id3806889">- No instruction fetch;</para>
+          <para id="id4571815">- Don’t care;</para>
+          <para id="id5229051">- No Instruction fetch and read;</para>
+          <para id="id5349472">- No instruction fetch and write;</para>
+          <para id="id4940573">- Read;</para>
+          <para id="id4550157">- Write;</para>
+          <para id="id5035118">- No instruction fetch and no DMA access;</para>
+          <para id="id4935034">- DMA access (read or write);</para>
+          <para id="id3141761">- No DMA access;</para>
+          <para id="id4578683">- Write and no DMA access;</para>
+          <para id="id2757426">- No instruction fetch and read and no DMA access;</para>
+          <para id="id5294105">- Read and no DMA access;</para>
+          <para id="id4485972">- Read and DMA access;</para>
+          <para id="id4589387">- Write and DMA access.</para>
+        </section>
+        <section id="id4024998">
+          <title>Memory Data Bus</title>
+          <para id="id5287340"><emphasis effect="bold">Value</emphasis>: A mask and compare will be applied to the data on the bus and to value added here, to determine if the trigger is true;</para>
+          <para id="id4994898"><emphasis effect="bold">Mask</emphasis>: The information introduced in this field is used in a logic AND operation with the contents;</para>
+          <para id="id4980658"><emphasis effect="bold">Operator</emphasis>: Logic operation with the data (==, &lt;=, &gt;=, !=);</para>
+          <para id="id4918520"><emphasis effect="bold">Access</emphasis>: Memory access type (on Memory Address Bus).</para>
+        </section>
+        <section id="id4007793">
+          <title>Miscellaneous</title>
+          <para id="id5262033"><emphasis effect="bold">Group</emphasis>: Group to which the breakpoint belongs;</para>
+          <para id="id3223959"><emphasis effect="bold">Name</emphasis>: Name assigned to the breakpoint.</para>
+        </section>
+      </section>
+      <section id="id3928202">
+        <title>There is a predefined breakpoint that can be set to</title>
+        <para id="id3946954">- <emphasis effect="bold">Break in program range</emphasis>: Generates a suspension of the execution of the application in a range of program memory addresses. It uses two triggers that define the range of addresses;</para>
+        <para id="id4355243">- <emphasis effect="bold">Break in DMA transfer</emphasis>: Generates the suspension of the execution of the application, whenever a DMA read or write operation at the specified program address occurs. This breakpoint is implemented using only one trigger;</para>
+        <para id="id1643922">- <emphasis effect="bold">Break in DMA transfer range</emphasis>: Generates the suspension of the execution of the application, whenever a DMA read or write operation at the specified address range occurs. This breakpoint is implemented using two triggers;</para>
+        <para id="id4263338">- <emphasis effect="bold">Break in stack overflow</emphasis>: Generates the suspension of the execution of the application whenever the SP register value assumes a lower value than the specified one. This breakpoint is implemented using only one trigger;</para>
+        <para id="id4932271">- <emphasis effect="bold">Breakpoint</emphasis>: Generates the suspension of the execution of the application whenever the memory bus address takes the value specified. This breakpoint is implemented using only one trigger;</para>
+        <para id="id4481415">- <emphasis effect="bold">Hardware breakpoint</emphasis>: Generates the suspension of the execution of the application whenever the memory bus address takes the value specified. This breakpoint is implemented using only one trigger;</para>
+        <para id="id4155642">- <emphasis effect="bold">Watch on data address range</emphasis>: Generates a suspension of the execution of the application whenever the specified data memory addresses range is accessed. It uses two triggers to define the range of addresses;</para>
+        <para id="id5262538">- <emphasis effect="bold">Watchpoint</emphasis>: Generates the suspension of the execution of the application whenever a specified data memory address is accessed. It uses a trigger to generate the watchpoint;</para>
+        <para id="id4136313">- <emphasis effect="bold">Watchpoint with data</emphasis>: Generates the suspension of the execution of the application whenever a specified data memory address is accessed and the value of the address is equal to specified value. Two triggers are used to implement this watch.</para>
+      </section>
+      <section id="id5059183">
+        <title>Code Execution Verification</title>
+        <para id="id5059710">In order to verify the code execution, it is necessary to use support tools to complete this task. CCE provides a set of features with this aim.</para>
+        <para id="id3908836">A breakpoint suspends the execution of the application in order to check the status of the system. The activation, deactivation and configuration of these breakpoints are possible through CCE.</para>
+        <para id="id5304078">There are two types of breakpoints: software and hardware. While the first type of breakpoint is implemented through the insertion of code in the application, in a way invisible to the user, the second type is implemented internally by the device’s hardware. Although the software breakpoints are not limited, the hardware breakpoints, depending on the device, have a limit of 2 to 4 breakpoints.</para>
+        <para id="id4450816">The application debugging process often requires access to the actual values of the variables. The <emphasis effect="bold">Variable</emphasis> view allows the user to monitor the application’s local and global variables. In this view, the CCE automatically displays the name and contents of the local variables of the function that is being executed. It is also possible to add the name of other local variables or global variables to be monitored in the debugging process.</para>
+        <para id="id4241694">The values of the local variables can be modified. The values of the variables that have been changed during the last instruction execution are displayed in red. However, the variable names cannot be modified. It is allowed to change the representation format of the variable: Natural, decimal or hexadecimal. The variables that contain more than one element, such as arrays, structures, or pointers are presented with a (+) sign immediately after the name. This signal means that the variable has elements that can be seen through the expansion of the (+) sign, passing this signal (-), which allows the structure to be collapsed.</para>
+        <para id="id2376444">The local variables cannot be added or removed from the Variables view. However, global variables can be added or removed. The local variables can be disabled in order to freeze their value as the program is executed.</para>
+        <para id="id4456834">The <emphasis effect="bold">Expressions</emphasis> view accepts the entry of expressions to evaluate them as the program is executed. These expressions are written in syntax similar to that used by the C programming language.</para>
+        <section id="id4998705">
+          <title>The commands accessible through the context menu can</title>
+          <para id="id5383377">- Specify the number of elements of the array to be displayed in the Expression view: The command <emphasis effect="bold">Display as Array</emphasis> can be used to display the elements of any pointer or array. The command <emphasis effect="bold">Remove Array Expansion</emphasis> is used to return an expanded variable back to its original state;</para>
+          <para id="id4312014">- Change value: Changes the content of the variable;</para>
+          <para id="id2512276">- Cast to type: Performs a promotion (cast) for a different type of variable;</para>
+          <para id="id2343345">- Restore Original Type: Restores the expression for the original data type.</para>
+        </section>
+      </section>
+      <section id="id5234007">
+        <title>The Memory window of the Debug perspective</title>
+        <para id="id4578690">The <emphasis effect="bold">Memory</emphasis> window of the Debug perspective allows the user to monitor and modify the device’s memory. The memory is provided with a list of <emphasis effect="bold">Memory Monitors</emphasis>. Each monitor represents a section of memory specified by its named location base address. Each memory monitor may be represented in different data formats (memory renderings). The debugger allows four different types of rendering:</para>
+        <para id="id2895948">- Hex (default);</para>
+        <para id="id3257371">- Ascii;</para>
+        <para id="id1957259">- Integer signed;</para>
+        <para id="id3341056">- Unsigned integer.</para>
+        <para id="id3279914">The Memory view has two panels:</para>
+        <para id="id4478748">- Memory Monitors;</para>
+        <para id="id3467388">- Memory Renderings.</para>
+        <para id="id3286514">The first panel displays the memory monitors list added to the debug session. The second panel is controlled by selection in the first one and consists of tabs that display the rendering. This panel can be configured to display both renderings.</para>
+        <para id="id5304833">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

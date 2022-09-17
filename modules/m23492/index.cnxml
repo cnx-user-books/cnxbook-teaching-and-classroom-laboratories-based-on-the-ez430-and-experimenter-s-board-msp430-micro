@@ -1,0 +1,23 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Introduction</title>
+  <metadata>
+  <md:content-id>m23492</md:content-id><md:title>Introduction</md:title>
+  <md:abstract/>
+  <md:uuid>fa4274ad-6ee4-459e-8a2e-cc19cafd563e</md:uuid>
+</metadata>
+
+<content>
+    <para id="id4197111">Introduction</para>
+    <para id="id4197116">The types of devices such as microprocessor, microcontroller, processor, digital signal processor (DSP), amongst others, in a certain manner, are related to the same device – the ASIC (Application Specific Integrated Circuit). Each processing device executes instructions, following a determined program applied to the inputs and shares architectural characteristics developed from the first microprocessors created in 1971. In the three decades after the development of the first microprocessor, huge developments and innovations have been made in this engineering field. Any of the terms used at the beginning of this section are correct to define a microprocessor, although each one has different characteristics and applications.</para>
+    <para id="id7766832">The definition of a microcontroller is somewhat difficult due to the constantly changing nature of the silicon industry. What we today consider a microcontroller with medium capabilities is several orders of magnitude more powerful, than the computer used on the first space missions. Nevertheless, some generalizations can be made as to what characterizes a microcontroller. Typically, microcontrollers are selected for embedded systems projects, i.e., control systems with a limited number of inputs and outputs where the controller is <emphasis effect="italics">embedded</emphasis> into the system.</para>
+    <para id="id17618490">The programmable SoC (system-on-chip) concept started in 1972 with the 4-bit TMS1000 microcomputer developed by Texas Instruments (TI), and in those days it was ideal for applications such as calculators and ovens. This term was changed to Microcontroller Unit (MCU), which was more descriptive of a typical application. Nowadays, MCUs are at the heart of many physical systems, with higher levels of integration and processing power at lower power consumption.</para>
+    <para id="id17618494">The following list presents several qualities that define a microcontroller:</para>
+    <para id="id23548933">- Cost: Usually, the microcontrollers are high-volume, low cost devices;</para>
+    <para id="id17139666">- Clock frequency: Compared with other devices (microprocessors and DSPs), microcontrollers use a low clock frequency. Microcontrollers today can run up to 100 MHz/ 100 Million Instructions Per Second (MIPS)</para>
+    <para id="id7368053">- Power consumption: orders of magnitude lower than their DSP and MPU cousins;</para>
+    <para id="id22342986">- Bits: 4 bits (older devices) to 32 bits devices;</para>
+    <para id="id19677900">- Memory: Limited available memory, usually less than 1 MByte;</para>
+    <para id="id17734851">- Input/Output (I/O): Low to high (8-150) pin-out count.</para>
+    <para id="id3168885">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+  </content>
+</document>

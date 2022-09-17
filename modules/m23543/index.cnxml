@@ -1,0 +1,124 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Signal Acquisition: Lab4 - Voltage signal comparison with Comparator_A</title>
+  <metadata>
+  <md:content-id>m23543</md:content-id><md:title>Laboratory Signal Acquisition: Lab4 - Voltage signal comparison with Comparator_A</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool analyse the Comparator_A operation. A voltage is applied to one of the Comparator’s inputs, generated optionally by the DAC12 or by other external source. Whenever the external voltage value is higher than the comparison value internally generated, it is generated an interrupt that switches the LED state.</md:abstract>
+  <md:uuid>b65b69e9-40b0-417a-8f4e-df4a04327315</md:uuid>
+</metadata>
+
+<content>
+    <section id="id7148023">
+      <title>Laboratory Signal Acquisition: Lab4 - Voltage signal comparison with Comparator_A</title>
+      <section id="id7148030">
+        <title>Introduction</title>
+        <para id="id7148043">This laboratory gives examples of the uses of the ADC types available in the hardware development kits. A different laboratory is developed for each kit, taking into account that both the ADC10 and the SD16_A laboratories implement a temperature data logger. The ADC12 laboratory also uses operational amplifiers to perform the analogue signal conditioning.</para>
+      </section>
+      <section id="id7148054">
+        <title>Overview</title>
+        <para id="id7148060">This laboratory (<link url="http://cnx.org/content/m23543/latest/Lab4_ADC.c" window="new"> Lab4_ADC.c</link>) analyses Comparator_A operation. A voltage is applied to one of the Comparator’s inputs, generated either by the DAC12 or by other external source. Whenever the external voltage value is higher than the comparison value internally generated, an interrupt is generated that switches the LED state.</para>
+      </section>
+      <section id="id7148081">
+        <title>Resources</title>
+        <para id="id7148087">The resources used by the application are:</para>
+        <para id="id7148091">- DAC12;</para>
+        <para id="id7148096">- Comparator_A;</para>
+        <para id="id7148100">- Digital IO;</para>
+        <para id="id7148104">- Timer_A.</para>
+      </section>
+      <section id="id7148109">
+        <title>Software application organization</title>
+        <para id="id7148115">The application starts by stopping the Watchdog Timer.</para>
+        <para id="id7148120">Timer_A is configured to generate an interrupt once every msec, and updates the DAC12 output in order to provide a ramp signal.</para>
+        <para id="id7148127">The Comparator_A’s output is configured to be accessible at pin P6.6, which is available on Header 4 pin 7. The signal applied to CA0 input is compared with 0.5 V<sub>cc</sub> internal reference voltage. Every time that a compare match occurs, an interrupt is requested and switches the state of LED1.</para>
+      </section>
+      <section id="id7148145">
+        <title>System configuration</title>
+        <section id="id7148152">
+          <title>Comparator_A configuration</title>
+          <para id="id7148159">Configure the registers in order to receive the external signal at the CA0 input and compare it with the internal reference 0.5 V<sub>cc</sub>. Enable the comparator with an interrupt triggered on a low-to-high transition of the comparator output.</para>
+          <code id="id7148172" display="block">CACTL1 = CAON | CAREF_2 | CARSEL | CAIE;  // Enable comp, ref = 0.5*Vcc
+
+CACTL2 = P2CA0; // Pin to CA0
+
+P2DIR |= 0x042; // P2.1 and P2.6 output direction
+P2SEL |= 0x040; // P2.1 = LED1 and P2.6 = CAOUT 
+
+CACTL1 |= CAIE; // Setup interrupt for Comparator
+
+
+//*********************************************************
+// Comp_A interrupt service routine -- toggles LED
+//*********************************************************
+#pragma vector=COMPARATORA_VECTOR
+__interrupt void Comp_A_ISR (void)
+{
+ CACTL1 ^= CAIES; // Toggles interrupt edge
+ P2OUT ^= 0x02; // Toggle P2.1
+}    </code>
+        </section>
+        <section id="id7148270">
+          <title>ADC12 configuration</title>
+          <para id="id7148276">
+            <code display="inline">ADC12CTL0 = REF2_5V + REFON; // Internal 2.5V ref on</code>
+          </para>
+        </section>
+        <section id="id7148285">
+          <title>DAC12 configuration</title>
+          <para id="id7148293">
+            <code display="inline">DAC12_0DAT = 0x00; // DAC_0 output 0V</code>
+          </para>
+          <code id="id7148301" display="block">DAC12_0CTL = DAC12IR | DAC12AMP_5 | DAC12ENC;
+// DAC_0-&gt;P6.6
+// DAC reference Vref
+// 12 bits resolution
+// Imediate load
+// DAC full scale output
+// Medium speed/current
+// Straight binary
+// Not grouped
+    </code>
+        </section>
+        <section id="id7148341">
+          <title>Timer_A configuration</title>
+          <code id="id7148348" display="block">// Compare mode
+TAR = 0; // TAR reset
+TACCR0 = 13600; // Delay to allow Ref to settle
+TACCTL0 |= CCIE; // Compare-mode interrupt
+TACTL = TACLR + MC_1 + TASSEL_2; // up mode, SMCLK
+
+// Interrupt enable
+TAR = 0; // TAR reset
+TACCTL0 = CCIE; // CCR0 interrupt enabled
+TACCR0 = 32; // 1 msec counting period
+TACTL = TASSEL_1 | MC_1 | ID_0; // ACLK, up mode
+
+
+//*********************************************************
+// ISR to TACCRO from Timer A 
+//*********************************************************
+#pragma vector=TIMERA0_VECTOR
+__interrupt void TimerA0_ISR (void)
+{
+ DAC12_0DAT++;</code>
+          <code id="id7142484" display="block">if (DAC12_0DAT == 0xFFF)
+    DAC12_0DAT = 0;
+    
+    if (flag == 1) // if flag active exit LPM0
+    { 
+     flag = 0;
+     LPM0_EXIT;
+    } 
+}
+    </code>
+        </section>
+      </section>
+      <section id="id7142548">
+        <title>Analysis of operation</title>
+        <para id="id7142554">The experimental verification of this laboratory can be accomplished by connecting the DAC12’s output, available on Header 8 pin 7, to the Comparator_A’s input CA0, available on Header 4 pin 7.</para>
+        <para id="id7142565">Observe the signals wave form at the Comparator_A’s input and output using an oscilloscope. The LED1 switches state whenever the input’s voltage value is lower than the compare value.</para>
+        <para id="id7142576">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id7142581">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

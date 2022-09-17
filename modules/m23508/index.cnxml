@@ -1,0 +1,557 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Introduction to CCE IDE</title>
+  <metadata>
+  <md:content-id>m23508</md:content-id><md:title>Introduction to CCE IDE</md:title>
+  <md:abstract/>
+  <md:uuid>bbcbc5a0-e5cd-45cf-993b-9b77267751e9</md:uuid>
+</metadata>
+
+<content>
+    <para id="id1170520628418">Introduction to CCE IDE</para>
+    <para id="id1170514766104">The introductory overview in the use of CCE will continue with a practical example, addressing some of its main features. Let us begin by building a project. This project will be configured with respect to the hardware, i.e., the MSP430 family device.</para>
+    <section id="id1170509683620">
+      <title>Launching the workbench</title>
+      <para id="id1170510077539">The term “Workbench” refers to the integrated development environment of all tools necessary for the development and management of projects. When CCE is started, it asks the user where they want to locate the work directory (workspace).</para>
+      <para id="id1170507412091">After choosing the location where the workspace will be stored, it opens by default in the project construction perspective. The concept associated with a perspective is important for the correct understanding of CCE operation. A perspective provides that for a given task there is an organization of windows most appropriate to its implementation. Changing perspective involves reformulating the workspace for a new Windows configuration that promotes the development of particular task. There are two major perspectives: <emphasis effect="bold">C/C++</emphasis> for editing, management and compilation of projects, and <emphasis effect="bold">Debug</emphasis> for debugging the applications. The working perspective is selected in the upper right hand corner of the application.</para>
+      <para id="id1170531392056">By default, the windows included in the <emphasis effect="bold">C/C++</emphasis> perspective are: <emphasis effect="bold">C/C++ Projects</emphasis> (to manage the projects); <emphasis effect="bold">Editor</emphasis> (to edit files); <emphasis effect="bold">Outline</emphasis> (to view data); <emphasis effect="bold">Console</emphasis> (to send messages); <emphasis effect="bold">Problems</emphasis> (identifies problems found in the project). The icons associated with the various tasks that can be performed in this perspective are shown together in <emphasis effect="italics">Table 1</emphasis>.</para>
+      <table id="id1170529956631" summary="">
+        <tgroup cols="4">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <colspec colnum="4" colname="c4"/>
+          <tbody>
+            <row>
+              <entry>Button</entry>
+              <entry>Description</entry>
+              <entry>Button</entry>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170514908636" alt="">
+                  <image mime-type="image/png" src="../../media/graphics1-beef.png"/>
+                </media>
+              </entry>
+              <entry>Open a new perspective</entry>
+              <entry>
+                <media id="id1170507675936" alt="">
+                  <image mime-type="image/png" src="../../media/graphics2-1f64.png"/>
+                </media>
+              </entry>
+              <entry>Save the active editor contents</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170510198843" alt="">
+                  <image mime-type="image/png" src="../../media/graphics3-7147.png"/>
+                </media>
+              </entry>
+              <entry>Save the contents of all editors</entry>
+              <entry>
+                <media id="id1170512480668" alt="">
+                  <image mime-type="image/png" src="../../media/graphics4-3f2a.png"/>
+                </media>
+              </entry>
+              <entry>Save editor contents under a new name or location</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170509456811" alt="">
+                  <image mime-type="image/png" src="../../media/graphics5-137b.png"/>
+                </media>
+              </entry>
+              <entry>Opens the search dialog</entry>
+              <entry>
+                <media id="id1170508315466" alt="">
+                  <image mime-type="image/png" src="../../media/graphics6-4e6f.png"/>
+                </media>
+              </entry>
+              <entry>Print editor contents</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170510078183" alt="">
+                  <image mime-type="image/png" src="../../media/graphics7-366a.png"/>
+                </media>
+              </entry>
+              <entry>Open a resource creation wizard (New)</entry>
+              <entry>
+                <media id="id1170512564225" alt="">
+                  <image mime-type="image/png" src="../../media/graphics8-ff88.png"/>
+                </media>
+              </entry>
+              <entry>Open a file creation wizard</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id5986672" alt="">
+                  <image mime-type="image/png" src="../../media/graphics9-1705.png"/>
+                </media>
+              </entry>
+              <entry>Open a folder creation wizard</entry>
+              <entry>
+                <media id="id1170511979973" alt="">
+                  <image mime-type="image/png" src="../../media/graphics10.png"/>
+                </media>
+              </entry>
+              <entry>Open a project creation wizard</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170510088514" alt="">
+                  <image mime-type="image/png" src="../../media/graphics11.png"/>
+                </media>
+              </entry>
+              <entry>Open the import wizard</entry>
+              <entry>
+                <media id="id1170509689158" alt="">
+                  <image mime-type="image/png" src="../../media/graphics12.png"/>
+                </media>
+              </entry>
+              <entry>Open the export wizard</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170530699061" alt="">
+                  <image mime-type="image/png" src="../../media/graphics13.png"/>
+                </media>
+              </entry>
+              <entry>Run incremental build (Build All)</entry>
+              <entry>
+                <media id="id1170518307257" alt="">
+                  <image mime-type="image/png" src="../../media/graphics14.png"/>
+                </media>
+              </entry>
+              <entry>Run a program</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170511971249" alt="">
+                  <image mime-type="image/png" src="../../media/graphics15.png"/>
+                </media>
+              </entry>
+              <entry>Debug a program</entry>
+              <entry>
+                <media id="id1170511737625" alt="">
+                  <image mime-type="image/png" src="../../media/graphics16.png"/>
+                </media>
+              </entry>
+              <entry>Run an external tool</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170509345935" alt="">
+                  <image mime-type="image/png" src="../../media/graphics17.png"/>
+                </media>
+              </entry>
+              <entry>Cut selection to clipboard</entry>
+              <entry>
+                <media id="id1170512769273" alt="">
+                  <image mime-type="image/png" src="../../media/graphics18.png"/>
+                </media>
+              </entry>
+              <entry>Copy selection to clipboard</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170512234298" alt="">
+                  <image mime-type="image/png" src="../../media/graphics19.png"/>
+                </media>
+              </entry>
+              <entry>Paste selection from clipboard</entry>
+              <entry>
+                <media id="id1170515237868" alt="">
+                  <image mime-type="image/png" src="../../media/graphics20.png"/>
+                </media>
+              </entry>
+              <entry>Undo most recent edit</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170513705057" alt="">
+                  <image mime-type="image/png" src="../../media/graphics21.png"/>
+                </media>
+              </entry>
+              <entry>Redo most recent undone edit</entry>
+              <entry>
+                <media id="id1170512467153" alt="">
+                  <image mime-type="image/png" src="../../media/graphics22.png"/>
+                </media>
+              </entry>
+              <entry>Navigate to next item in a list</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170506895249" alt="">
+                  <image mime-type="image/png" src="../../media/graphics23.png"/>
+                </media>
+              </entry>
+              <entry>Navigate to previous item in a list</entry>
+              <entry>
+                <media id="id1170512174641" alt="">
+                  <image mime-type="image/png" src="../../media/graphics24.png"/>
+                </media>
+              </entry>
+              <entry>Navigate forwards</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170512431657" alt="">
+                  <image mime-type="image/png" src="../../media/graphics25.png"/>
+                </media>
+              </entry>
+              <entry>Navigate backwards</entry>
+              <entry>
+                <media id="id1170514707696" alt="">
+                  <image mime-type="image/png" src="../../media/graphics26.png"/>
+                </media>
+              </entry>
+              <entry>Navigate up one level</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170512578180" alt="">
+                  <image mime-type="image/png" src="../../media/graphics27.png"/>
+                </media>
+              </entry>
+              <entry>Add bookmark or task</entry>
+              <entry>
+                <media id="id1170529604320" alt="">
+                  <image mime-type="image/png" src="../../media/graphics28.png"/>
+                </media>
+              </entry>
+              <entry>Open a view's drop down menu</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id2265560" alt="">
+                  <image mime-type="image/png" src="../../media/graphics29.png"/>
+                </media>
+              </entry>
+              <entry>Close view or editor</entry>
+              <entry>
+                <media id="id1170513871956" alt="">
+                  <image mime-type="image/png" src="../../media/graphics30.png"/>
+                </media>
+              </entry>
+              <entry>Pin editor to prevent automatic reuse</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170526343678" alt="">
+                  <image mime-type="image/png" src="../../media/graphics31.png"/>
+                </media>
+              </entry>
+              <entry>Filter tasks or properties</entry>
+              <entry>
+                <media id="id1170514702410" alt="">
+                  <image mime-type="image/png" src="../../media/graphics32.png"/>
+                </media>
+              </entry>
+              <entry>Go to a task, problem, or bookmark in the editor</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170525159692" alt="">
+                  <image mime-type="image/png" src="../../media/graphics33.png"/>
+                </media>
+              </entry>
+              <entry>Restore default properties</entry>
+              <entry>
+                <media id="id1170512179734" alt="">
+                  <image mime-type="image/png" src="../../media/graphics34.png"/>
+                </media>
+              </entry>
+              <entry>Show items as a tree</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170529477113" alt="">
+                  <image mime-type="image/png" src="../../media/graphics35.png"/>
+                </media>
+              </entry>
+              <entry>Refresh view contents</entry>
+              <entry>
+                <media id="id1170529631455" alt="">
+                  <image mime-type="image/png" src="../../media/graphics36.png"/>
+                </media>
+              </entry>
+              <entry>Sort list in alphabetical order</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170508160149" alt="">
+                  <image mime-type="image/png" src="../../media/graphics37.png"/>
+                </media>
+              </entry>
+              <entry>Cancel a running operation</entry>
+              <entry>
+                <media id="id1170511956860" alt="">
+                  <image mime-type="image/png" src="../../media/graphics38.png"/>
+                </media>
+              </entry>
+              <entry>Delete selected item or content</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170514802118" alt="">
+                  <image mime-type="image/png" src="../../media/graphics39.png"/>
+                </media>
+              </entry>
+              <entry>Last edit location</entry>
+              <entry>
+                <media id="id1170509978112" alt="">
+                  <image mime-type="image/png" src="../../media/graphics40.png"/>
+                </media>
+              </entry>
+              <entry>Toggle Mark Occurrences</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170509795066" alt="">
+                  <image mime-type="image/png" src="../../media/graphics41.png"/>
+                </media>
+              </entry>
+              <entry>Assembly instruction only</entry>
+              <entry/>
+              <entry/>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1170519468217">By default, the windows included in the <emphasis effect="bold">Debug</emphasis> perspective are: <emphasis effect="bold">Debug</emphasis> (provides information concerning the debug process); <emphasis effect="bold">Editor</emphasis> (to edit files); <emphasis effect="bold">Variables/Expressions</emphasis> (to evaluate variables and expressions values during debug); <emphasis effect="bold">Console</emphasis> (console to send messages); <emphasis effect="bold">Registers/Breakpoints</emphasis> (to evaluate the contents of registers and to define code breakpoint); and <emphasis effect="bold">Disassembly/Memory</emphasis> (to evaluate the assembly code and memory map occupation). The icons associated with the various tasks that can be performed in this perspective are shown together in <emphasis effect="italics">Table 2</emphasis>.</para>
+      <table id="id1170511942708" summary="">
+        <tgroup cols="3">
+          <colspec colnum="1" colname="c1"/>
+          <colspec colnum="2" colname="c2"/>
+          <colspec colnum="3" colname="c3"/>
+          <tbody>
+            <row>
+              <entry>Icon</entry>
+              <entry>Command</entry>
+              <entry>Description</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170512251730" alt="">
+                  <image mime-type="image/png" src="../../media/graphics42.png"/>
+                </media>
+              </entry>
+              <entry>Create New</entry>
+              <entry>Create a new project, folder, or file.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170514532643" alt="">
+                  <image mime-type="image/png" src="../../media/graphics43.png"/>
+                </media>
+              </entry>
+              <entry>Save</entry>
+              <entry>Save the content of the current editor. Disabled if the editor does not contain unsaved changes.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170513696330" alt="">
+                  <image mime-type="image/png" src="../../media/graphics44.png"/>
+                </media>
+              </entry>
+              <entry>Print</entry>
+              <entry>Prints the content of the current editor.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170512089176" alt="">
+                  <image mime-type="image/png" src="../../media/graphics45.png"/>
+                </media>
+              </entry>
+              <entry>Build All</entry>
+              <entry>Compiles all files for all projects in workbench.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170511930319" alt="">
+                  <image mime-type="image/png" src="../../media/graphics46.png"/>
+                </media>
+              </entry>
+              <entry>Enable/Disable Breakpoints</entry>
+              <entry>Enables or disables a breakpoint at the specified location.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170508318682" alt="">
+                  <image mime-type="image/png" src="../../media/graphics47.png"/>
+                </media>
+              </entry>
+              <entry>Toggle Breakpoint</entry>
+              <entry>Toggles a breakpoint at a specific address selected in the Edit window.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id5000974" alt="">
+                  <image mime-type="image/png" src="../../media/graphics48.png"/>
+                </media>
+              </entry>
+              <entry>Change Build Configuration</entry>
+              <entry>Lists available build configurations to choose.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170513851042" alt="">
+                  <image mime-type="image/png" src="../../media/graphics49.png"/>
+                </media>
+              </entry>
+              <entry>New C/C++ Project</entry>
+              <entry>Creates a new C/C++ project.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170520485400" alt="">
+                  <image mime-type="image/png" src="../../media/graphics50.png"/>
+                </media>
+              </entry>
+              <entry>New C/C++ Source Folder</entry>
+              <entry>Creates a source folder within the current project.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170511970284" alt="">
+                  <image mime-type="image/png" src="../../media/graphics51.png"/>
+                </media>
+              </entry>
+              <entry>New C/C++ Source File</entry>
+              <entry>Creates a source file within the current project.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170523302437" alt="">
+                  <image mime-type="image/png" src="../../media/graphics52.png"/>
+                </media>
+              </entry>
+              <entry>New C/C++ Class</entry>
+              <entry>Creates a C++ class within the current project.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170514880442" alt="">
+                  <image mime-type="image/png" src="../../media/graphics53.png"/>
+                </media>
+              </entry>
+              <entry>Debug Active Project</entry>
+              <entry>Debugs the current active project.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170530066827" alt="">
+                  <image mime-type="image/png" src="../../media/graphics54.png"/>
+                </media>
+              </entry>
+              <entry>Launch TI Debugger</entry>
+              <entry>Launches the TI specific debugger.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170518354089" alt="">
+                  <image mime-type="image/png" src="../../media/graphics55.png"/>
+                </media>
+              </entry>
+              <entry>Debug</entry>
+              <entry>Launches the Debug dialog box.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170509662337" alt="">
+                  <image mime-type="image/png" src="../../media/graphics56.png"/>
+                </media>
+              </entry>
+              <entry>Run</entry>
+              <entry>Launches the Run dialog box</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170517161813" alt="">
+                  <image mime-type="image/png" src="../../media/graphics57.png"/>
+                </media>
+              </entry>
+              <entry>External Tools</entry>
+              <entry>Launches the External Tools dialog box</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170514665710" alt="">
+                  <image mime-type="image/png" src="../../media/graphics58.png"/>
+                </media>
+              </entry>
+              <entry>Open Type</entry>
+              <entry>Brings up the Open Type selection dialog to open a type in the editor. The Open Type selection dialog shows all types existing in the workspace.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170512652711" alt="">
+                  <image mime-type="image/png" src="../../media/graphics59.png"/>
+                </media>
+              </entry>
+              <entry>Search</entry>
+              <entry>Launches the C/C++ Search dialog box</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170526295502" alt="">
+                  <image mime-type="image/png" src="../../media/graphics60.png"/>
+                </media>
+              </entry>
+              <entry>Select Working Sets</entry>
+              <entry>Selects a working set from the list to be the active one. Working sets group elements for display in views or for operations on a set of elements.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170522945471" alt="">
+                  <image mime-type="image/png" src="../../media/graphics61.png"/>
+                </media>
+              </entry>
+              <entry>Next Annotation</entry>
+              <entry>Selects the next annotation in the resource that is currently active in the editor area. Supported in the Java editor.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170513433442" alt="">
+                  <image mime-type="image/png" src="../../media/graphics62.png"/>
+                </media>
+              </entry>
+              <entry>Previous Annotation</entry>
+              <entry>Selects the previous annotation in the resource that is currently active in the editor area. Supported in the Java editor.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170509662456" alt="">
+                  <image mime-type="image/png" src="../../media/graphics63.png"/>
+                </media>
+              </entry>
+              <entry>Go to Last Edit Location</entry>
+              <entry>Returns editor view to the last line edited, if the file that was last edited was closed it will be re-opened.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170513507537" alt="">
+                  <image mime-type="image/png" src="../../media/graphics64.png"/>
+                </media>
+              </entry>
+              <entry>Back</entry>
+              <entry>Navigates back through open files.</entry>
+            </row>
+            <row>
+              <entry>
+                <media id="id1170514636775" alt="">
+                  <image mime-type="image/png" src="../../media/graphics65.png"/>
+                </media>
+              </entry>
+              <entry>Forward</entry>
+              <entry>Navigates forward through open files.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para id="id1170513906492">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

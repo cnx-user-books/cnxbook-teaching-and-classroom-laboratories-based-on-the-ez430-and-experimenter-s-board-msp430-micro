@@ -1,0 +1,234 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Central Processing Unit (MSP430 CPU)</title>
+  <metadata>
+  <md:content-id>m23497</md:content-id><md:title>Central Processing Unit (MSP430 CPU)</md:title>
+  <md:abstract/>
+  <md:uuid>f856d01e-5cfb-49f5-aa98-11d40ad5f158</md:uuid>
+</metadata>
+
+<content>
+    <section id="id1172651870241">
+      <title>Central Processing Unit (MSP430 CPU)</title>
+      <para id="id1172651527547">The RISC type architecture of the CPU is based on a short instruction set (27 instructions), interconnected by a 3-stage instruction pipeline for instruction decoding. The CPU has a 16-bit ALU, four dedicated registers and twelve working registers, which makes the MSP430 a high performance microcontroller suitable for low power applications. The addition of twelve working general purpose registers saves CPU cycles by allowing the storage of frequently used values and variables instead of using RAM.</para>
+      <para id="id1172652668224">The orthogonal instruction set allows the use of any addressing mode for any instruction, which makes programming clear and consistent, with few exceptions, increasing the compiler efficiency for high-level languages such as C.</para>
+      <para id="id1172652725535">
+        <figure id="id1172651572476">
+          <title>MSP430 CPU block diagram.</title>
+          <media id="id1172651572476_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics1-dd32.png" id="id1172651572476__onlineimage" height="695" width="345"/>
+          </media>
+        </figure>
+      </para>
+      <section id="id1172651647551">
+        <title>Arithmetic Logic Unit (ALU)</title>
+        <para id="id1172651526046">The MSP430 CPU includes an arithmetic logic unit (ALU) that handles addition, subtraction, comparison and logical (AND, OR, XOR) operations. ALU operations can affect the overflow, zero, negative, and carry flags in the status register.</para>
+      </section>
+      <section id="id1172652941471">
+        <title>MSP430 CPU registers</title>
+        <para id="id1172652922640">The CPU incorporates sixteen 16-bit registers:</para>
+        <para id="id1172651632183">- Four registers (R0, R1, R2 and R3) have dedicated functions;</para>
+        <para id="id1172652493616">- There are 12 working registers (R4 to R15) for general use.</para>
+        <section id="id1172652692839">
+          <title>R0: Program Counter (PC)</title>
+          <para id="id1172660838425">The 16-bit Program Counter (PC/R0) points to the next instruction to be read from memory and executed by the CPU. The Program counter is implemented by the number of bytes used by the instruction (2, 4, or 6 bytes, always even). It is important to remember that the PC is aligned at even addresses, because the instructions are 16 bits, even though the individual memory addresses contain 8-bit values.</para>
+        </section>
+        <section id="id1172651540479">
+          <title>R1: Stack Pointer (SP)</title>
+          <para id="id5475457">The Stack Pointer (SP/R1) is located in R1.</para>
+          <para id="id1172656069293">1<sup>st</sup>: stack can be used by user to store data for later use (instructions: store by PUSH, retrieve by POP);</para>
+          <para id="id1172651676873">2<sup>nd</sup>: stack can be used by user or by compiler for subroutine parameters (PUSH, POP in calling routine; addressed via offset calculation on stack pointer (SP) in called subroutine);</para>
+          <para id="id1172652611777">3<sup>rd</sup>: used by subroutine calls to store the program counter value for return at subroutine's end (RET);</para>
+          <para id="id6535010">4<sup>th</sup>: used by interrupt - system stores the actual PC value first, then the actual status register content (on top of stack) on return from interrupt (RETI) the system get the same status as just before the interrupt happened (as long as none has changed the value on TOS) and the same program counter value from stack.</para>
+        </section>
+        <section id="id1172652841728">
+          <title>R2: Status Register (SR)</title>
+          <para id="id1172664072263">The Status Register (SR/R2) stores the state and control bits. The system flags are changed automatically by the CPU depending on the result of an operation in a register. The reserved bits of the SR are used to support the constants generator. See the device-specific data sheets for more details.</para>
+          <para id="id1172651747501">SR</para>
+          <table id="id1172669620145" summary="">
+            <tgroup cols="16">
+              <colspec colnum="1" colname="c1"/>
+              <colspec colnum="2" colname="c2"/>
+              <colspec colnum="3" colname="c3"/>
+              <colspec colnum="4" colname="c4"/>
+              <colspec colnum="5" colname="c5"/>
+              <colspec colnum="6" colname="c6"/>
+              <colspec colnum="7" colname="c7"/>
+              <colspec colnum="8" colname="c8"/>
+              <colspec colnum="9" colname="c9"/>
+              <colspec colnum="10" colname="c10"/>
+              <colspec colnum="11" colname="c11"/>
+              <colspec colnum="12" colname="c12"/>
+              <colspec colnum="13" colname="c13"/>
+              <colspec colnum="14" colname="c14"/>
+              <colspec colnum="15" colname="c15"/>
+              <colspec colnum="16" colname="c16"/>
+              <tbody>
+                <row>
+                  <entry>15</entry>
+                  <entry>14</entry>
+                  <entry>13</entry>
+                  <entry>12</entry>
+                  <entry>11</entry>
+                  <entry>10</entry>
+                  <entry>9</entry>
+                  <entry>8</entry>
+                  <entry>7</entry>
+                  <entry>6</entry>
+                  <entry>5</entry>
+                  <entry>4</entry>
+                  <entry>3</entry>
+                  <entry>2</entry>
+                  <entry>1</entry>
+                  <entry>0</entry>
+                </row>
+                <row>
+                  <entry namest="c1" nameend="c7">Reserved for CG1</entry>
+                  <entry>V</entry>
+                  <entry>SCG1</entry>
+                  <entry>SCG0</entry>
+                  <entry>OSCOFF</entry>
+                  <entry>CPUOFF</entry>
+                  <entry>GIE</entry>
+                  <entry>N</entry>
+                  <entry>Z</entry>
+                  <entry>C</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+          <table id="id1172648229324" summary="">
+            <tgroup cols="3">
+              <colspec colnum="1" colname="c1"/>
+              <colspec colnum="2" colname="c2"/>
+              <colspec colnum="3" colname="c3"/>
+              <tbody>
+                <row>
+                  <entry>Bit</entry>
+                  <entry/>
+                  <entry>Description</entry>
+                </row>
+                <row>
+                  <entry>8</entry>
+                  <entry>V</entry>
+                  <entry>Overflow bit.V = 1 ⇒ Result of an arithmetic operation overflows the signed-variable range.</entry>
+                </row>
+                <row>
+                  <entry>7</entry>
+                  <entry>SCG1</entry>
+                  <entry>System clock generator 0.SCG1 = 1 ⇒ DCO generator is turned off – if not used for MCLK or     SMCLK.</entry>
+                </row>
+                <row>
+                  <entry>6</entry>
+                  <entry>SCG0</entry>
+                  <entry>System clock generator 1.SCG0 = 1 ⇒ FLL+ loop control is turned off.</entry>
+                </row>
+                <row>
+                  <entry>5</entry>
+                  <entry>OSCOFF</entry>
+                  <entry>Oscillator Off.OSCOFF = 1 ⇒ turns off LFXT1 when it is not used for MCLK or SMCLK.</entry>
+                </row>
+                <row>
+                  <entry>4</entry>
+                  <entry>CPUOFF</entry>
+                  <entry>CPU off.CPUOFF = 1 ⇒ disable CPU core.</entry>
+                </row>
+                <row>
+                  <entry>3</entry>
+                  <entry>GIE</entry>
+                  <entry>General interrupt enable.GIE = 1 ⇒ enables maskable interrupts.</entry>
+                </row>
+                <row>
+                  <entry>2</entry>
+                  <entry>N</entry>
+                  <entry>Negative flag.N = 1 ⇒ result of a byte or word operation is negative.</entry>
+                </row>
+                <row>
+                  <entry>1</entry>
+                  <entry>Z</entry>
+                  <entry>Zero flag.Z = 1 ⇒ result of a byte or word operation is 0.</entry>
+                </row>
+                <row>
+                  <entry>0</entry>
+                  <entry>C</entry>
+                  <entry>Carry flag.C = 1 ⇒ result of a byte or word operation produced a carry.</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+          <para id="id1172652855223">R2/R3: Constant Generator Registers (CG1/CG2)</para>
+          <para id="id1172652579727">Depending of the source-register addressing modes (As) value, six commonly used constants can be generated without a code word or code memory access to retrieve them.</para>
+          <para id="id4955577">This is a very powerful feature, which allows the implementation of emulated instructions, for example, instead of implementing a core instruction for an increment, the constant generator is used.</para>
+          <table id="id1172651733301" summary="">
+            <tgroup cols="4">
+              <colspec colnum="1" colname="c1"/>
+              <colspec colnum="2" colname="c2"/>
+              <colspec colnum="3" colname="c3"/>
+              <colspec colnum="4" colname="c4"/>
+              <tbody>
+                <row>
+                  <entry>Register</entry>
+                  <entry>As</entry>
+                  <entry>Constant</entry>
+                  <entry>Remarks</entry>
+                </row>
+                <row>
+                  <entry>R2</entry>
+                  <entry>00</entry>
+                  <entry>-</entry>
+                  <entry>Register mode</entry>
+                </row>
+                <row>
+                  <entry>R2</entry>
+                  <entry>01</entry>
+                  <entry>(0)</entry>
+                  <entry>Absolute mode</entry>
+                </row>
+                <row>
+                  <entry>R2</entry>
+                  <entry>10</entry>
+                  <entry>00004h</entry>
+                  <entry>+4, bit processing</entry>
+                </row>
+                <row>
+                  <entry>R2</entry>
+                  <entry>11</entry>
+                  <entry>00008h</entry>
+                  <entry>+8, bit processing</entry>
+                </row>
+                <row>
+                  <entry>R3</entry>
+                  <entry>00</entry>
+                  <entry>00000h</entry>
+                  <entry>0, word processing</entry>
+                </row>
+                <row>
+                  <entry>R3</entry>
+                  <entry>01</entry>
+                  <entry>00001h</entry>
+                  <entry>+1</entry>
+                </row>
+                <row>
+                  <entry>R3</entry>
+                  <entry>10</entry>
+                  <entry>00002h</entry>
+                  <entry>+2, bit processing</entry>
+                </row>
+                <row>
+                  <entry>R3</entry>
+                  <entry>11</entry>
+                  <entry>0FFFFh</entry>
+                  <entry>-1, word processing</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </section>
+        <section id="id8093980">
+          <title>R4 - R15: General–Purpose Registers</title>
+          <para id="id1172658270630">These general-purpose registers are used to store data values, address pointers, or index values and can be accessed with byte or word instructions.</para>
+          <para id="id1172652947081">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

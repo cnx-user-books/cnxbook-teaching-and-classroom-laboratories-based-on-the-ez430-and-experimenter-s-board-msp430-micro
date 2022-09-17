@@ -1,0 +1,67 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory Hardware Multiplier: Lab1 - Multiplication without hardware multiplier</title>
+  <metadata>
+  <md:content-id>m23581</md:content-id><md:title>Laboratory Hardware Multiplier: Lab1 - Multiplication without hardware multiplier</md:title>
+  <md:abstract>Using the MSP-EXP430FG4618 Development Tool and the MSP430FG4618 device analyse the MSP430’s performance when makes a multiplication operation without the hardware multiplier. The execution time is measured with an oscilloscope.</md:abstract>
+  <md:uuid>b4ce4727-9821-4f6a-b9d6-6ceee83da057</md:uuid>
+</metadata>
+
+<content>
+    <section id="id26349891">
+      <title>Laboratory Hardware Multiplier: Lab1 - Multiplication without hardware multiplier</title>
+      <section id="id14121150">
+        <title>Introduction</title>
+        <para id="id11546142">This laboratory explores the hardware multiplier peripheral. It is composed of three different tasks, each of which evaluates a different characteristic of the hardware multiplier peripheral:</para>
+        <para id="id27495326">- Multiplication operation execution time, with and without the hardware multiplier.</para>
+        <para id="id15456459">-Differences between the use of the operator “*” and direct write to the hardware multiplier registers.</para>
+        <para id="id26936936">- Task operational analysis, in which the active power and the RMS value of an electrical system are calculated.</para>
+      </section>
+      <section id="id10690547">
+        <title>Overview</title>
+        <para id="id25160911">This laboratory explores and analyses the MSP430’s performance when it performs multiply operations without the hardware multiplier. The execution time is measured using an oscilloscope.</para>
+      </section>
+      <section id="id14134032">
+        <title>Resources</title>
+        <para id="id18308635">This laboratory only uses Port P2.1 connected to LED2 in order to measure the execution time of the multiply operation when it is performed by a software routine.</para>
+        <para id="id4096861">The default configuration of the FLL+ is used. All the clock signals required for the operation of the components of this device take their default values.</para>
+      </section>
+      <section id="id5958619">
+        <title>Software application organization</title>
+        <para id="id14284837">- The application starts by stopping the Watchdog Timer;</para>
+        <para id="id15824257">- Port P2.1 is configured as an output with the pin at a low level;</para>
+        <para id="id11427904">- The variables a and b to be multiplied are initialized;</para>
+        <para id="id25665271">- The multiplication of the two variables is performed between toggle P2.1 instructions;</para>
+        <para id="id13514497">- This application ends by putting the device into low power mode LPM4.</para>
+      </section>
+      <section id="id7551926">
+        <title>System configuration</title>
+        <para id="id25574739">Go to <emphasis>Properties &gt; TI Debug Settings</emphasis> and select the <emphasis>Target</emphasis> tab. Uncheck the <emphasis>automatically step over functions without debug information when source stepping</emphasis> in order to allow stepping into the multiply routine;</para>
+        <para id="id13727167">Go to <emphasis>Properties &gt; C/C++ Build &gt; Linker MSP430 Linker v3.0 &gt; General options</emphasis> and choose the option <emphasis>None</emphasis> at the <emphasis>Link in hardware version of RTS mpy routine</emphasis>. With this linker option, the application (<link url="http://cnx.org/content/m23581/latest/Lab1_HM.c" window="new"> Lab1_HM.c </link>) will be built without the hardware multiplier and all multiplication operations will be performed by the software routine.</para>
+        <para id="id14782645">Rebuild the project and download it to the target.</para>
+      </section>
+      <section id="id23700393">
+        <title>Analysis of operation</title>
+        <section id="id16302620">
+          <title>Software multiplication routine analysis</title>
+          <para id="id27160048">- Connect the oscilloscope probe to port P2.1 available on Header 4 pin 2;</para>
+          <para id="id12511412">- Put the cursor at line of code 51 {c = a*b} and <emphasis>Run to line</emphasis>;</para>
+          <para id="id15300766">- Go to <emphasis>Disassembly</emphasis> view and switch to <emphasis>mixed disassembly view</emphasis> in order to show both C and Assembly code;</para>
+          <para id="id25160095">- Observe that the variables <emphasis>a</emphasis> and <emphasis>b</emphasis> are passed by registers and the <code display="inline">#__mpyi</code> routine is called;</para>
+          <para id="id20412994">- Run the code step-by-step with the <emphasis>Disassembly</emphasis> view active. This action will lead to the software multiply routine;</para>
+          <para id="id9994864">- As the software multiply routine source code is not available, switch to <emphasis>Assembly</emphasis> view only;</para>
+          <para id="id14394866">- Run the application step-by-step until the <code display="inline">RETA</code> instruction;</para>
+          <para id="id7905350">- This multiplication is a time-consuming CPU operation.</para>
+        </section>
+        <section id="id27508749">
+          <title>Measurement of the multiply operation execution time</title>
+          <para id="id12939776">- Restart the application. It will run from the beginning;</para>
+          <para id="id7904247">- Put the cursor on line of code 56 <code display="inline">{_BIS_SR(LPM4)</code>} and <emphasis>Run to line</emphasis>;</para>
+          <para id="id25190896">- Measure the time pulse time width using the oscilloscope;</para>
+          <para id="id15456461">- This software multiply operation takes around 54 μsec.</para>
+          <para id="id8067398">This example and many others are available on the MSP430 Teaching ROM. </para>
+          <para id="id5805612">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+        </section>
+      </section>
+    </section>
+  </content>
+</document>

@@ -1,0 +1,95 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Project Configuration details</title>
+  <metadata>
+  <md:content-id>m23520</md:content-id><md:title>Project Configuration details</md:title>
+  <md:abstract/>
+  <md:uuid>52d1a587-fb4d-415b-8af7-df703e79d413</md:uuid>
+</metadata>
+
+<content>
+    <section id="id1170624075469">
+      <title>Project Configuration details</title>
+      <para id="id1170620503811">The project configuration defines a set of options to build it. The options defined at this level are applied to all the files of the project. CCE allows setting different options for building at different stages of the project.</para>
+      <para id="id1170632909264">Building a project is a process that generates new features starting from the existing ones, or updates them if they already exist. In the workspace, different builds for different types of projects, or for different stages of development can be invoked. The different build types are:</para>
+      <para id="id1170622657682">- An <emphasis effect="bold">Incremental build</emphasis> uses a build held earlier. Thus, from a past build state, it applies the necessary changes to the resources that have been changed;</para>
+      <para id="id1170626272377">- A <emphasis effect="bold">Clean Build</emphasis> ignores all previous builds as well as problems or errors that led to them. This type of build will transform all resources in accordance with the set of rules in the project build configuration.</para>
+      <para id="id1170631691035">The project builds can be done in two different ways. The behaviour configuration can be defined in <emphasis effect="bold">Window &gt; Preferences &gt; General &gt; Workspace</emphasis>:</para>
+      <para id="id1170626142103">- Automatic builds are always incremental and are always carried out throughout the workspace. Whenever there is resource alteration, it will initiate a build process. This option may be disabled in <emphasis effect="bold">Window &gt; Preferences &gt; General &gt; Workspace</emphasis>;</para>
+      <para id="id1170622762663">- A manual build is always triggered by the user. This type of project build option can be clean or incremental, and can be applied on a group of project files, or to the whole workspace.</para>
+      <para id="id1170626927677">The order in which the build is processed is configurable. If the project contains mentions to another project, the CDT (C/C++ Development Tools) must first build the initial project. The order in which the build takes place may be selected in <emphasis effect="bold">Window &gt; Preferences &gt; General &gt; Workspace &gt; Build Order</emphasis>.</para>
+      <para id="id1170622707280">In order to bring the various parts of a project together, it is necessary to build the project using a configuration stored in a file. There are several build files available, giving different build alternatives, so the build file most appropriate to the stage of the project must be selected. The CDT can automatically generate build files whenever a <emphasis effect="bold">Managed Make C project</emphasis> or <emphasis effect="bold">Managed Make C++ project</emphasis> is created. Each project is therefore created with two default settings: Debug and Release. Other additional settings can be configured. Whenever a project is created or an existing project is opened, the first configuration in the list of alphabetically sorted items, is taken as active.</para>
+      <para id="id2795392">The project’s compiler and linker definition options are complex. Therefore, it is recommended to carefully read the documentation related to the compiler and to the assembler/linker. </para>
+      <para id="id1170623726297">After the project’s creation, it must be configured for the appropriate compiler, linker and debugging options. By selecting the option <emphasis effect="bold">Properties</emphasis> from the context menu of the view <emphasis effect="bold">C/C++ Project</emphasis>, the project’s configuration window is displayed (<emphasis effect="italics">Figure 1</emphasis>). The compiler, linker and debug options can be defined here.</para>
+      <figure id="id1170625933262">
+        <title>CCE workbench – Configuration window.</title>
+        <media id="id1170625933262_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics1-09b5.png" id="id1170625933262__onlineimage" height="399" width="490"/>
+        </media>
+      </figure>
+      <para id="id1170619508226">The management of build configurations is found under the option <emphasis effect="bold">C/C++ Build</emphasis>, accessed via the <emphasis effect="bold">Manage</emphasis> button. Through it the management features can be accessed (see <emphasis effect="italics">Figure 2</emphasis>).</para>
+      <para id="id1170630268641">
+        <figure id="id1170626964776">
+          <title>CCE workbench – Manage window.</title>
+          <media id="id1170626964776_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics2-07bb.png" id="id1170626964776__onlineimage" height="173" width="280"/>
+          </media>
+        </figure>
+      </para>
+      <para id="id1170619478275">It is possible to create new build configurations, delete the existing ones or modify their names. The name of the modified configuration is selected in <emphasis effect="bold">configuration</emphasis>.</para>
+      <para id="id1170620282101">The C/C++ compiler used by the project is controlled by the project’s properties. To view the project properties in the dialog box that appears, the page <emphasis effect="bold">C/C++ Build</emphasis> allows control of the variety of configurations, including:</para>
+      <para id="id6593986">Build Options: specifies the options that affect all project files. This dialog page allows selection of the appropriate options, including those for compiling and linking. It is also possible to specify whether the compiler uses <emphasis effect="bold">Stop On Error</emphasis> or <emphasis effect="bold">Keep Going On Error</emphasis>. The second option allows the compiler to build all projects referenced, even if the current project contains errors. The build command specifies the make file to use.</para>
+      <para id="id1170618356690">The MSP430X devices allow data to be located anywhere in the 20-bit address space. By enabling this option, the compiler will use instructions that need a larger space for their storage. Hence, the memory space occupied by the final program will be greater. The option (- large_memory_model) is valid only when the project is intended as a MSP430X device defined by the compile option (- vmspx). The programs for MSP430X processors should be compiled with RTS libraries supplied for that purpose (rts430xl.lib and rts430xl_eh.lib).</para>
+      <para id="id1170631759539">The compilation option (- silicon_version) selects the CPU version using the 4 least significant processor’s identification digits. If this option is not used, the compiler will construct the default code for the device.</para>
+      <para id="id1170632566954">In the process of linking, if all references to the multiplication routines of integers are to be replaced by the routines versions that use the hardware multiplier option (- use_hw_mpy), the device multiplier’s length must be specified. To use the 16-bit hardware multiplier, present in most devices, choose the option 16. For devices belonging to the F4xx family, which has a 32-bit multiplier module, chose the option 32. Finally, for the new 5xx family, which also has a 32-bit multiplier, use the F5 option. The default option is 16-bit hardware multiplier module.</para>
+      <para id="id1170621704154"/>
+      <para id="id1170619247827">The model used for the initialization of static variables in the C program can be specified as: None, Link using ROM autoinitialization model (- rom_model), or link using RAM autoinitialization model (- ram_model). The C/C++ compiler produces tables of data for automatic initialization of global variables. These tables are placed in the section identified by .cinit.</para>
+      <para id="id1170626197869">The memory space reserved for the passing of arguments by the C routines is defined in (--arg_size). The space reserved for the dynamic allocation of memory by the program is defined in the option (--heap_size). The system stack size used by the program is set by the option (--stack_size). See <emphasis effect="italics">Figure 3</emphasis>.</para>
+      <figure id="id1170620412356">
+        <title>CCE workbench – Memory space configuration.</title>
+        <media id="id1170620412356_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics3-cabe.png" id="id1170620412356__onlineimage" height="379" width="500"/>
+        </media>
+      </figure>
+      <para id="id1170626200781">The device for which the project is intended is configured in the <emphasis effect="bold">Properties&gt; TI Building Setting</emphasis>. The window is in every way identical to that presented in the project’s creation (<emphasis effect="italics">Figure 4</emphasis>).</para>
+      <para id="id1170643988650">
+        <figure id="id1170626175986">
+          <title>CCE workbench – Device configuration.</title>
+          <media id="id1170626175986_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics4-f15b.png" id="id1170626175986__onlineimage" height="427" width="590"/>
+          </media>
+        </figure>
+      </para>
+      <para id="id1411871">The project debugging is carried out as specified in the window <emphasis effect="bold">TI Debug Settings</emphasis>. With the <emphasis effect="bold">Setup</emphasis> tab, using the option <emphasis effect="bold">connection</emphasis>, the method of connecting to the device is established, either parallel port or USB port. The <emphasis effect="bold">Debugger</emphasis> tab can be used to specify whether to load the all application (<emphasis effect="bold">Load program</emphasis>) or just load the project’s symbols (<emphasis effect="bold">Load symbols only</emphasis>). These options can be used to choose between loading the entire program, or just the symbols. This last option is valid when the development environment cannot load the software, such as in the case of the software runs in ROM.</para>
+      <para id="id7519295">Using the <emphasis effect="bold">Target</emphasis> tab, it is possible to define various aspects related to the device. Thus, it is possible to enable the use of IO functions in <emphasis effect="bold">Enable CIO functions</emphasis> use, or establish the starting point for the code execution when a reset occurs or a program is loaded. In the MSP430 properties, it is possible to specify the supply voltage and the types of breakpoints: software or hardware. The memory storage process can also be defined using this tab (<emphasis effect="italics">Figures 5 to 7</emphasis>).</para>
+      <para id="id1170632511014">
+        <figure id="id1170628158237">
+          <title>CCE workbench – Device options configuration.</title>
+          <media id="id1170628158237_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics5-12a1.png" id="id1170628158237__onlineimage" height="448" width="590"/>
+          </media>
+        </figure>
+      </para>
+      <figure id="id1170630327399">
+        <title>CCE workbench – Device options configuration: TI Debug Settings – Target: Generic.</title>
+        <media id="id1170630327399_media" alt="">
+          <image mime-type="image/png" src="../../media/graphics6-f377.png" id="id1170630327399__onlineimage" height="289" width="590"/>
+        </media>
+      </figure>
+      <para id="id1170624006226">
+        <figure id="id1170623958678">
+          <title>CCE workbench – Device options configuration: TI Debug Settings – Target: MSP430 properties.</title>
+          <media id="id1170623958678_media" alt="">
+            <image mime-type="image/png" src="../../media/graphics7-9d02.png" id="id1170623958678__onlineimage" height="290" width="590"/>
+          </media>
+        </figure>
+      </para>
+      <para id="id1170642582924">The first time that the project is built, the <emphasis effect="bold">Project &gt; Build All</emphasis> option must be selected. The project build status can be examined in the <emphasis effect="bold">Console</emphasis> window. If there is a problem, the <emphasis effect="bold">Problems</emphasis> window will list them all. After a successful build of the project, the output file can be automatically loaded into the device.</para>
+      <para id="id1170632510390">Alternatively, a project can be built at the beginning of the debug session. The option <emphasis effect="bold">Debug Active Project</emphasis> will recompile the project and launch the debugger, using the device information defined in the project options.</para>
+      <para id="id1411616">Note that an attempt to update the <emphasis effect="bold">firmware</emphasis> can occur when the debugger is used for the first time, after a software release has been installed or a new USB interface is used.</para>
+      <para id="id1170624094595">Finally, the active perspective must be switched to the <emphasis effect="bold">Debug</emphasis> perspective. This operation can be carried out with the perspective selection buttons located on upper right corner of the workspace window, or alternatively, by selecting <emphasis effect="bold">Window &gt; Open Perspective &gt; Debug</emphasis>.</para>
+      <para id="id1170618412355">When the project is debugged, the errors are identified on the right hand side of the editor as red marks while the problems are identified as white marks. A mark is added on the left hand side of the editor to the lines that contain an error. When this mark is selected, the compiler provides information about the error. </para>
+      <para id="id1170619620191">When the project is made (make option), the resources used can be accessed on <emphasis effect="bold">Properties &gt; C/C++ Build &gt; MSP430 Linker V3.0 &gt; Linker Output</emphasis> in the option <emphasis effect="bold">Produce list of input and output sections</emphasis>.</para>
+      <para id="id1170631820505">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+    </section>
+  </content>
+</document>

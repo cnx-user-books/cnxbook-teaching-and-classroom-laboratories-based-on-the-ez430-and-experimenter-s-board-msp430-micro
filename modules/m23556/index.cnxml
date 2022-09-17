@@ -1,0 +1,55 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Laboratory GPIO: Lab4 - Enable/disable LED blinking by push button press</title>
+  <metadata>
+  <md:content-id>m23556</md:content-id><md:title>Laboratory GPIO: Lab4 - Enable/disable LED blinking by push button press</md:title>
+  <md:abstract>Use the S1 button in the development tool to start and stop the led blinking. It is not necessary to use Lower Power Modes in this exercise.</md:abstract>
+  <md:uuid>c06a195a-cec4-4f82-b521-94bac7556779</md:uuid>
+</metadata>
+
+<content>
+    <section id="id11551125">
+      <title>Laboratory GPIO: Lab4 - Enable/disable LED blinking by push button press</title>
+      <section id="id3329918">
+        <title>Introduction</title>
+        <para id="id16804104">The hands-on laboratory consists of configuring the I/O ports, setting up the input lines to read push buttons and the output lines to feed LEDs. The following exercises have been developed for the three hardware development tools. </para>
+        <para id="id13358595">The first to be discussed is the MSP-EXP430FG4618 Experimenter’s board. Modifications are later made to suit the other development boards. The main differences between the boards are related to the specific ports in which the buttons and LED are (or can be) connected. For the development of this laboratory, Code Composer Essentials v3 has been used.</para>
+      </section>
+      <section id="id14747058">
+        <title>Procedure</title>
+        <para id="id15654351">Detect of the button is pressed:</para>
+        <para id="id16542384">
+          <code display="inline">if (!(P1IN &amp; 0x01))</code>
+        </para>
+        <para id="id14827292">Include a control flow program variable that detects if the LED is blinking or not, when the button is pressed:</para>
+        <para id="id14310313">- Define a variable that indicates whether the LED is blinking;</para>
+        <para id="id14272462">
+          <code display="inline">unsigned char blink_status=1;</code>
+        </para>
+        <para id="id5929856">- Set the program flow depending on the state of the variable.</para>
+        <code id="id14133882" display="block">while(1){                      // Infinite loop 
+ if (blink_status == 1) { 
+  P2OUT ^= 0x04;               // Toggle Port P2.2
+  i=15000;                     // Delay 
+  do (i--);
+   while (i !=0);
+ }
+ if (!(P1IN &amp; 0x01)) {     // Detect S1 pressed
+  i=1500;                      // Delay, button debounce 
+  do (i--);
+  while (i !=0);
+   while (!(P1IN &amp; 0x01)); // Wait for the release of the button
+    i=1500;                    // Delay, button debounce 
+    do (i--);
+     while (i !=0);
+      if (blink_status ==1){   // If led is blinking, stop it
+       P2OUT&amp;= ~ 0x04;     // Turn Led off
+       blink_status=0;
+      }else 
+       blink_status=1;
+    </code>
+        <para id="id11953584">This example and many others are available on the MSP430 Teaching ROM. </para>
+        <para id="id12311019">Request this ROM, and our other Teaching Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+      </section>
+    </section>
+  </content>
+</document>

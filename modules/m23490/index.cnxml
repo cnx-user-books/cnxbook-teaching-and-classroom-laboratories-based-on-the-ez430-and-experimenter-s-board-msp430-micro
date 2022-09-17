@@ -1,0 +1,56 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>MSP430 Main characteristics</title>
+  <metadata>
+  <md:content-id>m23490</md:content-id><md:title>MSP430 Main characteristics</md:title>
+  <md:abstract/>
+  <md:uuid>7094b76c-50bd-4bbc-9148-6d76f62af28b</md:uuid>
+</metadata>
+
+<content>
+    <para id="id13391604">MSP430 Main characteristics</para>
+    <para id="id8716977">Although there are variants in devices in the family, a MSP430 microcontroller can be characterized by:</para>
+    <para id="id13974620">- Low power consumption:</para>
+    <list id="id13974624" list-type="bulleted">
+      <item>0.1 μA for RAM data retention;</item>
+      <item>0.8 μA for real time clock mode operation;</item>
+      <item>250 μA/MIPS at active operation.</item>
+    </list>
+    <para id="id10781390">Low operation voltage (from 1.8 V to 3.6 V).</para>
+    <para id="id14865651">&lt; 1 μs clock start-up.</para>
+    <para id="id10817672">&lt; 50 nA port leakage.</para>
+    <para id="id10817676">Zero-power Brown-Out Reset (BOR).</para>
+    <para id="id13401489">On-chip analogue devices:</para>
+    <list id="id13959809" list-type="bulleted">
+      <item>10/12/16-bit Analogue-to-Digital Converter (ADC);</item>
+      <item>12-bit dual Digital-to-Analogue Converter (DAC);</item>
+      <item>Comparator-gated timers;</item>
+      <item>Operational Amplifiers (OP Amps);</item>
+      <item>Supply Voltage Supervisor (SVS).</item>
+    </list>
+    <para id="id4354223">16 bit RISC CPU:</para>
+    <list id="id10792351" list-type="bulleted">
+      <item>Instructions processing on either bits, bytes or words;</item>
+      <item>Compact core design reduces power consumption and cost;</item>
+      <item>Compiler efficient;</item>
+      <item>27 core instructions;</item>
+      <item>7 addressing modes;</item>
+      <item>Extensive vectored-interrupt capability.</item>
+    </list>
+    <para id="id14784522">Flexibility:</para>
+    <list id="id14062522" list-type="bulleted">
+      <item>Up to 256 kB In-System Programmable (ISP) Flash;</item>
+      <item>Up to 100 pin options;</item>
+      <item>USART, I2C, Timers;</item>
+      <item>LCD driver;</item>
+      <item>Embedded emulation.</item>
+    </list>
+    <para id="id17076130">The microcontroller’s performance is directly related to the 16-bit data bus, the 7 addressing modes and the reduced instructions set, which allows a shorter, denser programming code for fast execution. These microcontroller families share a 16-bit CPU (Central Processing Unit) core, RISC type, intelligent peripherals, and flexible clock system that interconnects using a Von Neumann<sup/>common memory address bus (MAB) and memory data bus (MDB) architecture.</para>
+    <figure id="id8551856">
+      <title>MSP430 architecture.</title>
+      <media id="id8551856_media" alt="">
+        <image mime-type="image/jpg" src="../../media/graphics1.jpg" id="id8551856__onlineimage" height="356" width="490"/>
+      </media>
+    </figure>
+    <para id="id13204165">Request the MSP430 Teaching ROM Materials here <link url="https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp">https://www-a.ti.com/apps/dspuniv/teaching_rom_request.asp</link></para>
+  </content>
+</document>
